@@ -1,21 +1,24 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 const SCLogin = styled.section`
-  position: relative;
+  background-image: url("/../../image/atulado-background_image.svg");
+  background-repeat: no-repeat;
+  background-size: cover;
+
   .page-title {
     text-align: center;
     font-size: 30px;
     line-height: 32px;
   }
   .login-wrapper {
-    background-color: ${({ theme }) => theme.color.primary};
     min-height: calc(100vh - 64px);
     display: flex;
     align-items: center;
     justify-content: center;
 
     .login-card {
-      padding: ${({ theme }) => `${theme.spaces.m.mobileSize} ${theme.spaces.s.mobileSize}`};
+      padding: ${({ theme }) =>
+        `${theme.spaces.m.mobileSize} ${theme.spaces.s.mobileSize}`};
       border-radius: 4px;
       background: ${({ theme }) => theme.color.white};
     }
@@ -36,12 +39,13 @@ const SCLogin = styled.section`
       }
     }
 
-    .forgot-password, .error-message {
+    .forgot-password,
+    .error-message {
       margin-top: ${({ theme }) => theme.spaces.xs.mobileSize};
       text-align: center;
     }
 
-    .error-message {
+    .error-message  {
       color: ${({ theme }) => theme.color.red};
     }
   }
@@ -61,6 +65,28 @@ const SCLogin = styled.section`
   }
 
   @media only screen and (min-width: 769px) {
+    .nav-wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      padding: ${({ theme }) =>
+        `${theme.spaces.s.desktopSize} ${theme.spaces.l.desktopSize}`};
+
+      .options-wrapper {
+        display: flex;
+
+        a {
+          color: ${({ theme }) => theme.color.primary};
+        }
+
+        & > * {
+          cursor: pointer;
+          margin-right: ${({ theme }) => theme.spaces.m.desktopSize};
+        }
+      }
+    }
+
     .login-wrapper {
       .login-card {
         padding: ${({ theme }) => `${theme.spaces.m.desktopSize} 109px`};
@@ -83,7 +109,8 @@ const SCLogin = styled.section`
         }
       }
 
-      .forgot-password, .error-message {
+      .forgot-password,
+      .error-message {
         margin-top: ${({ theme }) => theme.spaces.s.desktopSize};
       }
     }
