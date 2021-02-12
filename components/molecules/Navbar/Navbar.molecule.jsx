@@ -16,13 +16,11 @@ export const Navbar = ({ optionList, action, withoutMenu = false }) => {
   return (
     <SCNavbar>
       <div>
-        <Logo mode="white" height="25%" width="25%" type="text" />
-        <Logo mode="white" height="10%" width="10%" type="logo" />
+        <Logo mode="white" height="45%" width="45%" type="text" />
       </div>
 
       <div className="info-wrapper">
-        <SCTextSLight color="white">¿Necesitas ayuda?</SCTextSLight>
-        <SCTextL color="white">917 379 260 / 900 818 852</SCTextL>
+        <SCTextL color="white">900 818 852</SCTextL>
       </div>
       {withoutMenu || (
         <div className="menu-wrapper" onClick={() => handleOpenMenu()}>

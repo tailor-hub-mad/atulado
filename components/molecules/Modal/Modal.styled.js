@@ -40,10 +40,6 @@ export const SCModal = styled.div`
       float: right;
 
       cursor: pointer;
-
-      svg {
-        stroke: ${({ theme }) => theme.color.black};
-      }
     }
 
     .info-wrapper {

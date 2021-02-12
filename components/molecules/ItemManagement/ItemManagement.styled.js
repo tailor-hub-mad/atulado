@@ -54,9 +54,5 @@ export const SCItemManagement = styled.div`
 
   .icon-wrapper {
     padding-left: ${({ theme }) => theme.spaces.xs.desktopSize};
-
-    svg {
-      stroke: ${({ theme }) => theme.color.black};
-    }
   }
 `;
