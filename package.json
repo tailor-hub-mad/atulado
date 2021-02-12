@@ -1,0 +1,43 @@
+{
+  "name": "with-next-translate",
+  "scripts": {
+    "dev": "next-translate && next dev",
+    "build": "next-translate && next build",
+    "start": "next start -p $PORT",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook",
+    "heroku-postbuild": "NODE_ENV=production next-translate && next build"
+  },
+  "dependencies": {
+    "@nivo/bar": "^0.63.1",
+    "axios": "^0.21.0",
+    "dotenv": "^8.2.0",
+    "fs": "^0.0.1-security",
+    "js-cookie": "^2.2.1",
+    "js-file-download": "^0.4.12",
+    "lodash": "^4.17.20",
+    "next": "9.4.4",
+    "next-translate": "0.16.1",
+    "react": "16.13.1",
+    "react-day-picker": "^7.4.8",
+    "react-dom": "16.13.1",
+    "react-hook-form": "^6.11.2",
+    "react-scrollspy": "^3.4.3",
+    "smoothscroll-polyfill": "^0.4.4",
+    "styled-components": "^5.2.0",
+    "swr": "^0.3.8",
+    "yup": "^0.29.3"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.12.3",
+    "@storybook/addon-actions": "^6.0.27",
+    "@storybook/addon-essentials": "^6.0.27",
+    "@storybook/addon-links": "^6.0.27",
+    "@storybook/react": "^6.0.27",
+    "babel-loader": "^8.1.0",
+    "babel-plugin-inline-react-svg": "^1.1.1",
+    "babel-plugin-module-resolver": "^4.0.0",
+    "react-is": "^17.0.1"
+  }
+}
