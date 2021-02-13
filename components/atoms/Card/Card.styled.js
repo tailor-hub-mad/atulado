@@ -92,6 +92,7 @@ export const SCCard = styled.div`
     width: 61px;
     height: 61px;
 
+    stroke: ${({ theme }) => theme.color.black};
     margin-left: ${({ theme }) => theme.spaces.xs.desktopSize};
   }
 
