@@ -10,6 +10,7 @@ import { useAuth } from "../../../context";
 import { useRouter } from "next/router";
 import { Logo } from "../../atoms/Logo/Logo.atom";
 import { SCTextM } from "../../atoms/Text/TextM.styled";
+import { Navbar } from "../../molecules/Navbar/Navbar.molecule";
 
 export default function LoginTemplate({ role = "cliente" }) {
   const [errorMessage, setErrorMessage] = useState("");
@@ -48,7 +49,17 @@ export default function LoginTemplate({ role = "cliente" }) {
 
   return (
     <SCLogin>
-      <div className="nav-wrapper">
+      <div className="nav-mobile-wrapper">
+        <Navbar
+          optionList={[
+            { option: "Tarifas", link: "/", visible: true },
+            { option: "Contratar", link: "/", visible: true },
+            { option: "Área cliente", link: "/", visible: true },
+          ]}
+        />
+      </div>
+
+      <nav className="nav-desktop-wrapper">
         <Logo height="15%" width="15%" type="text" />
         <div className="options-wrapper">
           <SCTextM>
@@ -61,7 +72,7 @@ export default function LoginTemplate({ role = "cliente" }) {
             <a href="">Área cliente</a>
           </SCTextM>
         </div>
-      </div>
+      </nav>
       <div className="login-wrapper">
         <div className="login-card">
           <SCTextXL className="page-title">Área {role}</SCTextXL>

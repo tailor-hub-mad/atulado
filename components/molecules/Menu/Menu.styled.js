@@ -10,8 +10,8 @@ export const SCMenu = styled.div`
 
   background: linear-gradient(
     0deg,
-    rgba(10, 117, 208, 0.7),
-    rgba(10, 117, 208, 0.7)
+    rgba(161, 215, 192, 0.7),
+    rgba(161, 215, 192, 0.7)
   );
 
   overflow: hidden;

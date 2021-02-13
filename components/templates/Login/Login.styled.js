@@ -5,6 +5,14 @@ const SCLogin = styled.section`
   background-repeat: no-repeat;
   background-size: cover;
 
+  nav {
+    background-color: transparent;
+  }
+
+  .nav-desktop-wrapper {
+    display: none;
+  }
+
   .page-title {
     text-align: center;
     font-size: 30px;
@@ -65,13 +73,18 @@ const SCLogin = styled.section`
   }
 
   @media only screen and (min-width: 769px) {
-    .nav-wrapper {
+    .nav-mobile-wrapper {
+      display: none;
+    }
+
+    .nav-desktop-wrapper {
       display: flex;
       justify-content: space-between;
       align-items: center;
 
       padding: ${({ theme }) =>
         `${theme.spaces.s.desktopSize} ${theme.spaces.l.desktopSize}`};
+      padding-bottom: 0;
 
       .options-wrapper {
         display: flex;

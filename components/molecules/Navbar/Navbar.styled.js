@@ -25,6 +25,10 @@ export const SCNavbar = styled.nav`
 
   .menu-wrapper {
     display: inline-block;
+
+    svg {
+      stroke: ${({ theme }) => theme.color.white};
+    }
   }
 
   @media only screen and (min-width: 769px) {
