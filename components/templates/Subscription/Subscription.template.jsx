@@ -266,7 +266,10 @@ export default function SubscriptionTemplate() {
           />
 
           <div className="title" ref={refs[0]}>
-            <SCTextXL>Vamos a dar de alta tu mejor energía</SCTextXL>
+            <SCTextXL>
+              Contrata nuestra tarifa **NombreTarifa** y disfruta del mejor
+              precio del mercado
+            </SCTextXL>
           </div>
 
           <div className="main-wrapper">

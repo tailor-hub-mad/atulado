@@ -458,7 +458,7 @@ const FriendCodeModal = ({ setFriendCodeModal, contracts = [], user }) => {
   return (
     <Modal closeAction={() => setFriendCodeModal(false)} type="claim">
       <div className="friend-code-modal-wrapper">
-        <div className="image-modal-wrapper">
+        <div className="image-faces-modal-wrapper">
           <FacesImage />
         </div>
         <div className="form-modal-wrapper">

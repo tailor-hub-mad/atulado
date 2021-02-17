@@ -1,6 +1,9 @@
 import styled from "styled-components";
 
 export const SCSubscription = styled.section`
+  background-image: url("/../../image/atulado-background-subscription_image.svg");
+  background-repeat: no-repeat;
+
   .title {
     display: none;
   }
@@ -20,8 +23,6 @@ export const SCSubscription = styled.section`
       z-index: 1;
 
       padding: ${({ theme }) => `0 ${theme.spaces.xs.desktopSize}`};
-
-      background: ${({ theme }) => theme.color.white};
 
       &::-webkit-scrollbar {
         display: none;
@@ -133,7 +134,9 @@ export const SCSubscription = styled.section`
 
       text-align: center;
 
-      margin-top: ${({ theme }) => theme.spaces.m.desktopSize};
+      margin: ${({ theme }) => `${theme.spaces.m.desktopSize} 362px`};
+
+      margin-bottom: 0;
     }
 
     .main-wrapper {

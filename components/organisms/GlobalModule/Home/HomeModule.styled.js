@@ -116,13 +116,15 @@ export const SCHomeModule = styled.div`
   }
 
   .friend-code-modal-wrapper {
-    .image-modal-wrapper {
+    .image-faces-modal-wrapper {
       display: flex;
       justify-content: center;
 
       svg {
         width: 20%;
         height: 20%;
+
+        fill: ${({ theme }) => theme.color.black};
       }
     }
 

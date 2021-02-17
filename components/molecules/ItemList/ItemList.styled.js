@@ -23,7 +23,7 @@ export const SCItemContractList = styled.div`
 
   p {
     color: ${({ theme, disabled }) =>
-    disabled ? theme.color.white : theme.color.black};
+      disabled ? theme.color.white : theme.color.black};
   }
 
   svg {
@@ -31,7 +31,7 @@ export const SCItemContractList = styled.div`
     margin-left: ${({ theme }) => theme.spaces.xs.desktopSize};
 
     fill: ${({ theme, disabled }) =>
-    disabled ? theme.color.white : theme.color.black};
+      disabled ? theme.color.white : theme.color.black};
   }
 
   &:hover {
@@ -99,7 +99,7 @@ export const SCItemContractList = styled.div`
     border-width: 1px;
     border-style: solid;
     border-color: ${({ theme, disabled }) =>
-    disabled ? theme.color.gray : theme.color.primary};
+      disabled ? theme.color.gray : theme.color.primary};
 
     .checked {
       display: ${({ checked }) => (checked ? "block" : "none")};
@@ -110,10 +110,10 @@ export const SCItemContractList = styled.div`
       border-radius: 50%;
 
       background-color: ${({ theme, checked, disabled }) => {
-    if (disabled) return theme.color.white;
-    if (checked) return theme.color.primary;
-    return theme.color.white;
-  }};
+        if (disabled) return theme.color.white;
+        if (checked) return theme.color.primary;
+        return theme.color.white;
+      }};
     }
   }
 `;
