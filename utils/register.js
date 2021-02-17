@@ -413,7 +413,7 @@ const handleAttachmentData = (data) => {
   return attachmentData;
 };
 
-export const handleDataRegistrstion = async (data) => {
+export const handleDataRegistration = async (data) => {
   console.log(data);
 
   const holderData = handleDataHolder(data);

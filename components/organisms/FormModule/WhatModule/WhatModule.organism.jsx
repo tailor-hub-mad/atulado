@@ -48,6 +48,9 @@ export const WhatModule = ({
   extraDataRegister,
   setExtraDataRegister,
   defaultInfoUpdateContract,
+  setHasFormErros,
+  setRequiredData,
+  requiredData,
 }) => {
   // Components states
   const [optionSelected, setOptionSelected] = useState(true);
@@ -274,14 +277,14 @@ export const WhatModule = ({
 
     offeredRateById.find((offered) => {
       atrData = find(
-        offered.ContractTypes,
+        offered.data.ContractTypes,
         (element) => element.TollName == atr
       );
 
       return atrData;
     });
 
-    const nPowers = Object.keys(atrData.Price).filter((element) => {
+    const nPowers = Object.keys(atrData?.Price).filter((element) => {
       return element.includes("PowerP") && atrData.Price[element] > 0;
     });
 
@@ -295,7 +298,7 @@ export const WhatModule = ({
 
     offeredRateById.find((offered) => {
       atrData = find(
-        offered.ContractTypes,
+        offered.data.ContractTypes,
         (element) => element.TollName == atr
       );
 
@@ -317,6 +320,8 @@ export const WhatModule = ({
     }
 
     if (Object.keys(newPowerValues).length === nPowers.length) {
+      setRequiredData({ ...requiredData, inputs: true });
+
       const { Toll: atr } = atrData;
 
       const powersValue = Object.keys(newPowerValues).map((element) =>
@@ -396,7 +401,26 @@ export const WhatModule = ({
 
       validationValues["SIPSInformation"] = validationSipsInformation;
 
+      setHasFormErros(false);
       const { data } = await validateATRPower(validationValues);
+
+      if (data) {
+        const {
+          MaxPowerAllowed,
+          MaxPowerAllowedBIE,
+          NormalizedPowers,
+          PowerByTensionLevel,
+        } = data;
+
+        if (
+          !MaxPowerAllowed?.Status ||
+          !MaxPowerAllowedBIE?.Status ||
+          !NormalizedPowers?.Status ||
+          !PowerByTensionLevel?.Status
+        ) {
+          setHasFormErros(true);
+        }
+      }
 
       if (type) {
         setATRPowerCurrentErrors(data);
@@ -583,14 +607,20 @@ export const WhatModule = ({
 
     const dataOfferedRateById = await Promise.all(
       dataOfferedRate.map((element) => {
-        return getOfferedRatesById(element.RateId, 3);
+        if (element.RateId == 1) {
+          return getOfferedRatesById(element.RateId, 3);
+        }
       })
     );
 
-    const atrTypes = getATRTypesByOfferedRates(dataOfferedRate);
+    const filterDataOfferedRateById = flatten(
+      dataOfferedRateById.filter((data) => data)
+    );
+
+    const atrTypes = getATRTypesByOfferedRates(filterDataOfferedRateById);
 
     setOfferedRate(dataOfferedRate);
-    setOfferedRateById(dataOfferedRateById.map(({ data }) => data));
+    setOfferedRateById(filterDataOfferedRateById);
     setATRTypes(atrTypes);
     setSubscriptionReason(dataSubscriptionReason);
     setOscumValues(dataOscumValues);

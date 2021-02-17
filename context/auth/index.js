@@ -116,6 +116,9 @@ export const ProtectRoute = ({ children }) => {
         router.push("/global");
         return <LoadingScreen />;
       }
+    } else if (router.pathname?.includes("/alta")) {
+      router.push("/tarifas");
+      return <LoadingScreen />;
     }
 
     return children;

@@ -204,7 +204,7 @@ export const ClientDetailModule = ({
   };
 
   const handleAddDoc = () => {
-    router.push("/alta?newContract=true");
+    router.push("/tarifas");
   };
 
   const handleOnClikContract = (contractId) => {

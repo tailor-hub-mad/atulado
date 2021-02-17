@@ -40,7 +40,7 @@ export const TabBar = ({ optionList = [], action, user }) => {
 
       <div className="actions-wrapper">
         {user?.roleCode != 1 ? (
-          <Link href="/alta?newContract=true">
+          <Link href="/tarifas">
             <a>
               <Button className="action-button">Contratar</Button>
             </a>

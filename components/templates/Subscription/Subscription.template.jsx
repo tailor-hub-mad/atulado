@@ -28,7 +28,7 @@ import {
   readRegistration,
 } from "../../../lib/api/register";
 import { getContractById } from "../../../lib/api/contract";
-import { handleDataRegistrstion } from "../../../utils/register";
+import { handleDataRegistration } from "../../../utils/register";
 
 import { EXTERNAL_LINK_PROXIMA_WEB } from "../../../utils/constants";
 
@@ -54,10 +54,7 @@ export default function SubscriptionTemplate() {
     }, {})
   );
 
-  const [errorMessage, setErrorMessage] = useState({
-    open: false,
-    message: "",
-  });
+  const [hasFormErrors, setHasFormErros] = useState(false);
   const [defaultAddressNewContract, setDefaultAddressNewContract] = useState();
   const [defaultInfoUpdateContract, setDefaultInfoUpdateContract] = useState();
   const [defaultUserNewContract, setDefaultUserNewContract] = useState();
@@ -77,7 +74,9 @@ export default function SubscriptionTemplate() {
   });
   const [requiredData, setRequiredData] = useState({
     conditions: null,
+    inputs: null,
   });
+
   const [summaryData, setSummaryData] = useState({
     client: {},
     client_payer: {},
@@ -105,7 +104,6 @@ export default function SubscriptionTemplate() {
   const methods = useForm({
     mode: "onBlur",
     shouldFocusError: true,
-    reValidateMode: "onSubmit",
   });
 
   const onSubmit = async (dataInputs) => {
@@ -116,7 +114,7 @@ export default function SubscriptionTemplate() {
       update: defaultInfoUpdateContract?.contract,
     };
 
-    const dataRegister = await handleDataRegistrstion(data);
+    const dataRegister = await handleDataRegistration(data);
 
     let response = null;
 
@@ -139,27 +137,16 @@ export default function SubscriptionTemplate() {
         : await createRegistration(dataRegister);
     }
 
-    setOpenModal(true);
-
     if (response?.error) {
-      setErrorMessage({
-        open: true,
-        message: response.error,
-      });
-
-      setTimeout(() => {
-        setErrorMessage({
-          open: false,
-          message: "",
-        });
-      }, 7000);
-      form;
+      setHasFormErros(true);
+    } else {
+      setOpenModal(true);
     }
 
     setLoading(false);
   };
 
-  const onError = (errors, e) => {
+  const onError = () => {
     setLoading(false);
   };
 
@@ -252,7 +239,10 @@ export default function SubscriptionTemplate() {
       <SCSubscription>
         <>
           {openModal && (
-            <ModalForm updateContract={updateContract || updateProcess} />
+            <ModalForm
+              updateContract={updateContract || updateProcess}
+              user={user}
+            />
           )}
           <Navbar
             optionList={[
@@ -326,6 +316,7 @@ export default function SubscriptionTemplate() {
                       setExtraDataRegister={setExtraDataRegister}
                       defaultAddressNewContract={defaultAddressNewContract}
                       defaultInfoUpdateContract={defaultInfoUpdateContract}
+                      setHasFormErros={setHasFormErros}
                     />
                   </div>
                 </div>
@@ -343,6 +334,9 @@ export default function SubscriptionTemplate() {
                       extraDataRegister={extraDataRegister}
                       setExtraDataRegister={setExtraDataRegister}
                       defaultInfoUpdateContract={defaultInfoUpdateContract}
+                      setRequiredData={setRequiredData}
+                      requiredData={requiredData}
+                      setHasFormErros={setHasFormErros}
                     />
                   </div>
                 </div>
@@ -378,6 +372,7 @@ export default function SubscriptionTemplate() {
                     setExtraDataRegister={setExtraDataRegister}
                     defaultUserNewContract={defaultUserNewContract}
                     defaultInfoUpdateContract={defaultInfoUpdateContract}
+                    setHasFormErros={setHasFormErros}
                   />
                 </div>
 
@@ -454,9 +449,11 @@ export default function SubscriptionTemplate() {
                 </div>
                 <div className="submit-wrapper">
                   <Button
-                    disabled={Object.keys(requiredData).some(
-                      (element) => !requiredData[element]
-                    )}
+                    disabled={
+                      Object.keys(requiredData).some(
+                        (element) => !requiredData[element]
+                      ) || hasFormErrors
+                    }
                     type="submit"
                   >
                     {updateContract ? "Actualizar" : "Terminar"}
@@ -464,9 +461,21 @@ export default function SubscriptionTemplate() {
                 </div>
 
                 <div className="error-form-wrapper">
-                  {errorMessage.open && (
+                  {Object.keys(requiredData).every(
+                    (element) => requiredData[element]
+                  ) &&
+                    hasFormErrors && (
+                      <SCTextSLight color="red">
+                        No se puede terminar{" "}
+                        {updateContract ? "la actualización" : "el alta"} del
+                        formulario porque contiene errores.
+                      </SCTextSLight>
+                    )}
+                  {requiredData.conditions && !requiredData.inputs && (
                     <SCTextSLight color="red">
-                      {errorMessage.message}
+                      No se puede terminar{" "}
+                      {updateContract ? "la actualización" : "el alta"} del
+                      formulario porque hay datos sin completar.
                     </SCTextSLight>
                   )}
                 </div>
@@ -527,7 +536,8 @@ const SummaryClientData = ({ dataClient }) => {
     <>
       <SCTextSLight color="black">{dataClient?.company_cif}</SCTextSLight>
       <SCTextSLight color="black">{dataClient?.company_name}</SCTextSLight>
-      <SCTextSLight color="black">{dataClient?.company_emails}</SCTextSLight>
+      <SCTextSLight color="black">{dataClient?.company_email}</SCTextSLight>
+      <SCTextSLight color="black">{dataClient?.company_phone}</SCTextSLight>
 
       <div className="separator" />
 
@@ -543,16 +553,24 @@ const SummaryClientData = ({ dataClient }) => {
 const SummaryAddressData = ({ addressData }) => {
   return (
     <>
-      <SCTextSLight color="black">
-        <span>{addressData?.type_road}</span>
-        <span> {addressData?.name_road}</span>
-        <span>, {addressData?.number_road}</span>
-      </SCTextSLight>
-      <SCTextSLight color="black">{addressData?.postal_code}</SCTextSLight>
-      <SCTextSLight color="black">
-        <span>{addressData?.city}</span>
-        <span>, {addressData?.province}</span>
-      </SCTextSLight>
+      {addressData?.name_road && addressData?.number_road && (
+        <SCTextSLight color="black">
+          <span>{addressData?.type_road}</span>
+          <span> {addressData?.name_road}</span>
+          <span>, {addressData?.number_road}</span>
+        </SCTextSLight>
+      )}
+
+      {addressData?.postal_code && (
+        <>
+          <SCTextSLight color="black">{addressData?.postal_code}</SCTextSLight>
+          <SCTextSLight color="black">
+            <span>{addressData?.city}</span>
+            <span>, {addressData?.province}</span>
+          </SCTextSLight>
+        </>
+      )}
+
       <div className="separator" />
     </>
   );
@@ -583,6 +601,9 @@ const SummaryPayerData = ({ dataPayer }) => {
       <SCTextSLight color="black">{dataPayer?.company_payer_name}</SCTextSLight>
       <SCTextSLight color="black">
         {dataPayer?.company_payer_email}
+      </SCTextSLight>
+      <SCTextSLight color="black">
+        {dataPayer?.company_payer_phone}
       </SCTextSLight>
 
       <div className="separator" />
@@ -636,7 +657,7 @@ const SummaryContractData = ({ dataContract }) => {
   );
 };
 
-const ModalForm = ({ updateContract }) => {
+const ModalForm = ({ updateContract, user }) => {
   const [openFriend, setOpenFriend] = useState(false);
 
   const router = useRouter();
@@ -644,7 +665,6 @@ const ModalForm = ({ updateContract }) => {
 
   // const methods = useForm({
   //   mode: "onBlur",
-  //   reValidateMode: "onSubmit",
   //   shouldFocusError: true,
   // });
 
@@ -661,7 +681,11 @@ const ModalForm = ({ updateContract }) => {
   // };
 
   return (
-    <Modal closeAction={() => (window.location = EXTERNAL_LINK_PROXIMA_WEB)}>
+    <Modal
+      closeAction={() => {
+        user ? router.push("/") : (window.location = EXTERNAL_LINK_PROXIMA_WEB);
+      }}
+    >
       <div className="modal-form-wrapper">
         {openFriend ? (
           <>
@@ -699,9 +723,13 @@ const ModalForm = ({ updateContract }) => {
         )}
 
         <div className="button-wrapper">
-          <a href={EXTERNAL_LINK_PROXIMA_WEB}>
-            <Button>Aceptar</Button>
-          </a>
+          {user ? (
+            <Button onClick={() => router.push("/")}>Aceptar</Button>
+          ) : (
+            <a href={EXTERNAL_LINK_PROXIMA_WEB}>
+              <Button>Aceptar</Button>
+            </a>
+          )}
         </div>
 
         {/* <div className="button-wrapper">
