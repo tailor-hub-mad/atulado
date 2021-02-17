@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { SCTextXL } from "../../atoms/Text/TextXL.styled";
-import { Navbar } from "../../molecules/Navbar/Navbar.molecule";
 import { SCLogin } from "./Login.styled";
 import { FormProvider, useForm } from "react-hook-form";
 import { InputPassword, InputText } from "../../atoms/Input/Input.atom";
@@ -9,6 +8,9 @@ import { SCTextSLight } from "../../atoms/Text/TextS.styled";
 import Link from "next/link";
 import { useAuth } from "../../../context";
 import { useRouter } from "next/router";
+import { Logo } from "../../atoms/Logo/Logo.atom";
+import { SCTextM } from "../../atoms/Text/TextM.styled";
+import { Navbar } from "../../molecules/Navbar/Navbar.molecule";
 
 export default function LoginTemplate({ role = "cliente" }) {
   const [errorMessage, setErrorMessage] = useState("");
@@ -47,14 +49,30 @@ export default function LoginTemplate({ role = "cliente" }) {
 
   return (
     <SCLogin>
-      <Navbar
-        optionList={[
-          { option: "Home", link: "/" },
-          { option: "Contratos", link: "/" },
-          { option: "Facturas", link: "/" },
-          { option: "Mis datos", link: "/" },
-        ]}
-      />
+      <div className="nav-mobile-wrapper">
+        <Navbar
+          optionList={[
+            { option: "Tarifas", link: "/", visible: true },
+            { option: "Contratar", link: "/", visible: true },
+            { option: "Área cliente", link: "/", visible: true },
+          ]}
+        />
+      </div>
+
+      <nav className="nav-desktop-wrapper">
+        <Logo height="15%" width="15%" type="text" />
+        <div className="options-wrapper">
+          <SCTextM>
+            <a href="">Tarifas</a>
+          </SCTextM>
+          <SCTextM>
+            <a href="">Contratar</a>
+          </SCTextM>
+          <SCTextM>
+            <a href="">Área cliente</a>
+          </SCTextM>
+        </div>
+      </nav>
       <div className="login-wrapper">
         <div className="login-card">
           <SCTextXL className="page-title">Área {role}</SCTextXL>

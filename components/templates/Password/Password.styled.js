@@ -2,17 +2,31 @@ import styled from "styled-components";
 
 export const SCPassword = styled.section`
   position: relative;
+
+  background-image: url("/../../image/atulado-background_image.svg");
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  nav {
+    background-color: transparent;
+  }
+
+  .nav-desktop-wrapper {
+    display: none;
+  }
+
   .page-title {
     text-align: center;
     font-size: 30px;
     line-height: 32px;
   }
   .login-wrapper {
-    background-color: ${({ theme }) => theme.color.primary};
     min-height: calc(100vh - 64px);
     display: flex;
     align-items: center;
     justify-content: center;
+
+    padding: ${({ theme }) => `0 ${theme.spaces.s.mobileSize}`};
 
     .login-card {
       padding: ${({ theme }) =>
@@ -49,6 +63,33 @@ export const SCPassword = styled.section`
   }
 
   @media only screen and (min-width: 769px) {
+    .nav-mobile-wrapper {
+      display: none;
+    }
+
+    .nav-desktop-wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      padding: ${({ theme }) =>
+        `${theme.spaces.s.desktopSize} ${theme.spaces.l.desktopSize}`};
+      padding-bottom: 0;
+
+      .options-wrapper {
+        display: flex;
+
+        a {
+          color: ${({ theme }) => theme.color.primary};
+        }
+
+        & > * {
+          cursor: pointer;
+          margin-right: ${({ theme }) => theme.spaces.m.desktopSize};
+        }
+      }
+    }
+
     .login-wrapper {
       .login-card {
         padding: ${({ theme }) => `${theme.spaces.m.desktopSize} 109px`};

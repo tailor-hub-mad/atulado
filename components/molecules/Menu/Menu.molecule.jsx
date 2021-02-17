@@ -1,6 +1,6 @@
 import React, { createRef } from "react";
 import { SCMenu } from "./Menu.styled";
-import { SCTextM } from "../../atoms/Text/TextM.styled";
+import { SCTextSMedium } from "../../atoms/Text/TextS.styled";
 import Link from "next/link";
 import useClickOutside from "../../../hooks/useClickOutside";
 
@@ -8,6 +8,8 @@ export const Menu = ({ optionList, setState, action }) => {
   const menuRef = createRef();
 
   useClickOutside(menuRef, () => setState(false));
+
+  console.log(optionList);
 
   return (
     <SCMenu>
@@ -28,9 +30,11 @@ export const Menu = ({ optionList, setState, action }) => {
                       : ""
                   }
                 >
-                  <SCTextM color={element.disabled ? "lightGray" : "black"}>
+                  <SCTextSMedium
+                    color={element.disabled ? "lightGray" : "black"}
+                  >
                     {element.option}
-                  </SCTextM>
+                  </SCTextSMedium>
                 </li>
               );
             })}
@@ -38,7 +42,7 @@ export const Menu = ({ optionList, setState, action }) => {
 
         <div className="actions-wrapper">
           <Link href="">
-            <SCTextM color="black">Salir</SCTextM>
+            <SCTextSMedium color="black">Salir</SCTextSMedium>
           </Link>
         </div>
       </nav>
