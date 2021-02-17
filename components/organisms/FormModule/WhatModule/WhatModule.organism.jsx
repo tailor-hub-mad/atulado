@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { isEmpty, flatten, find } from "lodash";
 import { useFormContext } from "react-hook-form";
+import { useRouter } from "next/router";
 
 import { SCWhatModule } from "./WhatModule.styled";
 import { SCTextXSLight } from "../../../atoms/Text/TextXS.styled";
@@ -88,6 +89,7 @@ export const WhatModule = ({
   ////////////////////////////////////////////////////
 
   const { getValues } = useFormContext();
+  const router = useRouter();
 
   ////////////////////////////////////////////////////
   // Buttons Actions
@@ -600,34 +602,41 @@ export const WhatModule = ({
     } catch (error) {}
   };
 
-  const getOffereds = async () => {
+  const getOffereds = async (rateId) => {
+    if (rateId) {
+      const { data: dataOfferedRateById } = await getOfferedRatesById(rateId);
+      console.log(dataOfferedRateById);
+    } else {
+    }
     const { data: dataOfferedRate } = await getOfferedRates(3);
     const { data: dataSubscriptionReason } = await getSubscriptionReason();
     const { data: dataOscumValues } = await getOscumValues();
 
-    const dataOfferedRateById = await Promise.all(
-      dataOfferedRate.map((element) => {
-        if (element.RateId == 1) {
-          return getOfferedRatesById(element.RateId, 3);
-        }
-      })
-    );
+    // const dataOfferedRateById = await Promise.all(
+    //   dataOfferedRate.map((element) => {
+    //     if (element.RateId == 1) {
+    //       return getOfferedRatesById(element.RateId, 3);
+    //     }
+    //   })
+    // );
 
-    const filterDataOfferedRateById = flatten(
-      dataOfferedRateById.filter((data) => data)
-    );
+    // const filterDataOfferedRateById = flatten(
+    //   dataOfferedRateById.filter((data) => data)
+    // );
 
-    const atrTypes = getATRTypesByOfferedRates(filterDataOfferedRateById);
+    // const atrTypes = getATRTypesByOfferedRates(filterDataOfferedRateById);
 
-    setOfferedRate(dataOfferedRate);
-    setOfferedRateById(filterDataOfferedRateById);
-    setATRTypes(atrTypes);
-    setSubscriptionReason(dataSubscriptionReason);
-    setOscumValues(dataOscumValues);
+    // setOfferedRate(dataOfferedRate);
+    // setOfferedRateById(filterDataOfferedRateById);
+    // setATRTypes(atrTypes);
+    // setSubscriptionReason(dataSubscriptionReason);
+    // setOscumValues(dataOscumValues);
   };
 
   useEffect(() => {
-    getOffereds();
+    console.log(router);
+    const { query } = router;
+    getOffereds(query?.rateId);
   }, []);
 
   useEffect(() => {
