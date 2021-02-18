@@ -54,11 +54,12 @@ export default function SubscriptionTemplate() {
     }, {})
   );
 
+  const [offeredName, setOfferedName] = useState("");
   const [hasFormErrors, setHasFormErros] = useState(false);
   const [defaultAddressNewContract, setDefaultAddressNewContract] = useState();
   const [defaultInfoUpdateContract, setDefaultInfoUpdateContract] = useState();
   const [defaultUserNewContract, setDefaultUserNewContract] = useState();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [openModal, setOpenModal] = useState(false);
   const [oppeners, setOppeners] = useState({
     bie: {
@@ -164,6 +165,12 @@ export default function SubscriptionTemplate() {
   };
 
   useEffect(() => {
+    if (offeredName != "") {
+      setLoading(false);
+    }
+  }, [offeredName]);
+
+  useEffect(() => {
     if (!updateContract && !newContract) return;
 
     if (user) {
@@ -257,8 +264,8 @@ export default function SubscriptionTemplate() {
 
           <div className="title" ref={refs[0]}>
             <SCTextXL>
-              Contrata nuestra tarifa **NombreTarifa** y disfruta del mejor
-              precio del mercado
+              {`Contrata nuestra tarifa ${offeredName} y disfruta del mejor
+              precio del mercado`}
             </SCTextXL>
           </div>
 
@@ -337,6 +344,7 @@ export default function SubscriptionTemplate() {
                       setRequiredData={setRequiredData}
                       requiredData={requiredData}
                       setHasFormErros={setHasFormErros}
+                      setOfferedName={setOfferedName}
                     />
                   </div>
                 </div>

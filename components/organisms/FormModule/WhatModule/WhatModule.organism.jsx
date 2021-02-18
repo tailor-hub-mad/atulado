@@ -52,6 +52,7 @@ export const WhatModule = ({
   setHasFormErros,
   setRequiredData,
   requiredData,
+  setOfferedName,
 }) => {
   // Components states
   const [optionSelected, setOptionSelected] = useState(true);
@@ -277,14 +278,10 @@ export const WhatModule = ({
 
     let atrData = null;
 
-    offeredRateById.find((offered) => {
-      atrData = find(
-        offered.data.ContractTypes,
-        (element) => element.TollName == atr
-      );
-
-      return atrData;
-    });
+    atrData = find(
+      offeredRateById.ContractTypes,
+      (element) => element.TollName == atr
+    );
 
     const nPowers = Object.keys(atrData?.Price).filter((element) => {
       return element.includes("PowerP") && atrData.Price[element] > 0;
@@ -298,14 +295,10 @@ export const WhatModule = ({
 
     const newSummaryData = { ...summaryData };
 
-    offeredRateById.find((offered) => {
-      atrData = find(
-        offered.data.ContractTypes,
-        (element) => element.TollName == atr
-      );
-
-      return atrData;
-    });
+    atrData = find(
+      offeredRateById.ContractTypes,
+      (element) => element.TollName == atr
+    );
 
     const nPowers = Object.keys(atrData.Price).filter((element) => {
       return element.includes("PowerP") && atrData.Price[element] > 0;
@@ -603,38 +596,22 @@ export const WhatModule = ({
   };
 
   const getOffereds = async (rateId) => {
-    if (rateId) {
-      const { data: dataOfferedRateById } = await getOfferedRatesById(rateId);
-      console.log(dataOfferedRateById);
-    } else {
-    }
+    const { data: dataOfferedRateById } = await getOfferedRatesById(rateId);
     const { data: dataOfferedRate } = await getOfferedRates(3);
     const { data: dataSubscriptionReason } = await getSubscriptionReason();
     const { data: dataOscumValues } = await getOscumValues();
 
-    // const dataOfferedRateById = await Promise.all(
-    //   dataOfferedRate.map((element) => {
-    //     if (element.RateId == 1) {
-    //       return getOfferedRatesById(element.RateId, 3);
-    //     }
-    //   })
-    // );
+    const { Name, ContractTypes } = dataOfferedRateById;
 
-    // const filterDataOfferedRateById = flatten(
-    //   dataOfferedRateById.filter((data) => data)
-    // );
-
-    // const atrTypes = getATRTypesByOfferedRates(filterDataOfferedRateById);
-
-    // setOfferedRate(dataOfferedRate);
-    // setOfferedRateById(filterDataOfferedRateById);
-    // setATRTypes(atrTypes);
-    // setSubscriptionReason(dataSubscriptionReason);
-    // setOscumValues(dataOscumValues);
+    setOfferedName(Name);
+    setATRTypes(getATRTypesByOfferedRates(ContractTypes));
+    setOfferedRate(dataOfferedRate);
+    setOfferedRateById(dataOfferedRateById);
+    setSubscriptionReason(dataSubscriptionReason);
+    setOscumValues(dataOscumValues);
   };
 
   useEffect(() => {
-    console.log(router);
     const { query } = router;
     getOffereds(query?.rateId);
   }, []);

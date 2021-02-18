@@ -515,12 +515,10 @@ export const handleDataRegistration = async (data) => {
 export const getATRTypesByOfferedRates = (data) => {
   return flatten(
     data.map((offered) => {
-      return offered.Tolls.map((contract) => {
-        return {
-          code: contract.TollId,
-          name: contract.TollName,
-        };
-      });
+      return {
+        code: offered.Toll,
+        name: offered.TollName,
+      };
     })
   );
 };
