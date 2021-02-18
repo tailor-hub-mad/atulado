@@ -197,7 +197,7 @@ export const SCSubscription = styled.section`
     margin-top: ${({ theme }) => theme.spaces.xs.desktopSize};
   }
 
-  @media (min-width: 1800px) {
+  @media (min-width: 1600px) {
     background-size: cover;
   }
 `;
