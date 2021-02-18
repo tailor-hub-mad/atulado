@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { isEmpty, flatten, find } from "lodash";
+import { isEmpty, flatten, find, pickBy } from "lodash";
 import { useFormContext } from "react-hook-form";
 import { useRouter } from "next/router";
 
@@ -446,7 +446,7 @@ export const WhatModule = ({
         ...newSummaryData["contract"],
         powers: newPowerValues,
         fee: {
-          supplyFee: contractPrice?.SupplyFee,
+          supplyFee: newSummaryData["contract"]["fee"]["supplyFee"],
           selfSupplyFee: contractPrice?.SelfSupplyFee,
           paperFee: contractPrice?.PaperFee,
         },
@@ -584,7 +584,7 @@ export const WhatModule = ({
         powers: sipsPowerList,
         atr: dataSipsInformation?.ATR?.Description,
         fee: {
-          supplyFee: contractPrice?.SupplyFee,
+          supplyFee: newSummaryData["contract"]["fee"]["supplyFee"],
           selfSupplyFee: contractPrice?.SelfSupplyFee,
           paperFee: contractPrice?.PaperFee,
         },
@@ -596,6 +596,8 @@ export const WhatModule = ({
   };
 
   const getOffereds = async (rateId) => {
+    const newSummaryData = { ...summaryData };
+
     const { data: dataOfferedRateById } = await getOfferedRatesById(rateId);
     const { data: dataOfferedRate } = await getOfferedRates(3);
     const { data: dataSubscriptionReason } = await getSubscriptionReason();
@@ -603,6 +605,21 @@ export const WhatModule = ({
 
     const { Name, ContractTypes } = dataOfferedRateById;
 
+    const { Price } = ContractTypes[0];
+
+    const filterPrice = pickBy(Price, function (value) {
+      return value > 0;
+    });
+
+    // SUMMARY DATA
+    newSummaryData["contract"] = {
+      ...newSummaryData["contract"],
+      fee: {
+        supplyFee: filterPrice,
+      },
+    };
+
+    setSummaryData(newSummaryData);
     setOfferedName(Name);
     setATRTypes(getATRTypesByOfferedRates(ContractTypes));
     setOfferedRate(dataOfferedRate);
@@ -722,7 +739,7 @@ export const WhatModule = ({
         powers: sipsPowerList,
         atr: newAtr.TollName,
         fee: {
-          supplyFee: contractPrice?.SupplyFee,
+          supplyFee: newSummaryData["contract"]["fee"]["supplyFee"],
           selfSupplyFee: contractPrice?.SelfSupplyFee,
           paperFee: eInvoice || contractPrice?.PaperFee,
         },
@@ -798,7 +815,7 @@ export const WhatModule = ({
         powers: sipsPowerList,
         atr: newAtr.TollName,
         fee: {
-          supplyFee: contractPrice?.SupplyFee,
+          supplyFee: newSummaryData["contract"]["fee"]["supplyFee"],
           selfSupplyFee: contractPrice?.SelfSupplyFee,
           paperFee: EInvoice || contractPrice?.PaperFee,
         },

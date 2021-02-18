@@ -643,12 +643,34 @@ const SummaryContractData = ({ dataContract }) => {
             return acc;
           }, "")}
       </SCTextSLight>
+      <div className="separator" />
       <SCTextSLight color="black">{dataContract?.price}</SCTextSLight>
       {dataContract?.fee && (
         <>
-          <SCTextSLight color="black">
-            Comisión de suministro: {dataContract.fee?.supplyFee} €/mes
-          </SCTextSLight>
+          {dataContract.fee?.supplyFee && (
+            <>
+              {dataContract.fee.supplyFee?.PowerP1 && (
+                <SCTextSLight color="black">{`Consumo punta: ${dataContract.fee.supplyFee.PowerP1} €/kw`}</SCTextSLight>
+              )}
+              {dataContract.fee.supplyFee?.PowerP2 && (
+                <SCTextSLight color="black">{`Consumo valle: ${dataContract.fee.supplyFee.PowerP2} €/kw`}</SCTextSLight>
+              )}
+              {dataContract.fee.supplyFee?.PowerP3 && (
+                <SCTextSLight color="black">{`Consumo super valle: ${dataContract.fee.supplyFee.PowerP3} €/kw`}</SCTextSLight>
+              )}
+              <div className="separator" />
+              {dataContract.fee.supplyFee?.EnergyP1 && (
+                <SCTextSLight color="black">{`Potencia punta: ${dataContract.fee.supplyFee.EnergyP1} €kw día`}</SCTextSLight>
+              )}
+              {dataContract.fee.supplyFee?.EnergyP2 && (
+                <SCTextSLight color="black">{`Potencia valle: ${dataContract.fee.supplyFee.EnergyP2} €kw día`}</SCTextSLight>
+              )}
+              {dataContract.fee.supplyFee.EnergyP3 && (
+                <SCTextSLight color="black">{`Potencia super valle: ${dataContract.fee.supplyFee.EnergyP3} €kw día`}</SCTextSLight>
+              )}
+            </>
+          )}
+
           {dataContract?.selfSupply && (
             <SCTextSLight color="black">
               Comisión de autoconsumo: {dataContract.fee?.selfSupplyFee} €/mes

@@ -414,8 +414,6 @@ const handleAttachmentData = (data) => {
 };
 
 export const handleDataRegistration = async (data) => {
-  console.log(data);
-
   const holderData = handleDataHolder(data);
   const payerData = handleDataPayer(data);
   const supplyData = handleSupply(data);
@@ -499,8 +497,6 @@ export const handleDataRegistration = async (data) => {
     dataRegister["withoutSignaturit"] =
       data?.update?.withoutSignaturit || false;
   }
-
-  console.log(dataRegister);
 
   return dataRegister;
 };
