@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { isEmpty, flatten, find } from "lodash";
+import { isEmpty, flatten, find, pickBy } from "lodash";
 import { useFormContext } from "react-hook-form";
+import { useRouter } from "next/router";
 
 import { SCWhatModule } from "./WhatModule.styled";
 import { SCTextXSLight } from "../../../atoms/Text/TextXS.styled";
@@ -48,6 +49,10 @@ export const WhatModule = ({
   extraDataRegister,
   setExtraDataRegister,
   defaultInfoUpdateContract,
+  setHasFormErros,
+  setRequiredData,
+  requiredData,
+  setOfferedName,
 }) => {
   // Components states
   const [optionSelected, setOptionSelected] = useState(true);
@@ -85,6 +90,7 @@ export const WhatModule = ({
   ////////////////////////////////////////////////////
 
   const { getValues } = useFormContext();
+  const router = useRouter();
 
   ////////////////////////////////////////////////////
   // Buttons Actions
@@ -272,16 +278,12 @@ export const WhatModule = ({
 
     let atrData = null;
 
-    offeredRateById.find((offered) => {
-      atrData = find(
-        offered.ContractTypes,
-        (element) => element.TollName == atr
-      );
+    atrData = find(
+      offeredRateById.ContractTypes,
+      (element) => element.TollName == atr
+    );
 
-      return atrData;
-    });
-
-    const nPowers = Object.keys(atrData.Price).filter((element) => {
+    const nPowers = Object.keys(atrData?.Price).filter((element) => {
       return element.includes("PowerP") && atrData.Price[element] > 0;
     });
 
@@ -293,14 +295,10 @@ export const WhatModule = ({
 
     const newSummaryData = { ...summaryData };
 
-    offeredRateById.find((offered) => {
-      atrData = find(
-        offered.ContractTypes,
-        (element) => element.TollName == atr
-      );
-
-      return atrData;
-    });
+    atrData = find(
+      offeredRateById.ContractTypes,
+      (element) => element.TollName == atr
+    );
 
     const nPowers = Object.keys(atrData.Price).filter((element) => {
       return element.includes("PowerP") && atrData.Price[element] > 0;
@@ -317,6 +315,8 @@ export const WhatModule = ({
     }
 
     if (Object.keys(newPowerValues).length === nPowers.length) {
+      setRequiredData({ ...requiredData, inputs: true });
+
       const { Toll: atr } = atrData;
 
       const powersValue = Object.keys(newPowerValues).map((element) =>
@@ -396,7 +396,26 @@ export const WhatModule = ({
 
       validationValues["SIPSInformation"] = validationSipsInformation;
 
+      setHasFormErros(false);
       const { data } = await validateATRPower(validationValues);
+
+      if (data) {
+        const {
+          MaxPowerAllowed,
+          MaxPowerAllowedBIE,
+          NormalizedPowers,
+          PowerByTensionLevel,
+        } = data;
+
+        if (
+          !MaxPowerAllowed?.Status ||
+          !MaxPowerAllowedBIE?.Status ||
+          !NormalizedPowers?.Status ||
+          !PowerByTensionLevel?.Status
+        ) {
+          setHasFormErros(true);
+        }
+      }
 
       if (type) {
         setATRPowerCurrentErrors(data);
@@ -427,7 +446,7 @@ export const WhatModule = ({
         ...newSummaryData["contract"],
         powers: newPowerValues,
         fee: {
-          supplyFee: contractPrice?.SupplyFee,
+          supplyFee: newSummaryData["contract"]["fee"]["supplyFee"],
           selfSupplyFee: contractPrice?.SelfSupplyFee,
           paperFee: contractPrice?.PaperFee,
         },
@@ -565,7 +584,7 @@ export const WhatModule = ({
         powers: sipsPowerList,
         atr: dataSipsInformation?.ATR?.Description,
         fee: {
-          supplyFee: contractPrice?.SupplyFee,
+          supplyFee: newSummaryData["contract"]["fee"]["supplyFee"],
           selfSupplyFee: contractPrice?.SelfSupplyFee,
           paperFee: contractPrice?.PaperFee,
         },
@@ -576,28 +595,42 @@ export const WhatModule = ({
     } catch (error) {}
   };
 
-  const getOffereds = async () => {
+  const getOffereds = async (rateId) => {
+    const newSummaryData = { ...summaryData };
+
+    const { data: dataOfferedRateById } = await getOfferedRatesById(rateId);
     const { data: dataOfferedRate } = await getOfferedRates(3);
     const { data: dataSubscriptionReason } = await getSubscriptionReason();
     const { data: dataOscumValues } = await getOscumValues();
 
-    const dataOfferedRateById = await Promise.all(
-      dataOfferedRate.map((element) => {
-        return getOfferedRatesById(element.RateId, 3);
-      })
-    );
+    const { Name, ContractTypes } = dataOfferedRateById;
 
-    const atrTypes = getATRTypesByOfferedRates(dataOfferedRate);
+    const { Price } = ContractTypes[0];
 
+    const filterPrice = pickBy(Price, function (value) {
+      return value > 0;
+    });
+
+    // SUMMARY DATA
+    newSummaryData["contract"] = {
+      ...newSummaryData["contract"],
+      fee: {
+        supplyFee: filterPrice,
+      },
+    };
+
+    setSummaryData(newSummaryData);
+    setOfferedName(Name);
+    setATRTypes(getATRTypesByOfferedRates(ContractTypes));
     setOfferedRate(dataOfferedRate);
-    setOfferedRateById(dataOfferedRateById.map(({ data }) => data));
-    setATRTypes(atrTypes);
+    setOfferedRateById(dataOfferedRateById);
     setSubscriptionReason(dataSubscriptionReason);
     setOscumValues(dataOscumValues);
   };
 
   useEffect(() => {
-    getOffereds();
+    const { query } = router;
+    getOffereds(query?.rateId);
   }, []);
 
   useEffect(() => {
@@ -706,7 +739,7 @@ export const WhatModule = ({
         powers: sipsPowerList,
         atr: newAtr.TollName,
         fee: {
-          supplyFee: contractPrice?.SupplyFee,
+          supplyFee: newSummaryData["contract"]["fee"]["supplyFee"],
           selfSupplyFee: contractPrice?.SelfSupplyFee,
           paperFee: eInvoice || contractPrice?.PaperFee,
         },
@@ -782,7 +815,7 @@ export const WhatModule = ({
         powers: sipsPowerList,
         atr: newAtr.TollName,
         fee: {
-          supplyFee: contractPrice?.SupplyFee,
+          supplyFee: newSummaryData["contract"]["fee"]["supplyFee"],
           selfSupplyFee: contractPrice?.SelfSupplyFee,
           paperFee: EInvoice || contractPrice?.PaperFee,
         },
