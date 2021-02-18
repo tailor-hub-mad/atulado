@@ -3,6 +3,7 @@ import styled from "styled-components";
 export const SCSubscription = styled.section`
   background-image: url("/../../image/atulado-background-subscription_image.svg");
   background-repeat: no-repeat;
+  background-size: auto;
 
   .title {
     display: none;
@@ -194,5 +195,9 @@ export const SCSubscription = styled.section`
 
   .separator {
     margin-top: ${({ theme }) => theme.spaces.xs.desktopSize};
+  }
+
+  @media (min-width: 1600px) {
+    background-size: cover;
   }
 `;

@@ -15,10 +15,11 @@ export default function RatesTemplate() {
   const [tab, setTab] = useState(1);
 
   const displayRates = () => {
-    return rates[`state${tab}`]?.map(rate => {
-      return <RateCard {...rate} key={uniqid()} />
-    })
-  }
+    return rates[`state${tab}`]?.map((rate) => {
+      return <RateCard {...rate} key={uniqid()} />;
+    });
+  };
+
   return (
     <SCRates tab={tab}>
       <Navbar
@@ -32,34 +33,34 @@ export default function RatesTemplate() {
         withoutMenu
       />
       <div className="title">
-        <SCTextXL>
-          Los mejores precios sin permanencia
-            </SCTextXL>
+        <SCTextXL>Los mejores precios sin permanencia</SCTextXL>
       </div>
 
       <div className="rates-wrapper">
         <div className="select-buttons">
-          <ChooseButton active={tab === 1} icon={<Bulb color={tab === 1 ? 'white' : '#009845'} />} action={() => setTab(1)}>
-            <SCTextM>
-              MENOS O IGUAL DE 15KW
-            </SCTextM>
+          <ChooseButton
+            active={tab === 1}
+            icon={<Bulb color={tab === 1 ? "white" : "#009845"} />}
+            action={() => setTab(1)}
+          >
+            <SCTextM>MENOS O IGUAL DE 15KW</SCTextM>
             <SCTextXSLight>
               Típica para hogares y pequeños negocios
             </SCTextXSLight>
           </ChooseButton>
-          <ChooseButton active={tab === 2} icon={<DoubleBulb color={tab === 2 ? 'white' : '#009845'} />} action={() => setTab(2)}>
-            <SCTextM>
-              MÁS DE 15KW
-            </SCTextM>
+          <ChooseButton
+            active={tab === 2}
+            icon={<DoubleBulb color={tab === 2 ? "white" : "#009845"} />}
+            action={() => setTab(2)}
+          >
+            <SCTextM>MÁS DE 15KW</SCTextM>
             <SCTextXSLight>
               Medianas y grandes empresas o comunidades
             </SCTextXSLight>
           </ChooseButton>
         </div>
-        <div className="rates-grid">
-          {displayRates()}
-        </div>
+        <div className="rates-grid">{displayRates()}</div>
       </div>
     </SCRates>
-  )
+  );
 }

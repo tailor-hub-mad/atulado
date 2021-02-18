@@ -9,8 +9,6 @@ export const Menu = ({ optionList, setState, action }) => {
 
   useClickOutside(menuRef, () => setState(false));
 
-  console.log(optionList);
-
   return (
     <SCMenu>
       <nav ref={menuRef}>

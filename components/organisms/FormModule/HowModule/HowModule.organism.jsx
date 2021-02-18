@@ -154,11 +154,11 @@ export const HowModule = ({
         <div className="tip-wrapper">
           <Tip type="warning">
             <p>
-              Este servicio tiene un sobrecoste
+              Este servicio tiene un sobrecoste{" "}
               {summaryData["contract"]?.fee?.paperFee &&
-                ` de ${summaryData["contract"]?.fee?.paperFee} €`}
-              . Además, si eliges esta opción, no te podremos enviar factura
-              electrónica.
+                ` de ${summaryData["contract"]?.fee?.paperFee}`}
+              {" €"}. Además, si eliges esta opción, no te podremos enviar
+              factura electrónica.
             </p>
           </Tip>
         </div>

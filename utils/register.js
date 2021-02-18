@@ -413,9 +413,7 @@ const handleAttachmentData = (data) => {
   return attachmentData;
 };
 
-export const handleDataRegistrstion = async (data) => {
-  console.log(data);
-
+export const handleDataRegistration = async (data) => {
   const holderData = handleDataHolder(data);
   const payerData = handleDataPayer(data);
   const supplyData = handleSupply(data);
@@ -500,8 +498,6 @@ export const handleDataRegistrstion = async (data) => {
       data?.update?.withoutSignaturit || false;
   }
 
-  console.log(dataRegister);
-
   return dataRegister;
 };
 
@@ -515,12 +511,10 @@ export const handleDataRegistrstion = async (data) => {
 export const getATRTypesByOfferedRates = (data) => {
   return flatten(
     data.map((offered) => {
-      return offered.Tolls.map((contract) => {
-        return {
-          code: contract.TollId,
-          name: contract.TollName,
-        };
-      });
+      return {
+        code: offered.Toll,
+        name: offered.TollName,
+      };
     })
   );
 };
