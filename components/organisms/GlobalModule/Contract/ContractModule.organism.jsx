@@ -59,6 +59,8 @@ export const ContractModule = ({
     open: false,
   });
 
+  console.log(fullContractData);
+
   const router = useRouter();
 
   const filterAttributes = (element) => {

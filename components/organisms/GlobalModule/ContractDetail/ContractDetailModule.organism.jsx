@@ -352,8 +352,10 @@ export const ContractDetailModule = ({
     setOpenMenu(newOpenMenu);
   };
 
+  console.log(dataContract);
+
   const handleSelectedOption = (_, index) => {
-    const { ContractCode: contractID } = dataContract;
+    const { ContractCode: contractID, RateId } = dataContract;
 
     switch (index) {
       case 0:
@@ -370,11 +372,11 @@ export const ContractDetailModule = ({
         break;
       case 3:
         return router.push(
-          `/alta?refWindow=3&updateContract=true&contractCode=${contractID}`
+          `/alta?rateId=${RateId}&refWindow=3&updateContract=true&contractCode=${contractID}`
         );
       case 4:
         return router.push(
-          `/alta?refWindow=1&updateContract=true&contractCode=${contractID}`
+          `/alta?rateId=${RateId}&refWindow=1&updateContract=true&contractCode=${contractID}`
         );
       default:
         setOpenMenu(false);

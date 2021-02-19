@@ -36,18 +36,20 @@ export const ManagementModule = ({
     }
   };
 
+  console.log(options);
+
   const handleAction = (type) => {
-    const { CUPS, ProcessId, RegistrationId } = options;
+    const { CUPS, ProcessId, RegistrationId, RateId } = options;
 
     switch (type) {
       case 1:
       case 2:
         return router.push(
-          `/alta?refWindow=1&cups=${CUPS}&updateProcess=true&proccessId=${RegistrationId}`
+          `/alta?rateId=${RateId}&refWindow=1&cups=${CUPS}&updateProcess=true&proccessId=${RegistrationId}`
         );
       case 3:
         return router.push(
-          `/alta?refWindow=3&cups=${CUPS}&updateProcess=true&proccessId=${RegistrationId}`
+          `/alta?rateId=${RateId}&refWindow=3&cups=${CUPS}&updateProcess=true&proccessId=${RegistrationId}`
         );
 
       case 5:

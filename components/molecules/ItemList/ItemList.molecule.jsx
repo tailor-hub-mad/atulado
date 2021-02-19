@@ -157,7 +157,7 @@ const withItemList = (Component) => ({
   };
 
   const handleSelectedOption = (_, index) => {
-    const { ContractCode: contractID, Id: invoiceID } = data;
+    const { ContractCode: contractID, Id: invoiceID, RateId } = data;
     switch (index) {
       case 0:
         if (type == "contract") {
@@ -191,11 +191,11 @@ const withItemList = (Component) => ({
         }
       case 3:
         return router.push(
-          `/alta?refWindow=3&updateContract=true&contractCode=${contractID}`
+          `/alta?rateId=${RateId}&refWindow=3&updateContract=true&contractCode=${contractID}`
         );
       case 4:
         return router.push(
-          `/alta?refWindow=1&updateContract=true&contractCode=${contractID}`
+          `/alta?rateId=${RateId}&refWindow=1&updateContract=true&contractCode=${contractID}`
         );
 
       case 5:
@@ -228,15 +228,22 @@ const withItemList = (Component) => ({
       )}
 
       <div className="content-wrapper">
-        {Object.keys(data).map((element, index) => (
-          <div
-            key={index}
-            className="item-content-wrapper"
-            onClick={handleOnClickAction}
-          >
-            <SCTextSLight color="black">{data[element] || "-"}</SCTextSLight>
-          </div>
-        ))}
+        {Object.keys(data).map((element, index) => {
+          if (element != "RateId") {
+            console.log(element);
+            return (
+              <div
+                key={index}
+                className="item-content-wrapper"
+                onClick={handleOnClickAction}
+              >
+                <SCTextSLight color="black">
+                  {data[element] || "-"}
+                </SCTextSLight>
+              </div>
+            );
+          }
+        })}
         <div className="menu-wrapper" ref={iconRef}>
           <ButtonIcon withoutTag action={handleActionMenu} icon={<MenuIcon />}>
             Opciones
