@@ -231,38 +231,38 @@ export const InvoiceModule = ({
     });
   };
 
-  const handleDownloadDoc = async () => {
-    setOpenDownloadScreen({
-      error: false,
-      open: true,
-    });
-    await Promise.all(
-      selectedInvoice.map((element) => {
-        return downloadInvoiceById(
-          user.roleCode,
-          user.UserId,
-          element.contractId,
-          element.invoiceId
-        ).then((response) => {
-          if (response.data) {
-            const buf = Buffer.from(response.data.Content, "base64");
-            FileDownload(buf, response.data.FileName);
+  // const handleDownloadDoc = async () => {
+  //   setOpenDownloadScreen({
+  //     error: false,
+  //     open: true,
+  //   });
+  //   await Promise.all(
+  //     selectedInvoice.map((element) => {
+  //       return downloadInvoiceById(
+  //         user.roleCode,
+  //         user.UserId,
+  //         element.contractId,
+  //         element.invoiceId
+  //       ).then((response) => {
+  //         if (response.data) {
+  //           const buf = Buffer.from(response.data.Content, "base64");
+  //           FileDownload(buf, response.data.FileName);
 
-            setOpenDownloadScreen({
-              error: false,
-              open: false,
-            });
-          }
-          if (response?.error) {
-            setOpenDownloadScreen({
-              error: true,
-              open: true,
-            });
-          }
-        });
-      })
-    );
-  };
+  //           setOpenDownloadScreen({
+  //             error: false,
+  //             open: false,
+  //           });
+  //         }
+  //         if (response?.error) {
+  //           setOpenDownloadScreen({
+  //             error: true,
+  //             open: true,
+  //           });
+  //         }
+  //       });
+  //     })
+  //   );
+  // };
 
   useEffect(() => {
     if (!contracts || !user) return;
@@ -276,9 +276,6 @@ export const InvoiceModule = ({
         ).then((response) => response.data);
       })
     ).then((response) => {
-      // Esta operación es provional. De memento descarto las posibles operaciones que hayan salido
-      // erroneas para poder seguir con el desarrolo. Se debe decidir que hacer que si vienen facturas errroneas.
-
       const newInvoices = response
         .filter(
           (element) => element.Succeeded && element.InvoicesCrMemos.length > 0
@@ -308,13 +305,13 @@ export const InvoiceModule = ({
           <SCTextXL color="primary">Facturas:</SCTextXL>
           <div className="icons-wrapper">
             <Search action={handleSearchInvoice} />
-            <ButtonIcon
+            {/* <ButtonIcon
               action={handleDownloadDoc}
               disabled={isEmpty(selectedInvoice)}
               icon={<DownloadIcon />}
             >
               Descargar factura/s
-            </ButtonIcon>
+            </ButtonIcon> */}
           </div>
         </div>
 
@@ -369,6 +366,7 @@ export const InvoiceModule = ({
                     dataInvoiceFilterTable.map((element, index) => {
                       return (
                         <ItmeInvoiceList
+                          withOutCheck
                           key={index}
                           data={filterAttributes(element)}
                           actionCheck={(value) =>
@@ -386,7 +384,7 @@ export const InvoiceModule = ({
                           }
                           optionsMenu={[
                             "Reclamar factura",
-                            "Descargar factura",
+                            // "Descargar factura",
                             "Descargar detalle factura",
                           ]}
                           setOpenDownloadScreen={setOpenDownloadScreen}

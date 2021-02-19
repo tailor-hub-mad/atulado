@@ -34,7 +34,7 @@ export const SCWhatModule = styled.div`
 
     .new-subscription-wrapper {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 2fr 1fr;
       margin-bottom: ${({ theme }) => theme.spaces.s.desktopSize};
     }
 

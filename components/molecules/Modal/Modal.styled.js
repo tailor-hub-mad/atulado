@@ -24,7 +24,7 @@ export const SCModal = styled.div`
     max-height: ${({ type }) => {
       if (type == "claim") return "90vh";
       if (type == "address") return "60vh";
-      return "50vh";
+      return "60vh";
     }};
 
     overflow-y: auto;

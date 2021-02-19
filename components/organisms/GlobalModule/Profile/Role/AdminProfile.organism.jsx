@@ -1,10 +1,12 @@
 import React from "react";
-import { useRouter } from "next/router";
 
 import { InputText } from "../../../../atoms/Input/Input.atom";
 
-export const AdminProfile = ({ data = {} }) => {
-  const router = useRouter();
+export const AdminProfile = ({ data = {}, setHaveChange }) => {
+  const handleHaveChenge = (value) => {
+    if (value == "") return;
+    setHaveChange(true);
+  };
 
   return (
     <div className="admin-wrapper">
@@ -13,13 +15,10 @@ export const AdminProfile = ({ data = {} }) => {
           label="Email"
           name="admin_email"
           defaultValue={data?.Email}
+          validation={{
+            validate: async (value) => handleHaveChenge(value),
+          }}
         />
-        {/* <InputPassword
-          label="Contraseña"
-          name="admin_password"
-          defaultValue={null}
-          disabled
-        /> */}
       </div>
 
       {/* <div className="admin-email-wrapper">

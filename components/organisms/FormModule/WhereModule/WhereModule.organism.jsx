@@ -24,6 +24,7 @@ export const WhereModule = ({
   setExtraDataRegister,
   defaultAddressNewContract = {},
   defaultInfoUpdateContract = {},
+  setHasFormErros,
 }) => {
   const [cups, setCups] = useState();
   const [cupsValidated, setCupsValidated] = useState(false);
@@ -189,6 +190,7 @@ export const WhereModule = ({
         setExtraDataRegister={setExtraDataRegister}
         cups={cups}
         updateRegistration={!isEmpty(defaultInfoUpdateContract)}
+        setHasFormErros={setHasFormErros}
       />
     </SCWhereModule>
   );

@@ -22,6 +22,7 @@ export const contractFilterAttributeTable = [
   "Payer",
   "CUPS",
   "State",
+  "RateId",
 ];
 
 export const dataYearTemplate = {

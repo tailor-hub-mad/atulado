@@ -132,7 +132,7 @@ export const ContractModule = ({
   };
 
   const handleAddDoc = () => {
-    router.push("/tarifas");
+    router.push("/alta?newContract=true");
   };
 
   const handleDeleteContrat = async (id) => {

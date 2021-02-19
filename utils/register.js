@@ -14,6 +14,7 @@ const handleDataHolder = (data) => {
       company_cif,
       company_name,
       company_email,
+      company_phone,
       company_admin_dni,
       company_admin_name,
       company_admin_surname,
@@ -22,6 +23,7 @@ const handleDataHolder = (data) => {
     holderData["legalNIFCIF"] = company_cif;
     holderData["legalName"] = company_name;
     holderData["email"] = company_email;
+    holderData["phoneNumber"] = company_phone;
     holderData["nif"] = company_admin_dni;
     holderData["name"] = company_admin_name;
 
@@ -77,6 +79,7 @@ const handleDataPayer = (data) => {
         company_payer_cif,
         company_payer_name,
         company_payer_email,
+        company_payer_phone,
         company_payer_admin_dni,
         company_payer_admin_name,
         company_payer_admin_surname,
@@ -85,6 +88,7 @@ const handleDataPayer = (data) => {
       payerData["legalNIFCIF"] = company_payer_cif;
       payerData["legalName"] = company_payer_name;
       payerData["email"] = company_payer_email;
+      payerData["phoneNumber"] = company_payer_phone;
       payerData["nif"] = company_payer_admin_dni;
       payerData["name"] = company_payer_admin_name;
 
@@ -191,10 +195,13 @@ const handleAddress = async (data) => {
     if (startsWith(key, "stair")) {
       addressData["stair"] = data[key];
     }
-    if (startsWith(key, "city")) {
+    if (startsWith(key, "cityId")) {
       addressData["cityId"] = data[key];
     }
-    if (startsWith(key, "province")) {
+    if (startsWith(key, "city_")) {
+      addressData["cityName"] = data[key];
+    }
+    if (startsWith(key, "countyId")) {
       addressData["countyId"] = data[key];
     }
   });
@@ -511,10 +518,12 @@ export const handleDataRegistration = async (data) => {
 export const getATRTypesByOfferedRates = (data) => {
   return flatten(
     data.map((offered) => {
-      return {
-        code: offered.Toll,
-        name: offered.TollName,
-      };
+      return offered.data.ContractTypes.map((contract) => {
+        return {
+          code: contract.Toll,
+          name: contract.TollName,
+        };
+      });
     })
   );
 };

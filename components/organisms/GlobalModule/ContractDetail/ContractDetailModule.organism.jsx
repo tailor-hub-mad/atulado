@@ -551,6 +551,7 @@ export const ContractDetailModule = ({
             setOpenUnsubscriptionModal({ open: false, contractId: null })
           }
           action={() => handleDeleteContrat(openUnsubscriptionModal.contractId)}
+          message="¿Estás seguro que quieres dar de baja el contrato?"
         />
       )}
       <SCContractDetailModule>

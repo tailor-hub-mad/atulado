@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { isEmpty, flatten, find, pickBy } from "lodash";
+import { isEmpty, flatten, find } from "lodash";
 import { useFormContext } from "react-hook-form";
-import { useRouter } from "next/router";
 
 import { SCWhatModule } from "./WhatModule.styled";
 import { SCTextXSLight } from "../../../atoms/Text/TextXS.styled";
@@ -52,7 +51,6 @@ export const WhatModule = ({
   setHasFormErros,
   setRequiredData,
   requiredData,
-  setOfferedName,
 }) => {
   // Components states
   const [optionSelected, setOptionSelected] = useState(true);
@@ -90,7 +88,6 @@ export const WhatModule = ({
   ////////////////////////////////////////////////////
 
   const { getValues } = useFormContext();
-  const router = useRouter();
 
   ////////////////////////////////////////////////////
   // Buttons Actions
@@ -278,10 +275,14 @@ export const WhatModule = ({
 
     let atrData = null;
 
-    atrData = find(
-      offeredRateById.ContractTypes,
-      (element) => element.TollName == atr
-    );
+    offeredRateById.find((offered) => {
+      atrData = find(
+        offered.data.ContractTypes,
+        (element) => element.TollName == atr
+      );
+
+      return atrData;
+    });
 
     const nPowers = Object.keys(atrData?.Price).filter((element) => {
       return element.includes("PowerP") && atrData.Price[element] > 0;
@@ -295,10 +296,14 @@ export const WhatModule = ({
 
     const newSummaryData = { ...summaryData };
 
-    atrData = find(
-      offeredRateById.ContractTypes,
-      (element) => element.TollName == atr
-    );
+    offeredRateById.find((offered) => {
+      atrData = find(
+        offered.data.ContractTypes,
+        (element) => element.TollName == atr
+      );
+
+      return atrData;
+    });
 
     const nPowers = Object.keys(atrData.Price).filter((element) => {
       return element.includes("PowerP") && atrData.Price[element] > 0;
@@ -446,7 +451,7 @@ export const WhatModule = ({
         ...newSummaryData["contract"],
         powers: newPowerValues,
         fee: {
-          supplyFee: newSummaryData["contract"]["fee"]["supplyFee"],
+          supplyFee: contractPrice?.SupplyFee,
           selfSupplyFee: contractPrice?.SelfSupplyFee,
           paperFee: contractPrice?.PaperFee,
         },
@@ -584,7 +589,7 @@ export const WhatModule = ({
         powers: sipsPowerList,
         atr: dataSipsInformation?.ATR?.Description,
         fee: {
-          supplyFee: newSummaryData["contract"]["fee"]["supplyFee"],
+          supplyFee: contractPrice?.SupplyFee,
           selfSupplyFee: contractPrice?.SelfSupplyFee,
           paperFee: contractPrice?.PaperFee,
         },
@@ -595,42 +600,34 @@ export const WhatModule = ({
     } catch (error) {}
   };
 
-  const getOffereds = async (rateId) => {
-    const newSummaryData = { ...summaryData };
-
-    const { data: dataOfferedRateById } = await getOfferedRatesById(rateId);
+  const getOffereds = async () => {
     const { data: dataOfferedRate } = await getOfferedRates(3);
     const { data: dataSubscriptionReason } = await getSubscriptionReason();
     const { data: dataOscumValues } = await getOscumValues();
 
-    const { Name, ContractTypes } = dataOfferedRateById;
+    const dataOfferedRateById = await Promise.all(
+      dataOfferedRate.map((element) => {
+        if (element.RateId == 1) {
+          return getOfferedRatesById(element.RateId, 3);
+        }
+      })
+    );
 
-    const { Price } = ContractTypes[0];
+    const filterDataOfferedRateById = flatten(
+      dataOfferedRateById.filter((data) => data)
+    );
 
-    const filterPrice = pickBy(Price, function (value) {
-      return value > 0;
-    });
+    const atrTypes = getATRTypesByOfferedRates(filterDataOfferedRateById);
 
-    // SUMMARY DATA
-    newSummaryData["contract"] = {
-      ...newSummaryData["contract"],
-      fee: {
-        supplyFee: filterPrice,
-      },
-    };
-
-    setSummaryData(newSummaryData);
-    setOfferedName(Name);
-    setATRTypes(getATRTypesByOfferedRates(ContractTypes));
     setOfferedRate(dataOfferedRate);
-    setOfferedRateById(dataOfferedRateById);
+    setOfferedRateById(filterDataOfferedRateById);
+    setATRTypes(atrTypes);
     setSubscriptionReason(dataSubscriptionReason);
     setOscumValues(dataOscumValues);
   };
 
   useEffect(() => {
-    const { query } = router;
-    getOffereds(query?.rateId);
+    getOffereds();
   }, []);
 
   useEffect(() => {
@@ -739,7 +736,7 @@ export const WhatModule = ({
         powers: sipsPowerList,
         atr: newAtr.TollName,
         fee: {
-          supplyFee: newSummaryData["contract"]["fee"]["supplyFee"],
+          supplyFee: contractPrice?.SupplyFee,
           selfSupplyFee: contractPrice?.SelfSupplyFee,
           paperFee: eInvoice || contractPrice?.PaperFee,
         },
@@ -815,7 +812,7 @@ export const WhatModule = ({
         powers: sipsPowerList,
         atr: newAtr.TollName,
         fee: {
-          supplyFee: newSummaryData["contract"]["fee"]["supplyFee"],
+          supplyFee: contractPrice?.SupplyFee,
           selfSupplyFee: contractPrice?.SelfSupplyFee,
           paperFee: EInvoice || contractPrice?.PaperFee,
         },
