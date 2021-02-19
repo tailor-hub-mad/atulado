@@ -102,6 +102,8 @@ export const ProtectRoute = ({ children }) => {
       return <LoadingScreen />;
     } else if (!router.pathname?.includes("/tarifas")) {
       if (!isAuthenticated && router.pathname == "/global") {
+        Cookies.remove("token");
+        Cookies.remove("roleCode");
         router.push("/login-cliente");
         return <LoadingScreen />;
       }
@@ -110,6 +112,8 @@ export const ProtectRoute = ({ children }) => {
         !router.pathname?.includes("/login") &&
         !router.pathname == "/pass-enviar-recuperar"
       ) {
+        Cookies.remove("token");
+        Cookies.remove("roleCode");
         router.push("/login-cliente");
         return <LoadingScreen />;
       }

@@ -21,7 +21,7 @@ import BackwardIcon from "../../../../public/icon/backward_icon.svg";
 import AddDocIcon from "../../../../public/icon/add-doc_icon.svg";
 
 import { getAccount } from "../../../../lib/api/account";
-import { getProcess } from "../../../../lib/api/process";
+import { getProcessByClient } from "../../../../lib/api/process";
 import { getContractsByAccount } from "../../../../lib/api/contract";
 import { getInvoicesByContract } from "../../../../lib/api/invoice";
 
@@ -204,7 +204,7 @@ export const ClientDetailModule = ({
   };
 
   const handleAddDoc = () => {
-    router.push("/tarifas");
+    router.push("/alta?newContract=true");
   };
 
   const handleOnClikContract = (contractId) => {
@@ -333,7 +333,7 @@ export const ClientDetailModule = ({
     }
 
     async function getProcessById(id) {
-      const { data } = await getProcess(user.roleCode, id);
+      const { data } = await getProcessByClient(user.roleCode, id);
 
       setDataManagement(data);
     }

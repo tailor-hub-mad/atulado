@@ -10,6 +10,7 @@ import { PLACEHOLDER_FORM_CUP } from "../../../../utils/constants";
 import { isEmpty, isEqual } from "lodash";
 import {
   validateNIF,
+  validatePayerNIF,
   validateEmail,
   validateFriendCode,
 } from "../../../../lib/api/validators";
@@ -21,6 +22,7 @@ export const DataModule = ({
   setExtraDataRegister,
   defaultUserNewContract,
   defaultInfoUpdateContract,
+  setHasFormErros,
 }) => {
   const [defaultAddress, setDefaultAddress] = useState({
     fiscal: null,
@@ -49,6 +51,7 @@ export const DataModule = ({
     company_payer_cif: "",
     company_payer_name: "",
     company_payer_email: "",
+    company_payer_phone: "",
     company_payer_admin_dni: "",
     company_payer_admin_name: "",
     company_payer_admin_surname: "",
@@ -66,6 +69,7 @@ export const DataModule = ({
     company_cif: "",
     company_name: "",
     company_email: "",
+    company_phone: "",
     company_admin_dni: "",
     company_admin_name: "",
     company_admin_surname: "",
@@ -230,6 +234,7 @@ export const DataModule = ({
         company_cif: LegalNIFCIF.toUpperCase(),
         company_name: Name,
         company_email: Email,
+        company_phone: PhoneNumber,
         company_admin_dni: NIF.toUpperCase(),
         company_admin_name: LegalName,
         company_admin_surname: `${LegalLastName} ${LegalSecondLastName}`,
@@ -373,6 +378,7 @@ export const DataModule = ({
           company_payer_cif: LegalNIFCIF.toUpperCase(),
           company_payer_name: LegalName,
           company_payer_email: Email,
+          company_payer_phone: PhoneNumber,
           company_payer_admin_dni: NIF.toUpperCase(),
           company_payer_admin_name: Name,
           company_payer_admin_surname: `${LastName} ${SecondLastName}`,
@@ -421,6 +427,7 @@ export const DataModule = ({
         company_cif: LegalNIFCIF.toUpperCase(),
         company_name: Name,
         company_email: Email,
+        company_phone: PhoneNumber,
         company_admin_dni: NIF.toUpperCase(),
         company_admin_name: LegalName,
         company_admin_surname: `${LegalLastName} ${LegalSecondLastName}`,
@@ -503,12 +510,26 @@ export const DataModule = ({
               <InputText
                 label="Email empresa"
                 name="company_email"
+                apiValidation={validateEmail}
                 validation={{
                   required: true,
                   validate: async (value) =>
                     handleDataClient("company_email", value),
                 }}
                 defaultValue={defaultUser?.company_email}
+                setHasFormErros={setHasFormErros}
+              />
+            </div>
+            <div className="wrapper-2column">
+              <InputText
+                label="Teléfono empresa"
+                name="company_phone"
+                validation={{
+                  required: true,
+                  validate: async (value) =>
+                    handleDataClient("company_phone", value),
+                }}
+                defaultValue={defaultUser?.company_phone}
               />
             </div>
             <div className="wrapper-2column">
@@ -522,6 +543,7 @@ export const DataModule = ({
                 }}
                 apiValidation={validateNIF}
                 defaultValue={defaultUser?.company_admin_dni}
+                setHasFormErros={setHasFormErros}
               />
             </div>
             <div className="wrapper-2column">
@@ -561,6 +583,7 @@ export const DataModule = ({
                 }}
                 apiValidation={validateNIF}
                 defaultValue={defaultUser?.client_dni}
+                setHasFormErros={setHasFormErros}
               />
             </div>
             <div className="wrapper-2column">
@@ -598,6 +621,7 @@ export const DataModule = ({
                 }}
                 apiValidation={validateEmail}
                 defaultValue={defaultUser?.client_email}
+                setHasFormErros={setHasFormErros}
               />
 
               <InputText
@@ -670,12 +694,26 @@ export const DataModule = ({
                 <InputText
                   label="Email empresa"
                   name="company_payer_email"
+                  apiValidation={validateEmail}
                   validation={{
                     required: true,
                     validate: async (value) =>
                       handleDataPayer("company_payer_email", value),
                   }}
                   defaultValue={defaultPayer?.company_payer_email}
+                  setHasFormErros={setHasFormErros}
+                />
+              </div>
+              <div className="wrapper-2column">
+                <InputText
+                  label="Teléfono empresa"
+                  name="company_payer_phone"
+                  validation={{
+                    required: true,
+                    validate: async (value) =>
+                      handleDataPayer("company_payer_phone", value),
+                  }}
+                  defaultValue={defaultPayer?.company_payer_phone}
                 />
               </div>
               <div className="wrapper-2column">
@@ -687,8 +725,9 @@ export const DataModule = ({
                     validate: async (value) =>
                       handleDataPayer("company_payer_admin_dni", value),
                   }}
-                  apiValidation={validateNIF}
+                  apiValidation={validatePayerNIF}
                   defaultValue={defaultPayer?.company_payer_admin_dni}
+                  setHasFormErros={setHasFormErros}
                 />
               </div>
               <div className="wrapper-2column">
@@ -726,8 +765,9 @@ export const DataModule = ({
                     validate: async (value) =>
                       handleDataPayer("client_payer_dni", value),
                   }}
-                  apiValidation={validateNIF}
+                  apiValidation={validatePayerNIF}
                   defaultValue={defaultPayer?.client_payer_dni}
+                  setHasFormErros={setHasFormErros}
                 />
               </div>
               <div className="wrapper-2column">
@@ -765,6 +805,7 @@ export const DataModule = ({
                   }}
                   apiValidation={validateEmail}
                   defaultValue={defaultPayer?.client_payer_email}
+                  setHasFormErros={setHasFormErros}
                 />
                 <InputText
                   label="Teléfono"
@@ -815,6 +856,7 @@ export const DataModule = ({
             extraDataRegister={extraDataRegister}
             setExtraDataRegister={setExtraDataRegister}
             defaultAddress={defaultAddress?.fiscal}
+            setHasFormErros={setHasFormErros}
           />
         )}
       </div>
@@ -851,6 +893,7 @@ export const DataModule = ({
             extraDataRegister={extraDataRegister}
             setExtraDataRegister={setExtraDataRegister}
             defaultAddress={defaultAddress?.delivery}
+            setHasFormErros={setHasFormErros}
           />
         )}
       </div>
@@ -896,6 +939,7 @@ export const DataModule = ({
                     ? defaultInfoUpdateContract?.contract?.PromotionalCode
                     : ""
                 }
+                setHasFormErros={setHasFormErros}
               />
             )}
           </div>

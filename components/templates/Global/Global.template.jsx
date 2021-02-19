@@ -78,7 +78,13 @@ export default function GlobalTemplate() {
           const { addUser, clientDetail, clientData } = optionsModule;
 
           if (addUser) {
-            return <AddUserModule clientData={clientData} user={user} />;
+            return (
+              <AddUserModule
+                clientData={clientData}
+                user={user}
+                optionsList={handleActionOptionList}
+              />
+            );
           }
           if (clientDetail) {
             return (
@@ -148,6 +154,7 @@ export default function GlobalTemplate() {
         }
 
       case "home":
+        console.log(optionsModule);
         if (isEmpty(optionsModule)) {
           return (
             <HomeModule

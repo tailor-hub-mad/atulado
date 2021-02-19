@@ -352,10 +352,8 @@ export const ContractDetailModule = ({
     setOpenMenu(newOpenMenu);
   };
 
-  console.log(dataContract);
-
   const handleSelectedOption = (_, index) => {
-    const { ContractCode: contractID, RateId } = dataContract;
+    const { ContractCode: contractID } = dataContract;
 
     switch (index) {
       case 0:
@@ -372,11 +370,11 @@ export const ContractDetailModule = ({
         break;
       case 3:
         return router.push(
-          `/alta?rateId=${RateId}&refWindow=3&updateContract=true&contractCode=${contractID}`
+          `/alta?refWindow=3&updateContract=true&contractCode=${contractID}`
         );
       case 4:
         return router.push(
-          `/alta?rateId=${RateId}&refWindow=1&updateContract=true&contractCode=${contractID}`
+          `/alta?refWindow=1&updateContract=true&contractCode=${contractID}`
         );
       default:
         setOpenMenu(false);
@@ -553,6 +551,7 @@ export const ContractDetailModule = ({
             setOpenUnsubscriptionModal({ open: false, contractId: null })
           }
           action={() => handleDeleteContrat(openUnsubscriptionModal.contractId)}
+          message="¿Estás seguro que quieres dar de baja el contrato?"
         />
       )}
       <SCContractDetailModule>

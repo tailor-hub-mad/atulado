@@ -176,7 +176,7 @@ const withItemList = (Component) => ({
           break;
         } else {
           setOpenMenu(false);
-          downloadInvoice(contractID, invoiceID);
+          downloadDeatilInvoice(contractID, invoiceID);
           break;
         }
       case 2:
@@ -185,9 +185,9 @@ const withItemList = (Component) => ({
           setOpenUnsubscriptionModal({ open: true, contractId: contractID });
           break;
         } else {
-          setOpenMenu(false);
-          downloadDeatilInvoice(contractID, invoiceID);
-          break;
+          // setOpenMenu(false);
+          // downloadInvoice(contractID, invoiceID);
+          // break;
         }
       case 3:
         return router.push(

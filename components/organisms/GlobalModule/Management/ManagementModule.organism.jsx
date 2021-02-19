@@ -30,26 +30,20 @@ export const ManagementModule = ({
     const { error } = sendReminder(user.roleCode, processId);
 
     setOpenInfoModal({ open: true, message: "Se ha enviado el recordatorio." });
-
-    if (error) {
-      // Controlar error
-    }
   };
 
-  console.log(options);
-
   const handleAction = (type) => {
-    const { CUPS, ProcessId, RegistrationId, RateId } = options;
+    const { CUPS, ProcessId, RegistrationId } = options;
 
     switch (type) {
       case 1:
       case 2:
         return router.push(
-          `/alta?rateId=${RateId}&refWindow=1&cups=${CUPS}&updateProcess=true&proccessId=${RegistrationId}`
+          `/alta?refWindow=1&cups=${CUPS}&updateProcess=true&proccessId=${RegistrationId}`
         );
       case 3:
         return router.push(
-          `/alta?rateId=${RateId}&refWindow=3&cups=${CUPS}&updateProcess=true&proccessId=${RegistrationId}`
+          `/alta?refWindow=3&cups=${CUPS}&updateProcess=true&proccessId=${RegistrationId}`
         );
 
       case 5:
@@ -63,7 +57,6 @@ export const ManagementModule = ({
   };
 
   const handleText = (type) => {
-    const { ContractCode } = options;
     switch (type) {
       case 1:
       case 2:
@@ -72,7 +65,7 @@ export const ManagementModule = ({
 
       case 5:
       case 6:
-        return ContractCode ? "Enviar recordatorio" : null;
+        return "Enviar recordatorio";
 
       default:
         return null;
