@@ -118,7 +118,7 @@ export const SCContractDetailModule = styled.div`
 
   .type-data-wrapper {
     display: grid;
-    grid-template-columns: 0.5fr 0.5fr 1fr 0.5fr 0.5fr 1fr 0.5fr 0.5fr 0.4fr;
+    grid-template-columns: 0.4fr 0.5fr 1fr 0.5fr 0.5fr 1fr 0.5fr 0.5fr 0.4fr;
     padding-left: 46px;
     padding-right: 16px;
     column-gap: 32px;

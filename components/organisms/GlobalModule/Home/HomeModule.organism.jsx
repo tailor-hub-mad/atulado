@@ -279,7 +279,7 @@ export const HomeModule = ({ contracts, user, optionsList }) => {
       });
     }
 
-    getProcess(user.roleCode, user.UserId).then(({ data }) => {
+    getProcess(user.roleCode).then(({ data }) => {
       setDataManagement(data);
       setFullDataManagement(data);
       setLoadingSpinner(false);
@@ -458,7 +458,7 @@ const FriendCodeModal = ({ setFriendCodeModal, contracts = [], user }) => {
   return (
     <Modal closeAction={() => setFriendCodeModal(false)} type="claim">
       <div className="friend-code-modal-wrapper">
-        <div className="image-faces-modal-wrapper">
+        <div className="image-modal-wrapper">
           <FacesImage />
         </div>
         <div className="form-modal-wrapper">

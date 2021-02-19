@@ -7,7 +7,7 @@ import { Modal } from "../../../../molecules/Modal/Modal.molecule";
 import Button from "../../../../atoms/Button/Button.atom";
 import { AddressModule } from "../../../FormModule/AddressModule/AddressModule.organism";
 
-import { getAddressCode } from "../../../../../lib/api/address";
+import { getMunicipalitiesByPostalCode } from "../../../../../lib/api/address";
 
 export const AddressModal = ({ closeAction, action }) => {
   const methods = useForm({
@@ -25,14 +25,11 @@ export const AddressModal = ({ closeAction, action }) => {
       stair_general,
     } = dataInputs;
 
-    const dataAddress = {
-      postal_code: postal_code_general,
-      city: city_general,
-      name_road: name_road_general,
-      number_road: number_road_general,
-    };
+    const {
+      data: municipalitiesByPostalCodeData,
+    } = await getMunicipalitiesByPostalCode(postal_code_general);
 
-    const { data } = await getAddressCode(dataAddress);
+    const { CountyCode, Municipalities } = municipalitiesByPostalCodeData;
 
     const address = {
       street: name_road_general,
@@ -41,9 +38,9 @@ export const AddressModal = ({ closeAction, action }) => {
       postalCode: postal_code_general,
       floor: floor_general,
       stair: stair_general,
-      cityId: data.municipalityINECode,
+      cityId: Municipalities[0].MunicipalityCode,
       cityName: city_general,
-      countyId: data.countyCode,
+      countyId: CountyCode,
     };
 
     action(address);
