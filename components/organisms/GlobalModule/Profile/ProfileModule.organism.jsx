@@ -12,15 +12,19 @@ import { AdminProfile } from "./Role/AdminProfile.organism";
 import { ClientProfile } from "./Role/ClientProfile.organism";
 import { CompanyProfile } from "./Role/CompanyProfile.organism";
 import { ManagerProfile } from "./Role/ManagerProfile.organism";
+import { UnsubscriptionModal } from "../../Modal/ContractModal/UnsubscriptionModal/UnsubscriptionModal.organism";
 
 import { deleteAccount, updateAccount } from "../../../../lib/api/account";
 
+import { useAuth } from "../../../../context";
+
 export const ProfileModule = ({ user, setOpenInfoModal, openInfoModal }) => {
   const [haveChange, setHaveChange] = useState(false);
-  const [isConfirmation, setIsConfirmation] = useState(false);
   const [errorMessage, setErrorMessage] = useState();
+  const [openUnsubscriptionModal, setOpenUnsubscriptionModal] = useState(false);
 
   const router = useRouter();
+  const { logout } = useAuth();
 
   const methods = useForm({
     mode: "onBlur",
@@ -59,7 +63,7 @@ export const ProfileModule = ({ user, setOpenInfoModal, openInfoModal }) => {
       const newOpenInfoModal = { ...openInfoModal };
       newOpenInfoModal["open"] = true;
       newOpenInfoModal["message"] =
-        "Hemos recibido tu solicitud de actualzación";
+        "Hemos recibido tu solicitud de actualización.";
       setOpenInfoModal(newOpenInfoModal);
     }
 
@@ -71,72 +75,77 @@ export const ProfileModule = ({ user, setOpenInfoModal, openInfoModal }) => {
   };
 
   const handleDeleteUser = async () => {
-    if (!isConfirmation) {
-      return setIsConfirmation(true);
-    }
-
-    setIsConfirmation(false);
-
-    const { error } = await deleteAccount(user.roleCode, user.UserId);
-
-    // error -> manejo de errores
-
+    await deleteAccount(user.roleCode, user.UserId);
+    logout();
     router.push("/login-cliente");
   };
 
   return (
-    <SCProfileModule>
-      <div className="data-wrapper">
-        <SCTextXL color="primary">Mis Datos:</SCTextXL>
+    <>
+      {openUnsubscriptionModal && (
+        <UnsubscriptionModal
+          closeAction={() => setOpenUnsubscriptionModal(false)}
+          action={() => handleDeleteUser()}
+          message="¿Estás seguro que quieres dar de baja tu cuenta de usuario?"
+        />
+      )}
+      <SCProfileModule>
+        <div className="data-wrapper">
+          <SCTextXL color="primary">Mis Datos:</SCTextXL>
 
-        <FormProvider {...methods}>
-          <form onSubmit={methods.handleSubmit(handleUpdateAccount)}>
-            {user.roleCode == 1 ? (
-              <AdminProfile data={user} />
-            ) : user.roleCode == 2 ? (
-              <ManagerProfile data={user} />
-            ) : (
-              <>
-                {user?.LegalName != "" ? (
-                  <CompanyProfile data={user} setHaveChange={setHaveChange} />
-                ) : (
-                  <ClientProfile data={user} setHaveChange={setHaveChange} />
-                )}
-              </>
-            )}
+          <FormProvider {...methods}>
+            <form onSubmit={methods.handleSubmit(handleUpdateAccount)}>
+              {user.roleCode == 1 ? (
+                <AdminProfile data={user} setHaveChange={setHaveChange} />
+              ) : user.roleCode == 2 ? (
+                <ManagerProfile data={user} />
+              ) : (
+                <>
+                  {user?.LegalName != "" ? (
+                    <CompanyProfile data={user} setHaveChange={setHaveChange} />
+                  ) : (
+                    <ClientProfile data={user} setHaveChange={setHaveChange} />
+                  )}
+                </>
+              )}
 
-            <div className="action-wrapper">
-              <div>
-                <Button type="submit" disabled={!haveChange}>
-                  Guardar Cambios
-                </Button>
+              <div className="action-wrapper">
+                <div>
+                  <Button type="submit" disabled={!haveChange}>
+                    Guardar cambios
+                  </Button>
 
-                {errorMessage && (
-                  <SCTextSLight className="info-message" color="red">
-                    {errorMessage}
-                  </SCTextSLight>
-                )}
-              </div>
+                  {errorMessage && (
+                    <SCTextSLight className="info-message" color="red">
+                      {errorMessage}
+                    </SCTextSLight>
+                  )}
+                </div>
 
-              <div className="selected-wrapper">
-                <ButtonSelect
-                  color="primary"
-                  action={() => router.push("/pass-cambiar")}
-                >
-                  Cambiar contraseña
-                </ButtonSelect>
-
-                {user.roleCode == 3 && (
-                  <ButtonSelect color="red" action={() => handleDeleteUser()}>
-                    Dar de baja
+                <div className="selected-wrapper">
+                  <ButtonSelect
+                    color="primary"
+                    action={() => router.push("/pass-cambiar")}
+                  >
+                    Cambiar contraseña
                   </ButtonSelect>
-                )}
+
+                  {user.roleCode == 3 && (
+                    <ButtonSelect
+                      checked={openUnsubscriptionModal}
+                      color="red"
+                      action={() => setOpenUnsubscriptionModal(true)}
+                    >
+                      Dar de baja
+                    </ButtonSelect>
+                  )}
+                </div>
               </div>
-            </div>
-          </form>
-        </FormProvider>
-      </div>
-    </SCProfileModule>
+            </form>
+          </FormProvider>
+        </div>
+      </SCProfileModule>
+    </>
   );
 };
 

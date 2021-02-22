@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { accountLogin, getAccount, getAccountMe } from "../../lib/api/account";
 import { GENERAL_ERROR } from "../../utils/constants";
 import LoadingScreen from "../../components/molecules/LoadingScreen/LoadingScreen.molecule";
+import { isEmpty } from "lodash";
 
 const AuthContext = createContext({});
 
@@ -96,8 +97,13 @@ export const ProtectRoute = ({ children }) => {
 
   if (isLoading) return <LoadingScreen />;
   else {
-    if (!router.pathname?.includes("/alta")) {
+    if (router.pathname === "/alta" && isEmpty(router.query)) {
+      router.push("/tarifas");
+      return <LoadingScreen />;
+    } else if (!router.pathname?.includes("/tarifas")) {
       if (!isAuthenticated && router.pathname == "/global") {
+        Cookies.remove("token");
+        Cookies.remove("roleCode");
         router.push("/login-cliente");
         return <LoadingScreen />;
       }
@@ -106,6 +112,8 @@ export const ProtectRoute = ({ children }) => {
         !router.pathname?.includes("/login") &&
         !router.pathname == "/pass-enviar-recuperar"
       ) {
+        Cookies.remove("token");
+        Cookies.remove("roleCode");
         router.push("/login-cliente");
         return <LoadingScreen />;
       }

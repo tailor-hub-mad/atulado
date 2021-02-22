@@ -2,8 +2,8 @@ import { pxToRem } from "./utils/functions";
 
 const theme = {
   color: {
-    primary: "#0A75D0",
-    ligthPrimary: "#F0FBFF",
+    primary: "#009845",
+    ligthPrimary: "#F6FFFA",
     yellow: "#FBB040",
     white: "white",
     black: "black",

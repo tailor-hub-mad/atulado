@@ -16,15 +16,15 @@ export const SCModal = styled.div`
 
   background: linear-gradient(
     0deg,
-    rgba(10, 117, 208, 0.7),
-    rgba(10, 117, 208, 0.7)
+    rgba(161, 215, 192, 0.7),
+    rgba(161, 215, 192, 0.7)
   );
 
   .modal-wrapper {
     max-height: ${({ type }) => {
       if (type == "claim") return "90vh";
       if (type == "address") return "60vh";
-      return "50vh";
+      return "60vh";
     }};
 
     overflow-y: auto;
@@ -39,11 +39,9 @@ export const SCModal = styled.div`
       position: relative;
       float: right;
 
-      cursor: pointer;
+      stroke: ${({ theme }) => theme.color.black};
 
-      svg {
-        stroke: ${({ theme }) => theme.color.black};
-      }
+      cursor: pointer;
     }
 
     .info-wrapper {

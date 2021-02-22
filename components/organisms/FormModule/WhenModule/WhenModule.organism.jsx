@@ -4,7 +4,7 @@ import { SCWhenModule } from "./WhenModule.styled";
 import { InputText } from "../../../atoms/Input/Input.atom";
 import { ButtonRound } from "../../../atoms/ButtonRound/ButtonRound.atom";
 
-export const WhenModule = ({ defaultInfoUpdateContract }) => {
+export const WhenModule = () => {
   const [optionSelected, setOptionSelected] = useState(true);
 
   const handleRoundButton = (name, value) => {};

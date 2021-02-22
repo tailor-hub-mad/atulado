@@ -1,20 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
+import { isEmpty } from "lodash";
 
 import { SCAddressModule } from "./AddressModule.styled";
 import { SCTextXSLight } from "../../../atoms/Text/TextXS.styled";
 import { InputText } from "../../../atoms/Input/Input.atom";
 import { SingleDropdown } from "../../../molecules/Dropdown/Single/SingleDropdown.molecule";
-import { validateAddress } from "../../../../lib/api/validators";
-import { getAddressCode } from "../../../../lib/api/address";
-import { isEmpty } from "lodash";
-import { GENERAL_ERROR } from "../../../../utils/constants";
-import roadsType from "../../../../utils/data/roadTypes";
 
 import {
   getMunicipalitiesByPostalCode,
   getProvinceCode,
 } from "../../../../lib/api/address";
+import { validateAddress } from "../../../../lib/api/validators";
+
+import roadsType from "../../../../utils/data/roadTypes";
 
 export const AddressModule = ({
   inputsId = {
@@ -36,18 +35,23 @@ export const AddressModule = ({
   setExtraDataRegister,
   defaultAddress = {},
   cups,
-  updateRegistration = true,
+  setHasFormErros,
 }) => {
+  // General
+  const [provinceData, setProvinceData] = useState();
   const [addressError, setAddressError] = useState("");
+  const [defaultDataAddress, setDefaultDataAddress] = useState({});
   const [detectedAddress, setDetectedAddress] = useState({
     cities: [],
     province: null,
   });
-  const [notRequiredAddress, setNotRequiredAddress] = useState({});
-  const [defaultDataAddress, setDefaultDataAddress] = useState({});
-  const [addressInfo, setAddressInfo] = useState();
 
-  const { setValue } = useFormContext();
+  // Address
+  const [addressInfo, setAddressInfo] = useState();
+  const [municipalitiesCode, setMunicipalitiesCode] = useState();
+  const [notRequiredAddress, setNotRequiredAddress] = useState({});
+
+  const { getValues, clearErrors, setValue } = useFormContext();
 
   const handleNotRequiredAddress = (name, value) => {
     const newNotRequiredAddress = { ...notRequiredAddress };
@@ -63,114 +67,139 @@ export const AddressModule = ({
     setExtraDataRegister(newExtraDataRegister);
   };
 
-  const handleValidationAddress = async (name, value) => {
+  const handleMunicipalitiesList = (name, value) => {
     const newAddressInfo = { ...addressInfo };
     const newExtraDataRegister = { ...extraDataRegister };
 
-    const requiredAddress = {};
+    const { MunicipalityCode } = municipalitiesCode.find((element) => {
+      return element.MunicipalityName == value;
+    });
 
-    if (value && name == inputsId.postal_code) {
-      if (value.length != 5 || value == "") {
-        setDefaultDataAddress({});
-        setAddressInfo();
+    newAddressInfo[name] = value;
 
-        setValue(inputsId.name_road, "");
-        setValue(inputsId.number_road, "");
-        setValue(inputsId.door, "");
-        setValue(inputsId.doorway, "");
-        setValue(inputsId.stair, "");
-        setValue(inputsId.floor, "");
-        setValue(inputsId.type_road, "");
+    newExtraDataRegister[addressType]["cityId"] = MunicipalityCode;
+    newExtraDataRegister[addressType] = {
+      ...newExtraDataRegister[addressType],
+      ...newAddressInfo,
+    };
 
+    setAddressInfo(newAddressInfo);
+    setExtraDataRegister(newExtraDataRegister);
+  };
+
+  const handleValidationAddress = async (name, value) => {
+    const newAddressInfo = { ...addressInfo };
+    const newExtraDataRegister = { ...extraDataRegister };
+    const newSummaryData = { ...summaryData };
+
+    newAddressInfo[name] = value;
+
+    if (name == inputsId.postal_code) {
+      setAddressError("");
+      setHasFormErros(false);
+
+      // Se obtiene el CountyCode y las diferentes localidades que comprenden ese Código Postal.
+      const {
+        data: municipalitiesByPostalCodeData,
+        error: municipalitiesByPostalCodeError,
+      } = await getMunicipalitiesByPostalCode(value);
+
+      // Si el código postal no existe -> error
+      if (municipalitiesByPostalCodeError) {
+        setAddressError(municipalitiesByPostalCodeError);
+        setHasFormErros(true);
         return;
       }
 
-      const {
-        data: municipalitiesByPostalCode,
-      } = await getMunicipalitiesByPostalCode(value);
+      const { CountyCode, Municipalities } = municipalitiesByPostalCodeData;
+      newExtraDataRegister[addressType]["countyId"] = CountyCode;
 
-      const { CountyCode, Municipalities } = municipalitiesByPostalCode;
+      // Se valida que el código postal está dentro de los limites de suministro.
+      const { error: validateAddressError } = await validateAddress(CountyCode);
 
-      requiredAddress[inputsId.province] = CountyCode;
+      // Si el código postal está fuera del límite de suministro -> error.
+      if (validateAddressError) {
+        setAddressError(validateAddressError);
+        setHasFormErros(true);
+        return;
+      }
 
+      // Se obtienen las diferentes localidades del código postal.
       const cities = Municipalities.map((element) => element.MunicipalityName);
+      newExtraDataRegister[addressType]["cityId"] =
+        Municipalities[0].MunicipalityCode;
+      setMunicipalitiesCode(Municipalities);
 
-      const { data: dataProvinceCode } = await getProvinceCode();
+      // Obetenemos el nombre de la provincia asociada al código postal
+      if (provinceData) {
+        const { Description: province } = provinceData.find(
+          (element) => Number(element.Code) == Number(CountyCode)
+        );
 
-      if (dataProvinceCode) {
-        const { Description: province } = dataProvinceCode.find((element) => {
-          return Number(element.Code) == Number(CountyCode);
-        });
-
-        setDetectedAddress({ province, cities });
+        clearErrors(inputsId.city);
+        clearErrors(inputsId.province);
 
         newAddressInfo[inputsId.city] = cities[0];
         newAddressInfo[inputsId.province] = province;
+
+        setDetectedAddress({ province, cities });
       }
     }
 
-    if (name == inputsId.type_road) {
-      newExtraDataRegister[addressType] = {
-        ...newExtraDataRegister[addressType],
-      };
+    // Se actualiza la información de la dirección
+    setAddressInfo(newAddressInfo);
 
-      newExtraDataRegister[addressType][inputsId.type_road] = value;
-    } else {
-      newAddressInfo[name] = value;
+    // EXTRA DATA REGISTER
+    newExtraDataRegister[addressType][name] = value;
+    newExtraDataRegister[addressType] = {
+      ...newAddressInfo,
+      ...newExtraDataRegister[addressType],
+    };
+    setExtraDataRegister(newExtraDataRegister);
 
-      setAddressInfo(newAddressInfo);
-    }
-
-    if (
-      Object.keys(newAddressInfo).some((element) =>
-        isEmpty(newAddressInfo[element])
-      )
-    )
-      return;
-
-    const dataAddress = {
+    // SUMMARY DATA
+    newSummaryData["address"] = {
       postal_code: newAddressInfo[inputsId.postal_code],
       city: newAddressInfo[inputsId.city],
       name_road: newAddressInfo[inputsId.name_road],
       number_road: newAddressInfo[inputsId.number_road],
-    };
-
-    const newSummaryData = { ...summaryData };
-    newSummaryData["address"] = {
-      ...dataAddress,
-      province:
-        newAddressInfo[inputsId.province] || newSummaryData["address"].province,
+      province: newAddressInfo[inputsId.province],
       type_road: newAddressInfo[inputsId.type_road] || "Calle",
     };
-
     setSummaryData(newSummaryData);
+  };
 
-    if (updateRegistration) return;
+  useEffect(() => {
+    async function getProvinceData() {
+      const { data, error } = await getProvinceCode();
 
-    const { data } = await getAddressCode(dataAddress);
+      if (error) return;
 
-    const response = await validateAddress(data);
-
-    let newAddressError = "";
-
-    if (!response) newAddressError = GENERAL_ERROR;
-    else if (response.error) newAddressError = response.error;
-    else {
-      requiredAddress[inputsId.postal_code] = dataAddress.postal_code;
-      requiredAddress[inputsId.city] = data.municipalityINECode;
-      requiredAddress[inputsId.name_road] = newAddressInfo[inputsId.name_road];
-      requiredAddress[inputsId.number_road] = data.number;
-
-      newExtraDataRegister[addressType] = {
-        ...newExtraDataRegister[addressType],
-        ...requiredAddress,
-      };
+      setProvinceData(data);
     }
 
-    setExtraDataRegister(newExtraDataRegister);
+    if (!provinceData) {
+      getProvinceData();
+    }
+  }, []);
 
-    return setAddressError(newAddressError);
-  };
+  useEffect(() => {
+    if (addressInfo) {
+      const postalCodeAddressInfo = addressInfo[inputsId.postal_code];
+
+      if (postalCodeAddressInfo) {
+        const postalCode = getValues()[inputsId.postal_code];
+
+        if (!postalCode || postalCode.length < 5) {
+          setAddressInfo();
+          setDetectedAddress({
+            cities: [],
+            province: null,
+          });
+        }
+      }
+    }
+  }, [getValues()]);
 
   useEffect(() => {
     if (cups) return;
@@ -181,12 +210,6 @@ export const AddressModule = ({
   useEffect(() => {
     if (addressInfo) return;
 
-    const addressInfoObject = {};
-    addressInfoObject[inputsId.postal_code] = "";
-    addressInfoObject[inputsId.city] = "";
-    addressInfoObject[inputsId.name_road] = "";
-    addressInfoObject[inputsId.number_road] = "";
-
     const newSummaryData = { ...summaryData };
     newSummaryData["address"] = {};
 
@@ -194,10 +217,9 @@ export const AddressModule = ({
     const addressTypeObject = {};
     addressTypeObject[inputsId.type_road] = "Calle";
     newExtraDataRegister[addressType] = addressTypeObject;
-    setExtraDataRegister(newExtraDataRegister);
 
-    setAddressInfo(addressInfoObject);
     setSummaryData(newSummaryData);
+    setExtraDataRegister(newExtraDataRegister);
   }, [addressInfo]);
 
   useEffect(() => {
@@ -205,50 +227,61 @@ export const AddressModule = ({
       return setDefaultDataAddress({});
     }
 
-    setDefaultDataAddress(defaultAddress);
-
     const newSummaryData = { ...summaryData };
+    const newExtraDataRegister = { ...extraDataRegister };
+
+    const newAddressTypeInfo = {};
+    const addressInfoObject = {};
+
+    if (defaultAddress?.postalCode) {
+      addressInfoObject[inputsId.postal_code] = defaultAddress?.postalCode;
+      newAddressTypeInfo[inputsId.postal_code] = defaultAddress?.postalCode;
+    }
+    if (defaultAddress?.name_road) {
+      addressInfoObject[inputsId.name_road] = defaultAddress?.name_road;
+      newAddressTypeInfo[inputsId.name_road] = defaultAddress?.name_road;
+    }
+    if (defaultAddress?.number_road) {
+      addressInfoObject[inputsId.number_road] = defaultAddress?.number_road;
+      newAddressTypeInfo[inputsId.number_road] = defaultAddress?.number_road;
+    }
+    if (defaultAddress?.province) {
+      addressInfoObject[inputsId.province] = defaultAddress?.province;
+    }
+    if (defaultAddress?.city) {
+      addressInfoObject[inputsId.city] = defaultAddress?.city;
+    }
+    if (defaultAddress?.door) {
+      newAddressTypeInfo[inputsId.door] = defaultAddress.door;
+    }
+    if (defaultAddress?.doorway) {
+      newAddressTypeInfo[inputsId.doorway] = defaultAddress.doorway;
+    }
+    if (defaultAddress?.stair) {
+      newAddressTypeInfo[inputsId.stair] = defaultAddress.stair;
+    }
+    if (defaultAddress?.floor) {
+      newAddressTypeInfo[inputsId.floor] = defaultAddress.floor;
+    }
+    if (defaultAddress?.type_road) {
+      newAddressTypeInfo[inputsId.type_road] = defaultAddress?.type_road;
+    } else {
+      newAddressTypeInfo[inputsId.type_road] = "Calle";
+    }
+
+    // EXTRA DATA REGISTER
+    newExtraDataRegister[addressType] = newAddressTypeInfo;
+
+    // SUMMARY DATA
     newSummaryData["address"] = {
       ...defaultAddress,
       type_road: defaultAddress?.type_road || "Calle",
     };
 
-    const newExtraDataRegister = { ...extraDataRegister };
-    const newAddressTypeInfo = {};
-    newAddressTypeInfo[inputsId.postal_code] = defaultAddress?.postalCode;
-    newAddressTypeInfo[inputsId.name_road] = defaultAddress?.name_road;
-    newAddressTypeInfo[inputsId.number_road] = defaultAddress?.number_road;
-    newAddressTypeInfo[inputsId.door] = defaultAddress?.door;
-    newAddressTypeInfo[inputsId.doorway] = defaultAddress?.doorway;
-    newAddressTypeInfo[inputsId.stair] = defaultAddress?.stair;
-    newAddressTypeInfo[inputsId.floor] = defaultAddress?.floor;
-    newAddressTypeInfo[inputsId.type_road] =
-      defaultAddress?.type_road || "Calle";
-
-    newExtraDataRegister[addressType] = newAddressTypeInfo;
-
-    const addressInfoObject = {};
-    if (defaultAddress?.postalCode) {
-      addressInfoObject[inputsId.postal_code] = defaultAddress?.postalCode;
-    }
-    if (defaultAddress?.province) {
-      addressInfoObject[inputsId.province] = defaultAddress?.province;
-    }
-
-    if (defaultAddress?.city) {
-      addressInfoObject[inputsId.city] = defaultAddress?.city;
-    }
-    if (defaultAddress?.name_road) {
-      addressInfoObject[inputsId.name_road] = defaultAddress?.name_road;
-    }
-
-    if (defaultAddress?.number_road) {
-      addressInfoObject[inputsId.number_road] = defaultAddress?.number_road;
-    }
-
+    setDefaultDataAddress(defaultAddress);
     setExtraDataRegister(newExtraDataRegister);
     setSummaryData(newSummaryData);
-    setAddressInfo({ ...addressInfo, ...addressInfoObject });
+    setAddressInfo({ ...addressInfoObject });
   }, [defaultAddress]);
 
   return (
@@ -276,38 +309,36 @@ export const AddressModule = ({
               validation={{
                 required: true,
                 validate: async (value) =>
-                  handleValidationAddress(inputsId.city, value),
+                  handleMunicipalitiesList(inputsId.city, value),
               }}
               additionalErrors={!isEmpty(addressError)}
             />
           ) : (
             <InputText
+              disabled
               label="Localidad"
               name={inputsId.city}
               validation={{
                 required: true,
-                validate: async (value) =>
-                  handleValidationAddress(inputsId.city, value),
               }}
               additionalErrors={!isEmpty(addressError)}
               defaultValue={
-                detectedAddress?.cities[0] || defaultDataAddress?.city
+                detectedAddress?.cities[0] || defaultDataAddress?.city || ""
               }
             />
           )}
         </div>
         <div className="row-1-mobile">
           <InputText
+            disabled
             label="Provincia"
             name={inputsId.province}
             validation={{
               required: true,
-              validate: async (value) =>
-                handleValidationAddress(inputsId.province, value),
             }}
             additionalErrors={!isEmpty(addressError)}
             defaultValue={
-              detectedAddress.province || defaultDataAddress?.province
+              detectedAddress.province || defaultDataAddress?.province || ""
             }
           />
         </div>
@@ -339,7 +370,8 @@ export const AddressModule = ({
             additionalErrors={!isEmpty(addressError)}
             defaultValue={
               defaultDataAddress.name_road ||
-              (addressInfo && addressInfo[inputsId.name_road])
+              (addressInfo && addressInfo[inputsId.name_road]) ||
+              ""
             }
           />
           <InputText
@@ -353,7 +385,8 @@ export const AddressModule = ({
             additionalErrors={!isEmpty(addressError)}
             defaultValue={
               defaultDataAddress?.number_road ||
-              (addressInfo && addressInfo[inputsId.number_road])
+              (addressInfo && addressInfo[inputsId.number_road]) ||
+              ""
             }
           />
         </div>
@@ -367,7 +400,7 @@ export const AddressModule = ({
               handleNotRequiredAddress(inputsId.doorway, value),
           }}
           additionalErrors={!isEmpty(addressError)}
-          defaultValue={defaultDataAddress?.doorway}
+          defaultValue={defaultDataAddress?.doorway || ""}
         />
         <InputText
           label="Escalera"
@@ -377,7 +410,7 @@ export const AddressModule = ({
               handleNotRequiredAddress(inputsId.stair, value),
           }}
           additionalErrors={!isEmpty(addressError)}
-          defaultValue={defaultDataAddress?.stair}
+          defaultValue={defaultDataAddress?.stair || ""}
         />
         <InputText
           label="Piso"
@@ -387,7 +420,7 @@ export const AddressModule = ({
               handleNotRequiredAddress(inputsId.floor, value),
           }}
           additionalErrors={!isEmpty(addressError)}
-          defaultValue={defaultDataAddress?.floor}
+          defaultValue={defaultDataAddress?.floor || ""}
         />
         <InputText
           label="Puerta"
@@ -397,7 +430,7 @@ export const AddressModule = ({
               handleNotRequiredAddress(inputsId.door, value),
           }}
           additionalErrors={!isEmpty(addressError)}
-          defaultValue={defaultDataAddress?.door}
+          defaultValue={defaultDataAddress?.door || ""}
         />
       </div>
 

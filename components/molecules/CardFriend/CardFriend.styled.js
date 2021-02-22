@@ -8,7 +8,7 @@ export const SCCardFriend = styled.section`
 
   padding: ${({ theme }) => theme.spaces.xs.desktopSize};
 
-  .img-wrapper {
+  .img-faces-wrapper {
     display: flex;
     justify-content: center;
   }

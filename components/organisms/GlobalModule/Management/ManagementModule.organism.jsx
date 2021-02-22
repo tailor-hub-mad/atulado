@@ -30,10 +30,6 @@ export const ManagementModule = ({
     const { error } = sendReminder(user.roleCode, processId);
 
     setOpenInfoModal({ open: true, message: "Se ha enviado el recordatorio." });
-
-    if (error) {
-      // Controlar error
-    }
   };
 
   const handleAction = (type) => {
@@ -61,7 +57,6 @@ export const ManagementModule = ({
   };
 
   const handleText = (type) => {
-    const { ContractCode } = options;
     switch (type) {
       case 1:
       case 2:
@@ -70,7 +65,7 @@ export const ManagementModule = ({
 
       case 5:
       case 6:
-        return ContractCode ? "Enviar recordatorio" : null;
+        return "Enviar recordatorio";
 
       default:
         return null;

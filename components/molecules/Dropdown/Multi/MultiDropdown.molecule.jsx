@@ -32,7 +32,7 @@ export const MultiDropdown = ({
   }, []);
 
   const { register, errors, getValues, setError, setValue } = useForm({
-    mode: "onSubmit",
+    mode: "onChange",
     shouldFocusError: true,
   });
 

@@ -18,6 +18,7 @@ import MenuIcon from "../../../../public/icon/menu_icon.svg";
 import {
   getInvoiceById,
   downloadInvoiceById,
+  downloadInvoicePaymentById,
   getInvoicesByContract,
   downloadInvoiceDetailById,
 } from "../../../../lib/api/invoice";
@@ -101,6 +102,8 @@ export const InvoiceDetailModule = ({
   };
 
   const handleDownloadDoc = async (type) => {
+    const { NavSalesType } = dataInvoice;
+
     setOpenDownloadScreen({
       error: false,
       open: true,
@@ -130,28 +133,53 @@ export const InvoiceDetailModule = ({
         }
       });
     } else {
-      await downloadInvoiceById(
-        user.roleCode,
-        user.UserId,
-        _contractId,
-        _invoiceId
-      ).then((response) => {
-        if (response.data) {
-          const buf = Buffer.from(response.data.Content, "base64");
-          FileDownload(buf, response.data.FileName);
+      if (NavSalesType) {
+        await downloadInvoicePaymentById(
+          user.roleCode,
+          user.UserId,
+          _contractId,
+          _invoiceId
+        ).then((response) => {
+          if (response.data) {
+            const buf = Buffer.from(response.data.Content, "base64");
+            FileDownload(buf, response.data.FileName);
 
-          setOpenDownloadScreen({
-            error: false,
-            open: false,
-          });
-        }
-        if (response?.error) {
-          setOpenDownloadScreen({
-            error: true,
-            open: true,
-          });
-        }
-      });
+            setOpenDownloadScreen({
+              error: false,
+              open: false,
+            });
+          }
+          if (response?.error) {
+            setOpenDownloadScreen({
+              error: true,
+              open: true,
+            });
+          }
+        });
+      } else {
+        await downloadInvoiceById(
+          user.roleCode,
+          user.UserId,
+          _contractId,
+          _invoiceId
+        ).then((response) => {
+          if (response.data) {
+            const buf = Buffer.from(response.data.Content, "base64");
+            FileDownload(buf, response.data.FileName);
+
+            setOpenDownloadScreen({
+              error: false,
+              open: false,
+            });
+          }
+          if (response?.error) {
+            setOpenDownloadScreen({
+              error: true,
+              open: true,
+            });
+          }
+        });
+      }
     }
 
     setResetButton(true);
@@ -304,14 +332,14 @@ export const InvoiceDetailModule = ({
             action={() => handleDownloadDoc()}
             reset={resetButton}
           >
-            Descarar pdf
+            Descargar pdf
           </ButtonSelect>
           <ButtonSelect
             color="black"
             action={() => handleDownloadDoc("detail")}
             reset={resetButton}
           >
-            Descarar detalle
+            Descargar detalle
           </ButtonSelect>
         </div>
 

@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const SCNavbar = styled.div`
+export const SCNavbar = styled.nav`
   width: 100%;
   height: ${({ theme }) => theme.spaces.m.desktopSize};
 

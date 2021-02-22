@@ -17,7 +17,7 @@ export const CardFriend = ({ options = [], helperAction, cardAction }) => {
           <Helper />
         </div>
       </div>
-      <div className="img-wrapper">
+      <div className="img-faces-wrapper">
         <FacesImage />
       </div>
 

@@ -279,7 +279,7 @@ export const HomeModule = ({ contracts, user, optionsList }) => {
       });
     }
 
-    getProcess(user.roleCode, user.UserId).then(({ data }) => {
+    getProcess(user.roleCode).then(({ data }) => {
       setDataManagement(data);
       setFullDataManagement(data);
       setLoadingSpinner(false);

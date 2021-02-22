@@ -12,6 +12,7 @@ export const InputText = React.forwardRef(
       apiValidation,
       additionalErrors,
       setValidatedInput,
+      setHasFormErros,
       type = "text",
       defaultValue = "",
       placeholder = "",
@@ -31,6 +32,7 @@ export const InputText = React.forwardRef(
       const { error } = await apiValidation(getValues(name));
       if (error) {
         if (setValidatedInput) setValidatedInput(false);
+        if (setHasFormErros) setHasFormErros(true);
 
         return setError(name, {
           type: "api_validation",
@@ -38,6 +40,7 @@ export const InputText = React.forwardRef(
         });
       }
       if (setValidatedInput) setValidatedInput(true);
+      if (setHasFormErros) setHasFormErros(false);
     };
 
     return (
@@ -134,7 +137,7 @@ export const InputPassword = React.forwardRef(
 
 export const InputTextArea = React.forwardRef(
   ({ label = "", name, disabled = false, validation, ...props }, ref) => {
-    const { register, errors, getValues, setError } = useFormContext();
+    const { register, errors } = useFormContext();
 
     return (
       <SCInputText
