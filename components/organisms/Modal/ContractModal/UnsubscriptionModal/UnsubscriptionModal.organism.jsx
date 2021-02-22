@@ -1,5 +1,4 @@
 import React from "react";
-import { useForm, FormProvider } from "react-hook-form";
 
 import { SCUnsubscriptionModal } from "./UnsubscriptionModal.styled";
 import { SCTextXL } from "../../../../atoms/Text/TextXL.styled";

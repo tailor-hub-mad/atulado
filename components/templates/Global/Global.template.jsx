@@ -154,7 +154,6 @@ export default function GlobalTemplate() {
         }
 
       case "home":
-        console.log(optionsModule);
         if (isEmpty(optionsModule)) {
           return (
             <HomeModule
