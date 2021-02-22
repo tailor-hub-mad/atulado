@@ -31,7 +31,7 @@ const SCFooter = styled.footer`
   }
 
   @media only screen and (min-width: 769px) {
-    padding: 0 80px;
+    padding: 0 80px !important;
     .links-container {
       margin: 0 auto;
       margin-top: 46px;

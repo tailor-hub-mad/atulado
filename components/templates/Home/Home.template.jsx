@@ -31,7 +31,7 @@ export default function HomeTemplate() {
       <div className="home-wrapper">
         <div className="nav-mobile-wrapper">
           <Navbar
-
+            color="#009845"
             optionList={[
               { option: "Tarifas", link: "/tarifas", visible: true },
               { option: "Contratar", link: "/alta", visible: true },

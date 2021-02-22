@@ -6,7 +6,7 @@ import { SCTextL } from "../../atoms/Text/TextL.styled";
 import { Menu } from "../Menu/Menu.molecule";
 import MenuMobileIcon from "../../../public/icon/menu-mobile_icon.svg";
 
-export const Navbar = ({ optionList, action, withoutMenu = false }) => {
+export const Navbar = ({ optionList, action, withoutMenu = false, color }) => {
   const [openMenu, setOpenMenu] = useState(false);
 
   const handleOpenMenu = () => {
@@ -14,13 +14,13 @@ export const Navbar = ({ optionList, action, withoutMenu = false }) => {
   };
 
   return (
-    <SCNavbar>
+    <SCNavbar color={color}>
       <div>
-        <Logo mode="white" height="45%" width="45%" type="text" />
+        <Logo mode={color || "white"} height="45%" width="45%" type="text" />
       </div>
 
       <div className="info-wrapper">
-        <SCTextL color="white">900 818 852</SCTextL>
+        <SCTextL color={color || "white"}>900 818 852</SCTextL>
       </div>
       {withoutMenu || (
         <div className="menu-wrapper" onClick={() => handleOpenMenu()}>

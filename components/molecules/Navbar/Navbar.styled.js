@@ -27,7 +27,7 @@ export const SCNavbar = styled.nav`
     display: inline-block;
 
     svg {
-      stroke: ${({ theme }) => theme.color.white};
+      stroke: ${({ theme, color }) => color || theme.color.white};
     }
   }
 
@@ -36,7 +36,7 @@ export const SCNavbar = styled.nav`
     min-height: 40px;
 
     padding: ${({ theme }) =>
-      `${theme.spaces.xs.desktopSize} ${theme.spaces.s.desktopSize}`};
+    `${theme.spaces.xs.desktopSize} ${theme.spaces.s.desktopSize}`};
 
     .info-wrapper {
       width: 100%;

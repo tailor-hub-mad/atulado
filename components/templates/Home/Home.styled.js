@@ -157,7 +157,7 @@ const SCHome = styled.section`
       }
     }
     .wrapper {
-      padding: 0 0px;
+      padding: 0px;
     }
     .home-wrapper {
       max-width: 1440px;
