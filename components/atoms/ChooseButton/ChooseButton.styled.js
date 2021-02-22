@@ -37,7 +37,8 @@ export const SCChooseButton = styled.div`
   }};
   }
   padding: 16px 8px;
-  
+  border: 1px solid #009845;
+  border-radius: 2px;
 
   .tag-wrapper {
     display: none;

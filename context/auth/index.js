@@ -95,6 +95,7 @@ export const ProtectRoute = ({ children }) => {
   const { isAuthenticated, isLoading } = useAuth();
   const router = useRouter();
 
+  if (router.pathname === "/") return children;
   if (isLoading) return <LoadingScreen />;
   else {
     if (router.pathname === "/alta" && isEmpty(router.query)) {
