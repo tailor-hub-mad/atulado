@@ -139,7 +139,6 @@ export const ManagementModule = ({
         contractList,
       });
     } else if (returnPageClient) {
-      // PENDIENTE DE IMPLEMENTAR
       optionsList("client", {
         clientDetail,
         clientData,
@@ -163,7 +162,7 @@ export const ManagementModule = ({
             ? options.CUPS
             : options.ContractCode}
         </SCTextXL>
-        {options.Alerts.length == 0 || (
+        {options?.Alerts?.length == 0 || (
           <ButtonCheck
             action={handleValidateAllOptions}
             options={{
@@ -180,13 +179,13 @@ export const ManagementModule = ({
         )}
       </div>
 
-      {options.Alerts.length == 0 ? (
+      {options?.Alerts?.length == 0 ? (
         <div className="empty-alerts-wrapper">
           <SCTextSLight color="black">No hay alertas pendientes</SCTextSLight>
         </div>
       ) : (
         <div className="info-wrapper">
-          {options.Alerts.map((element, index) => {
+          {options?.Alerts?.map((element, index) => {
             return (
               <Card
                 key={index}

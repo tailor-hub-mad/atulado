@@ -183,16 +183,12 @@ export const HomeModule = ({ contracts, user, optionsList }) => {
 
     const { RegistrationId, ProcessId } = process;
 
-    const { error } = validateDocumentation(
+    validateDocumentation(
       user.roleCode,
       user.UserId,
       ProcessId,
       RegistrationId
     );
-
-    if (error) {
-      // handle error
-    }
   };
 
   const getInvoicePriceByMonth = (invoices) => {

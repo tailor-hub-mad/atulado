@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { findIndex, isEmpty, pick, flatten } from "lodash";
+import { findIndex, isEmpty, pick, flatten, uniqBy } from "lodash";
 import { useForm, FormProvider } from "react-hook-form";
 import { useRouter } from "next/router";
 
@@ -15,24 +15,41 @@ import { ItemManagement } from "../../../molecules/ItemManagement/ItemManagement
 import { InputText } from "../../../atoms/Input/Input.atom";
 import Button from "../../../atoms/Button/Button.atom";
 import { ItemContractList } from "../../../molecules/ItemList/ItemList.molecule";
+import { ProcessModal } from "../../Modal/ProcessModal/ProcessModal.organism";
+import { UnsubscriptionModal } from "../../Modal/ContractModal/UnsubscriptionModal/UnsubscriptionModal.organism";
 
 import ForwardIcon from "../../../../public/icon/forward_icon.svg";
 import BackwardIcon from "../../../../public/icon/backward_icon.svg";
 import AddDocIcon from "../../../../public/icon/add-doc_icon.svg";
 
-import { getAccount } from "../../../../lib/api/account";
-import { getProcessByClient } from "../../../../lib/api/process";
+import {
+  getAccount,
+  deleteAccount,
+  updateAccount,
+} from "../../../../lib/api/account";
+import {
+  getProcess,
+  deleteProcessById,
+  validateDocumentation,
+} from "../../../../lib/api/process";
 import { getContractsByAccount } from "../../../../lib/api/contract";
 import { getInvoicesByContract } from "../../../../lib/api/invoice";
 
 import {
   invoiceKeysTable,
   invoiceFilterAttributeTable,
+  findInvoiceByAddress,
 } from "../../../../utils/invoice";
 import {
   contractKeysTable,
   contractFilterAttributeTable,
+  findContractsByAtttribute,
 } from "../../../../utils/contract";
+import {
+  findProcessByAddress,
+  findProcessByContract,
+  findProcessByCups,
+} from "../../../../utils/process";
 
 const INCREMENT = 3;
 
@@ -45,7 +62,6 @@ export const ClientDetailModule = ({
   setOpenClaimInvoiceModal,
   openClaimInvoiceModal,
 }) => {
-  const [errorMessage, setErrorMessage] = useState();
   const [loadingSpinner, setLoadingSpinner] = useState({
     management: true,
     contract: true,
@@ -57,14 +73,20 @@ export const ClientDetailModule = ({
   const [clientDetailData, setClientDetailData] = useState({});
   const [clientDataList, setClientDataList] = useState([]);
   const [indexClient, setIndexClient] = useState();
-  const [haveChange, setHaveChange] = useState(false);
-  const [isConfirmation, setIsConfirmation] = useState(false);
+  const [openUnsubscriptionModal, setOpenUnsubscriptionModal] = useState({
+    open: false,
+    userId: null,
+  });
 
   // management
-  const [dataManagement, setDataManagement] = useState();
+  const [dataManagement, setDataManagement] = useState([]);
+  const [fullDataManagement, setFullDataManagement] = useState([]);
   const [closeManagementModal, setCloseManagementModal] = useState({
     open: false,
     index: null,
+  });
+  const [filterManagementParameters, setFilterManagementParameters] = useState({
+    search: null,
   });
 
   // contracts
@@ -76,6 +98,9 @@ export const ClientDetailModule = ({
   const [invoiceData, setInvoiceData] = useState();
   const [visibleContracts, setVisibleContracts] = useState(3);
   const [visibleInvoices, setVisibleInvoices] = useState(3);
+  const [filterInvoicesParameters, setFilterInvoicesParameters] = useState({
+    search: null,
+  });
 
   const router = useRouter();
 
@@ -84,62 +109,21 @@ export const ClientDetailModule = ({
     shouldFocusError: true,
   });
 
-  const handleUpdateAccount = async (data) => {
-    let email = "";
-    let phoneNumber = "";
+  ////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////
 
-    Object.keys(data).forEach((element) => {
-      if (endsWith(element, "email")) {
-        email = data[element];
-      }
-      if (endsWith(element, "phone")) {
-        phoneNumber = data[element];
-      }
+  // Client
+  ////////////////////////////////////////////////////
+
+  const handleDeleteUser = async (id) => {
+    await deleteAccount(user.roleCode, id);
+    setOpenUnsubscriptionModal({
+      open: false,
+      index: null,
     });
-
-    const updatedUser = {
-      account: {
-        email: email != "" ? email : user.Email,
-        phoneNumber: phoneNumber != "" ? phoneNumber : user.phoneNumber,
-      },
-    };
-
-    const response = await updateAccount(
-      user.roleCode,
-      user.UserId,
-      updatedUser
-    );
-
-    if (response?.error) {
-      setErrorMessage(response.error);
-    } else {
-      const newOpenInfoModal = { ...openInfoModal };
-      newOpenInfoModal["open"] = true;
-      newOpenInfoModal["message"] =
-        "Hemos recibido tu solicitud de actualzación";
-      setOpenInfoModal(newOpenInfoModal);
-    }
-
-    setHaveChange(false);
-
-    setTimeout(() => {
-      setErrorMessage();
-    }, 5000);
-  };
-
-  const handleDeleteUser = async () => {
-    // if (!isConfirmation) {
-    //   return setIsConfirmation(true);
-    // }
-    // setIsConfirmation(false);
-    // const { error } = await deleteAccount(user.roleCode, user.UserId);
-    // // error -> manejo de errores
-    // router.push("/login-cliente");
-  };
-
-  const handleHaveChange = (value) => {
-    if (value == "") return;
-    setHaveChange(true);
+    setClientDetailData({});
+    optionsList("client");
+    return;
   };
 
   const handleArrow = (direction) => {
@@ -165,31 +149,82 @@ export const ClientDetailModule = ({
   ////////////////////////////////////////////////////
 
   const handleClickManagementItem = (index) => {
-    optionsList("home", dataManagement[index]);
+    optionsList("home", { clientDetail, clientData, returnPageClient: true });
   };
 
-  // Pendiente de implementar
   const handleDeleteManagement = async (index) => {
-    // const process = dataManagement[index];
-    // const { ContractCode, RegistrationId, ProcessId } = process;
-    // const { error } = await deleteProcessById(
-    //   user.roleCode,
-    //   user.UserId,
-    //   ContractCode,
-    //   RegistrationId,
-    //   ProcessId
-    // );
-    // if (error) {
-    //   // handle error
-    // }
-    // setCloseManagementModal({
-    //   open: false,
-    //   index: null,
-    // });
+    const process = dataManagement[index];
+
+    const { ContractCode, RegistrationId, ProcessId } = process;
+
+    await deleteProcessById(
+      user.roleCode,
+      user.UserId,
+      ContractCode,
+      RegistrationId,
+      ProcessId
+    );
+
+    setCloseManagementModal({
+      open: false,
+      index: null,
+    });
+  };
+
+  const handleFilterManagement = () => {
+    const { search } = filterManagementParameters;
+    let newManagementFilterData = fullDataManagement;
+
+    if (search != null) {
+      const newManagementFilterDataAddress = findProcessByAddress(
+        newManagementFilterData,
+        search
+      );
+
+      const newManagementFilterDataContract = findProcessByContract(
+        newManagementFilterData,
+        search
+      );
+
+      const newManagementFilterDataCups = findProcessByCups(
+        newManagementFilterData,
+        search
+      );
+
+      const uniqueNewManagementFilter = uniqBy(
+        flatten([
+          newManagementFilterDataAddress,
+          newManagementFilterDataContract,
+          newManagementFilterDataCups,
+        ]),
+        "ProcessId"
+      );
+
+      newManagementFilterData = uniqueNewManagementFilter;
+    }
+
+    return newManagementFilterData;
   };
 
   const handleSearchManagement = (value) => {
-    // Pendiente de implementar
+    const newDataFilterInvoicesParameters = { ...filterManagementParameters };
+
+    newDataFilterInvoicesParameters["search"] = value == "" ? null : value;
+
+    setFilterManagementParameters(newDataFilterInvoicesParameters);
+  };
+
+  const handleValidateProcess = (index) => {
+    const process = dataManagement[index];
+
+    const { RegistrationId, ProcessId } = process;
+
+    validateDocumentation(
+      user.roleCode,
+      user.UserId,
+      ProcessId,
+      RegistrationId
+    );
   };
 
   // Contracts
@@ -215,7 +250,17 @@ export const ClientDetailModule = ({
   };
 
   const handleSearchContract = (value) => {
-    // Pendiente de implementar
+    if (value == "") {
+      setContractData(fullContractData);
+    } else {
+      const newContractData = findContractsByAtttribute(
+        fullContractData,
+        "Address",
+        value
+      );
+
+      setContractData(newContractData);
+    }
   };
 
   // Invoice
@@ -231,8 +276,23 @@ export const ClientDetailModule = ({
     return invoice;
   };
 
+  const handleFilterInvoices = () => {
+    const { search } = filterInvoicesParameters;
+    let newInvoiceFilterData = fullInvoiceData;
+
+    if (search != null) {
+      newInvoiceFilterData = findInvoiceByAddress(newInvoiceFilterData, search);
+    }
+
+    return newInvoiceFilterData;
+  };
+
   const handleSearchInvoice = (value) => {
-    // Pendiente de implementar
+    const newDataFilterInvoicesParameters = { ...filterInvoicesParameters };
+
+    newDataFilterInvoicesParameters["search"] = value == "" ? null : value;
+
+    setFilterInvoicesParameters(newDataFilterInvoicesParameters);
   };
 
   const handleOnClikInvoice = (invoiceId, contractId) => {
@@ -333,9 +393,10 @@ export const ClientDetailModule = ({
     }
 
     async function getProcessById(id) {
-      const { data } = await getProcessByClient(user.roleCode, id);
+      const { data } = await getProcess(user.roleCode, id);
 
       setDataManagement(data);
+      setFullDataManagement(data);
     }
 
     if (!_userId) return;
@@ -402,8 +463,36 @@ export const ClientDetailModule = ({
     setLoadingSpinner(newLoadingSpinner);
   }, [fullContractData, dataManagement, fullInvoiceData]);
 
+  useEffect(() => {
+    const newFilterManagement = handleFilterManagement();
+
+    setDataManagement(newFilterManagement);
+  }, [filterManagementParameters]);
+
+  useEffect(() => {
+    const newFilterInvoices = handleFilterInvoices();
+
+    setInvoiceData(newFilterInvoices);
+  }, [filterInvoicesParameters]);
+
   return (
     <>
+      {openUnsubscriptionModal.open && (
+        <UnsubscriptionModal
+          closeAction={() =>
+            setOpenUnsubscriptionModal({ open: false, userId: null })
+          }
+          action={() => handleDeleteUser(openUnsubscriptionModal.userId)}
+          message="¿Estás seguro que quieres dar de baja tu cuenta de usuario?"
+        />
+      )}
+      {closeManagementModal.open && (
+        <ProcessModal
+          handleDeleteManagement={handleDeleteManagement}
+          setCloseManagementModal={setCloseManagementModal}
+          index={closeManagementModal.index}
+        />
+      )}
       <SCClientDetailModule>
         <div className="title-wrapper">
           <SCTextXL color="primary">
@@ -427,16 +516,12 @@ export const ClientDetailModule = ({
 
         <div className="data-wrapper">
           <FormProvider {...methods}>
-            <form onSubmit={methods.handleSubmit(handleUpdateAccount)}>
+            <form onSubmit={methods.handleSubmit()}>
               <div className="client-wrapper">
                 <InputText
                   disabled
                   label="DNI / NIE"
                   name="client_dni"
-                  validation={{
-                    required: true,
-                    validate: async (value) => handleHaveChange(value),
-                  }}
                   defaultValue={clientDetailData?.NIF}
                 />
                 <div />
@@ -445,20 +530,12 @@ export const ClientDetailModule = ({
                   disabled
                   label="Nombre"
                   name="client_name"
-                  validation={{
-                    required: true,
-                    validate: async (value) => handleHaveChange(value),
-                  }}
                   defaultValue={clientDetailData?.Name}
                 />
                 <InputText
                   disabled
                   label="Apellidos"
                   name="client_surname"
-                  validation={{
-                    required: true,
-                    validate: async (value) => handleHaveChange(value),
-                  }}
                   defaultValue={clientDetailData?.LastName}
                 />
                 <div />
@@ -469,13 +546,15 @@ export const ClientDetailModule = ({
 
                 <div className="selected-wrapper">
                   <ButtonSelect
-                    color="primary"
-                    action={() => router.push("/pass-cambiar")}
+                    checked={openUnsubscriptionModal.open}
+                    color="red"
+                    action={() =>
+                      setOpenUnsubscriptionModal({
+                        open: true,
+                        userId: _userId,
+                      })
+                    }
                   >
-                    Cambiar contraseña
-                  </ButtonSelect>
-
-                  <ButtonSelect color="red" action={() => handleDeleteUser()}>
                     Dar de baja
                   </ButtonSelect>
                 </div>
@@ -522,6 +601,7 @@ export const ClientDetailModule = ({
                             })
                           }
                           action={() => handleClickManagementItem(index)}
+                          validateAction={() => handleValidateProcess(index)}
                           data={element}
                         />
                       ))

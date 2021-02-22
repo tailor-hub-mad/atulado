@@ -51,6 +51,13 @@ export const SCAddUserModule = styled.div`
     }
   }
 
+  .spinner-wrapper {
+    display: flex;
+    justify-content: center;
+
+    margin-top: ${({ theme }) => theme.spaces.s.desktopSize};
+  }
+
   .client-wrapper {
     margin-top: ${({ theme }) => theme.spaces.m.desktopSize};
 

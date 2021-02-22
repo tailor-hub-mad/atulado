@@ -15,7 +15,6 @@ import { ManagerProfile } from "./Role/ManagerProfile.organism";
 import { UnsubscriptionModal } from "../../Modal/ContractModal/UnsubscriptionModal/UnsubscriptionModal.organism";
 
 import { deleteAccount, updateAccount } from "../../../../lib/api/account";
-
 import { useAuth } from "../../../../context";
 
 export const ProfileModule = ({ user, setOpenInfoModal, openInfoModal }) => {
@@ -63,7 +62,7 @@ export const ProfileModule = ({ user, setOpenInfoModal, openInfoModal }) => {
       const newOpenInfoModal = { ...openInfoModal };
       newOpenInfoModal["open"] = true;
       newOpenInfoModal["message"] =
-        "Hemos recibido tu solicitud de actualización.";
+        "Hemos recibido tu solicitud de actualización";
       setOpenInfoModal(newOpenInfoModal);
     }
 
@@ -148,83 +147,3 @@ export const ProfileModule = ({ user, setOpenInfoModal, openInfoModal }) => {
     </>
   );
 };
-
-// const [fullContractData] = useState(contracts);
-// const [contractData, setContractData] = useState(contracts);
-
-// const filterAttributes = (element) => {
-//   const contract = pick(element, [
-//     "ContractCode",
-//     "Address",
-//     "InitDate",
-//     "FinalDate",
-//     "Payer",
-//     "CUPS",
-//     "State",
-//   ]);
-
-//   contract.State = contract.State ? "Activo" : "Inactivo";
-
-//   return contract;
-// };
-
-// const handleOnClikContract = (contractId) => {
-//   optionsList("contract", {
-//     contractId,
-//     contractList: fullContractData,
-//   });
-// };
-
-// const handleSearchContract = (value) => {
-//   if (value == "") {
-//     setContractData(fullContractData);
-//   } else {
-//     const newContractData = findContractsByAtttribute(
-//       fullContractData,
-//       "Address",
-//       value
-//     );
-
-//     setContractData(newContractData);
-//   }
-// };
-
-// const handleAddDoc = () => {
-//   router.push("/alta");
-// };
-
-/* {user.roleCode == 1 || (
-        <div className="data-wrapper">
-          <div className="title-contract-wrapper">
-            <SCTextXL color="black">Contratos:</SCTextXL>
-            <div className="icons-wrapper">
-              <Search action={handleSearchContract} />
-              <ButtonIcon action={handleAddDoc} icon={<AddDocIcon />}>
-                Añadir contrato
-              </ButtonIcon>
-            </div>
-          </div>
-
-          <div className="contract-wrapper">
-            {isEmpty(contractData) ? (
-              <div className="contract-empty-wrapper">
-                <SCTextSLight color="black">
-                  No tienes contratos asociados
-                </SCTextSLight>
-              </div>
-            ) : (
-              <div className="list-contract-wrapper">
-                {contractData.map((element, index) => (
-                  <ItemContractList
-                    key={index}
-                    withOutCheck
-                    data={filterAttributes(element)}
-                    action={() => handleOnClikContract(element?.ContractCode)}
-                  />
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-*/

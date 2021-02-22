@@ -218,6 +218,7 @@ export const ContractModule = ({
         <UnsubscriptionModal
           closeAction={() => setOpenUnsubscriptionModal(false)}
           action={() => handleDeleteContrat(openUnsubscriptionModal.contractId)}
+          message="¿Estás seguro que quieres dar de baja el contrato?"
         />
       )}
 
