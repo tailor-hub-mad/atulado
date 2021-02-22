@@ -17,8 +17,10 @@ import SCHome from './Home.styled'
 import uniqid from "uniqid";
 import { SCTextL } from '../../atoms/Text/TextL.styled'
 import Footer from '../../Footer/Footer'
+import { useRouter } from 'next/router'
 
 export default function HomeTemplate() {
+  const router = useRouter();
   const displayInfo = () => {
     return info.map((item) => {
       return (
@@ -43,15 +45,27 @@ export default function HomeTemplate() {
         <nav className="nav-desktop-wrapper">
           <Logo height="15%" width="15%" type="text" />
           <div className="options-wrapper">
-            <SCTextM>
-              <a href="">Tarifas</a>
+            <Link href="/tarifas">
+              <a>
+                <SCTextM>
+                  Tarifas
             </SCTextM>
-            <SCTextM>
-              <a href="">Contratar</a>
+              </a>
+            </Link>
+            <Link href="/tarifas">
+              <a>
+                <SCTextM>
+                  Contratar
             </SCTextM>
-            <SCTextM>
-              <a href="">Área cliente</a>
+              </a>
+            </Link>
+            <Link href="/global">
+              <a>
+                <SCTextM>
+                  Área cliente
             </SCTextM>
+              </a>
+            </Link>
           </div>
         </nav>
         <div className="home-first-section wrapper">
@@ -62,7 +76,7 @@ export default function HomeTemplate() {
             <div className="select-buttons">
               <ChooseButton
                 icon={<Bulb color={"#009845"} />}
-                action={() => console.log('Click')}
+                action={() => router.push("/tarifas")}
               >
                 <SCTextM>MENOS O IGUAL DE 15KW</SCTextM>
                 <SCTextXSLight>
@@ -71,7 +85,7 @@ export default function HomeTemplate() {
               </ChooseButton>
               <ChooseButton
                 icon={<DoubleBulb color={"#009845"} />}
-                action={() => console.log('Click')}
+                action={() => router.push("/tarifas")}
               >
                 <SCTextM>MÁS DE 15KW</SCTextM>
                 <SCTextXSLight>

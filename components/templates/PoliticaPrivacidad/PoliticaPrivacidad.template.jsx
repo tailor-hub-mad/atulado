@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import React from 'react'
 import { Logo } from '../../atoms/Logo/Logo.atom'
 import { SCTextL } from '../../atoms/Text/TextL.styled'
@@ -24,15 +25,27 @@ export default function PoliticaPrivacidadTemplate() {
       <nav className="nav-desktop-wrapper">
         <Logo height="15%" width="15%" type="text" />
         <div className="options-wrapper">
-          <SCTextM>
-            <a href="">Tarifas</a>
-          </SCTextM>
-          <SCTextM>
-            <a href="">Contratar</a>
-          </SCTextM>
-          <SCTextM>
-            <a href="">Área cliente</a>
-          </SCTextM>
+          <Link href="/tarifas">
+            <a>
+              <SCTextM>
+                Tarifas
+            </SCTextM>
+            </a>
+          </Link>
+          <Link href="/tarifas">
+            <a>
+              <SCTextM>
+                Contratar
+            </SCTextM>
+            </a>
+          </Link>
+          <Link href="/global">
+            <a>
+              <SCTextM>
+                Área cliente
+            </SCTextM>
+            </a>
+          </Link>
         </div>
       </nav>
       <div className="content">
