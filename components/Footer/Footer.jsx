@@ -5,9 +5,9 @@ import { SCTextSLight } from '../atoms/Text/TextS.styled'
 import FooterLogo from '../icons/FooterLogo'
 import SCFooter from './Footer.styled'
 
-export default function Footer() {
+export default function Footer(props) {
   return (
-    <SCFooter>
+    <SCFooter {...props}>
       <div className="logo-wrapper">
         <FooterLogo />
       </div>

@@ -15,6 +15,11 @@ const SCHome = styled.section`
   h1 {
     font-size: 44px;
     line-height: 52px;
+    margin: 22px 0 42px;
+  }
+
+  h2 {
+    margin-bottom: 32px;
   }
 
   .select-buttons {
@@ -37,8 +42,6 @@ const SCHome = styled.section`
   }
 
   .home-third-section {
-    
-
     .right-section {
       .info-item:not(:last-child) {
         margin-bottom: 32px;
@@ -82,29 +85,80 @@ const SCHome = styled.section`
     padding: 0px;
     padding-bottom: 100px;
   }
-  .links-container {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    column-gap: 16px;
-    text-align: center;
-    margin-top: 46px;
-    margin-bottom: 100px;
+  
+  .wrapper {
+    padding: 0 16px;
+  }
+  .home-second-section {
+    margin: 100px auto;
+    h3 {
+      margin-bottom: 32px;
+    }
+
+    p:nth-child(3) {
+      margin-top: 16px;
+      margin-bottom: 32px;
+    }
   }
 
-  .legal-links {
-    margin-top: 16px;
-    a p {
-      display: inline-block;
-      .special {
-        margin-left: 4px;
+  .home-third-section {
+    .right-section {
+      margin-top: 42px;
+    }
+  }
+
+  .home-fourth-section {
+    margin: 100px auto;
+    .logo-wrapper {
+      text-align: center;
+
+      svg {
+        width: 32px;
+        height: 62px;
+      }
+    }
+
+    .section-titles {
+      p:nth-child(1) {
+        margin-bottom: 16px;
+        font-family: ${({ theme }) => theme.typography.poppinsBold};
+      }
+      text-align: center;
+      margin: 32px 0;
+    }
+
+    p:nth-child(3) {
+      margin-bottom: 16px;
+    }
+  }
+
+  .home-first-section {
+    .right-section {
+      background: linear-gradient(180deg, #FFFFFF 64.58%, rgba(255, 255, 255, 0) 100%);
+      overflow-y: hidden;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      column-gap: 10px;
+      max-height: 600px;
+      img {
+        margin-top: 10px;
       }
     }
   }
-  .legal {
-    padding-bottom: 16px;
-  }
 
   @media only screen and (min-width: 769px) {
+    .home-first-section {
+      .right-section {
+        max-height: 900px;
+        column-gap: 16px;
+        img {
+          margin-top: 16px;
+        }
+      }
+    }
+    .wrapper {
+      padding: 0 0px;
+    }
     .home-wrapper {
       max-width: 1440px;
       margin: 0 auto;
@@ -195,6 +249,7 @@ const SCHome = styled.section`
       }
 
       .right-section {
+        margin-top: 0;
         .info-item:not(:last-child) {
           margin-bottom: 48px;
         }
@@ -238,28 +293,7 @@ const SCHome = styled.section`
       row-gap: 16px;
     }
 
-    .links-container {
-      margin: 0 auto;
-      margin-top: 46px;
-      max-width: 672px;
-      text-align: center;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      column-gap: 64px;
-      margin-bottom: 128px;
-    }
-
-    .legal {
-      padding-bottom: 46px;
-      display: flex;
-      align-items: center;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .legal-links {
-      margin-top: 0px;
-    }
+    
   }
   
 `;

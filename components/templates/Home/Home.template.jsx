@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import React from 'react'
+import { Parallax } from 'react-scroll-parallax';
 import { info } from '../../../utils/info'
 import { ChooseButton } from '../../atoms/ChooseButton/ChooseButton.atom'
 import InfoItem from '../../atoms/InfoItem/InfoItem.atom'
@@ -53,7 +54,7 @@ export default function HomeTemplate() {
             </SCTextM>
           </div>
         </nav>
-        <div className="home-first-section">
+        <div className="home-first-section wrapper">
           <div className="left-section">
             <SCTextXL as="h1">El  mejor precio para tu hogar o empresa</SCTextXL>
             <SCTextXL as="h2">Participa en la nueva energía que ya está cambiando el mundo</SCTextXL>
@@ -80,11 +81,24 @@ export default function HomeTemplate() {
             </div>
           </div>
           <div className="right-section">
-
+            <div className="images-1">
+              <Parallax className="custom-class" y={[-90, 30]}>
+                <img src="/image/grid-1.jpg" alt="grid-image" />
+                <img src="/image/grid-2.jpg" alt="grid-image" />
+                <img src="/image/grid-3.jpg" alt="grid-image" />
+              </Parallax>
+            </div>
+            <div className="images-2">
+              <Parallax className="custom-class" y={[0, -60]}>
+                <img src="/image/grid-4.jpg" alt="grid-image" />
+                <img src="/image/grid-5.jpg" alt="grid-image" />
+                <img src="/image/grid-6.jpg" alt="grid-image" />
+              </Parallax>
+            </div>
           </div>
         </div>
 
-        <div className="home-second-section">
+        <div className="home-second-section wrapper">
           <SCTextXL as="h3">NUESTA TARIFA MILENIAL NO TIENE RIVAL</SCTextXL>
           <SCTextM>Accede al comparador oficial de la CNMC  y comprueba que nuestra tarifa MILENIAL no tiene rival en el mercado.</SCTextM>
           <SCTextM>Tu luz al mejor precio sin permanencia ni engaños. Con la tranquilidad de que siempre pagarás el mejor precio del mercado.</SCTextM>
@@ -104,12 +118,12 @@ export default function HomeTemplate() {
           <div className="left-section">
             <img src="/image/home-info-img.jpg" alt="home-info" />
           </div>
-          <div className="right-section">
+          <div className="right-section wrapper">
             {displayInfo()}
           </div>
         </div>
 
-        <div className="home-fourth-section">
+        <div className="home-fourth-section wrapper">
           <div className="logo-wrapper">
             <Logo type="logo" className="logo" />
           </div>
@@ -127,7 +141,7 @@ export default function HomeTemplate() {
           <img src="/image/home-images-3.jpg" alt="home-images" />
         </div>
 
-        <Footer />
+        <Footer className="wrapper" />
       </div>
     </SCHome>
   )
