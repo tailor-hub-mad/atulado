@@ -38,17 +38,10 @@ export const SCContractDetailModule = styled.div`
   }
 
   .management-section {
-    margin: ${({ theme }) =>
-      `${theme.spaces.m.desktopSize} ${theme.spaces.s.desktopSize}`};
+    margin: ${({ theme }) => `${theme.spaces.s.desktopSize} 0`};
 
     .title-table-management {
-      display: grid;
-      grid-template-columns: 1fr 0.5fr 1fr 1fr 0.5fr 0.5fr;
-      column-gap: ${({ theme }) => theme.spaces.s.desktopSize};
-      padding-right: 60px;
-
-      text-align: center;
-      margin-bottom: ${({ theme }) => theme.spaces.s.desktopSize};
+      display: none;
     }
 
     .option-table-management {
@@ -83,7 +76,6 @@ export const SCContractDetailModule = styled.div`
         flex-wrap: wrap;
 
         margin: ${({ theme }) => `${theme.spaces.xs.desktopSize} 0`};
-        margin-right: 60px;
 
         & > * {
           margin: ${({ theme }) => `8px ${theme.spaces.xs.desktopSize}`};
@@ -105,28 +97,17 @@ export const SCContractDetailModule = styled.div`
   }
 
   .detail-wrapper {
-    display: grid;
-    grid-template-rows: repeat(3, auto);
-    grid-template-columns: repeat(3, auto);
-    row-gap: ${({ theme }) => theme.spaces.xs.desktopSize};
-    column-gap: ${({ theme }) => theme.spaces.m.desktopSize};
-    align-self: stretch;
+    display: block;
 
-    margin-bottom: ${({ theme }) => theme.spaces.l.desktopSize};
-    margin-top: ${({ theme }) => theme.spaces.m.desktopSize};
+    & > * {
+      margin-top: ${({ theme }) => theme.spaces.xs.desktopSize};
+    }
+
+    margin-bottom: ${({ theme }) => theme.spaces.l.mobileSize};
   }
 
   .type-data-wrapper {
-    display: grid;
-    grid-template-columns: 0.4fr 0.5fr 1fr 0.5fr 0.5fr 1fr 0.5fr 0.5fr 0.4fr;
-    padding-left: 46px;
-    padding-right: 16px;
-    column-gap: 32px;
-
-    text-align: center;
-
-    margin-top: ${({ theme }) => theme.spaces.l.desktopSize};
-    margin-bottom: ${({ theme }) => theme.spaces.xs.desktopSize};
+    display: none;
   }
 
   .contract-empty-wrapper {
@@ -135,6 +116,8 @@ export const SCContractDetailModule = styled.div`
   }
 
   .list-contract-wrapper {
+    padding-top: ${({ theme }) => theme.spaces.s.desktopSize};
+
     & > * {
       &:not(:first-child) {
         margin-top: ${({ theme }) => theme.spaces.xs.desktopSize};
@@ -147,6 +130,61 @@ export const SCContractDetailModule = styled.div`
 
     .separator {
       margin-top: ${({ theme }) => theme.spaces.xs.desktopSize};
+    }
+  }
+
+  .button-select-wrapper {
+    display: flex;
+    justify-content: center;
+  }
+
+  @media only screen and (min-width: 769px) {
+    .detail-wrapper {
+      display: grid;
+      grid-template-rows: repeat(3, auto);
+      grid-template-columns: repeat(3, auto);
+      row-gap: ${({ theme }) => theme.spaces.xs.desktopSize};
+      column-gap: ${({ theme }) => theme.spaces.m.desktopSize};
+      align-self: stretch;
+
+      margin-bottom: ${({ theme }) => theme.spaces.l.desktopSize};
+      margin-top: ${({ theme }) => theme.spaces.m.desktopSize};
+    }
+
+    .management-section {
+      margin: ${({ theme }) =>
+        `${theme.spaces.m.desktopSize} ${theme.spaces.s.desktopSize}`};
+
+      .title-table-management {
+        display: grid;
+        grid-template-columns: 1fr 0.5fr 1fr 1fr 0.5fr 0.5fr;
+        column-gap: ${({ theme }) => theme.spaces.s.desktopSize};
+        padding-right: 60px;
+
+        text-align: center;
+        margin-bottom: ${({ theme }) => theme.spaces.s.desktopSize};
+      }
+    }
+
+    .type-data-wrapper {
+      display: grid;
+      grid-template-columns: 0.4fr 0.5fr 1fr 0.5fr 0.5fr 1fr 0.5fr 0.5fr 0.4fr;
+      padding-left: 46px;
+      padding-right: 16px;
+      column-gap: 32px;
+
+      text-align: center;
+
+      margin-top: ${({ theme }) => theme.spaces.l.desktopSize};
+      margin-bottom: ${({ theme }) => theme.spaces.xs.desktopSize};
+    }
+
+    .list-contract-wrapper {
+      padding-top: 0;
+    }
+
+    .button-select-wrapper {
+      display: block;
     }
   }
 `;

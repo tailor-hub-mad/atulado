@@ -25,7 +25,13 @@ export const SCManagementModule = styled.div`
     display: grid;
     column-gap: ${({ theme }) => theme.spaces.m.desktopSize};
     row-gap: ${({ theme }) => theme.spaces.s.desktopSize};
-    grid-template-columns: 352px 352px;
+    grid-template-columns: 352px;
     justify-items: stretch;
+  }
+
+  @media only screen and (min-width: 769px) {
+    .info-wrapper {
+      grid-template-columns: 352px 352px;
+    }
   }
 `;

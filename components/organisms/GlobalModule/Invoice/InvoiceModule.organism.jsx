@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useLayoutEffect } from "react";
 import { pick, find, flatten, isEmpty, findIndex } from "lodash";
 import FileDownload from "js-file-download";
 
@@ -25,6 +25,7 @@ import {
   findInvoiceByMonth,
   invoiceKeysTable,
   invoiceFilterAttributeTable,
+  invoiceFilterAttributeTableMobile,
 } from "../../../../utils/invoice";
 import { dataYearTemplate, chartTemplate } from "../../../../utils/contract";
 import {
@@ -43,6 +44,8 @@ export const InvoiceModule = ({
   setOpenClaimInvoiceModal,
   openClaimInvoiceModal,
 }) => {
+  const [screenSizeMobile, setScreenSizeMobile] = useState();
+
   const [dataInvoiceTable, setDataInvoiceTable] = useState();
   const [dataInvoiceFilterTable, setDataInvoiceFilterTable] = useState();
   const [filterInvoicesParameters, setFilterInvoicesParameters] = useState({
@@ -108,11 +111,15 @@ export const InvoiceModule = ({
   };
 
   const filterAttributes = (element) => {
-    const invoice = pick(element, invoiceFilterAttributeTable);
+    const invoice = screenSizeMobile
+      ? pick(element, invoiceFilterAttributeTableMobile)
+      : pick(element, invoiceFilterAttributeTable);
 
     invoice.Amount = invoice.Amount.toString() + ` €`;
 
-    invoice.Address = invoice.Address.Street;
+    if (!screenSizeMobile) {
+      invoice.Address = invoice.Address.Street;
+    }
 
     return invoice;
   };
@@ -297,6 +304,14 @@ export const InvoiceModule = ({
 
     setDataInvoiceFilterTable(newFilterInvoices);
   }, [filterInvoicesParameters]);
+
+  useLayoutEffect(() => {
+    if (window.innerWidth <= 769) {
+      setScreenSizeMobile(true);
+    } else {
+      setScreenSizeMobile(false);
+    }
+  }, []);
 
   return (
     <SCInvoiceModule>

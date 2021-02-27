@@ -41,19 +41,20 @@ export const SCInvoiceDetailModule = styled.div`
   }
 
   .detail-wrapper {
-    display: grid;
-    grid-template-rows: auto auto auto;
-    grid-template-columns: 1fr 1fr 1fr;
-    row-gap: ${({ theme }) => theme.spaces.xs.desktopSize};
-    column-gap: ${({ theme }) => theme.spaces.m.desktopSize};
-    align-self: stretch;
+    display: block;
 
-    margin-top: ${({ theme }) => theme.spaces.m.desktopSize};
-    margin-bottom: ${({ theme }) => theme.spaces.l.desktopSize};
+    & > * {
+      margin-top: ${({ theme }) => theme.spaces.xs.desktopSize};
+    }
+
+    margin-bottom: ${({ theme }) => theme.spaces.l.mobileSize};
   }
 
   .claim-wrapper {
-    margin-top: ${({ theme }) => theme.spaces.xs.desktopSize};
+    display: flex;
+    justify-content: center;
+
+    margin-top: ${({ theme }) => theme.spaces.m.mobileSize};
   }
 
   .download-wrapper {
@@ -68,6 +69,24 @@ export const SCInvoiceDetailModule = styled.div`
       &:not(:first-child) {
         margin-left: ${({ theme }) => theme.spaces.s.desktopSize};
       }
+    }
+  }
+
+  @media only screen and (min-width: 769px) {
+    .detail-wrapper {
+      display: grid;
+      grid-template-rows: repeat(3, auto);
+      grid-template-columns: repeat(3, auto);
+      row-gap: ${({ theme }) => theme.spaces.xs.desktopSize};
+      column-gap: ${({ theme }) => theme.spaces.m.desktopSize};
+      align-self: stretch;
+
+      margin-bottom: ${({ theme }) => theme.spaces.l.desktopSize};
+      margin-top: ${({ theme }) => theme.spaces.m.desktopSize};
+    }
+
+    .claim-wrapper {
+      display: block;
     }
   }
 `;

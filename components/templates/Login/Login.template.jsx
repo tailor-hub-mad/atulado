@@ -56,6 +56,7 @@ export default function LoginTemplate({ role = "cliente" }) {
             { option: "Contratar", link: "/", visible: true },
             { option: "Área cliente", link: "/", visible: true },
           ]}
+          withoutMenu
         />
       </div>
 

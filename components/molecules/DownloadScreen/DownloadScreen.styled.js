@@ -20,10 +20,10 @@ export const SCDownloadScreen = styled.section`
 
   .modal {
     height: 50vh;
-    width: 40vw;
+    width: 80vw;
 
     padding: ${({ theme }) =>
-      `${theme.spaces.l.desktopSize} ${theme.spaces.l.desktopSize}`};
+      `${theme.spaces.s.desktopSize} ${theme.spaces.s.desktopSize}`};
 
     display: flex;
     flex-direction: column;
@@ -45,6 +45,13 @@ export const SCDownloadScreen = styled.section`
     animation-timing-function: cubic-bezier(0.28, 0.84, 0.42, 1);
     animation-duration: 2s;
     animation-iteration-count: infinite;
+  }
+
+  @media only screen and (min-width: 769px) {
+    height: 50vh;
+    width: 40vw;
+    padding: ${({ theme }) =>
+      `${theme.spaces.l.desktopSize} ${theme.spaces.l.desktopSize}`};
   }
 
   @-webkit-keyframes bounce-7 {

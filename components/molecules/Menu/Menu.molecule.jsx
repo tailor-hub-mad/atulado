@@ -1,11 +1,14 @@
 import React, { createRef } from "react";
 import { SCMenu } from "./Menu.styled";
-import { SCTextSMedium } from "../../atoms/Text/TextS.styled";
+import { SCTextM } from "../../atoms/Text/TextM.styled";
 import Link from "next/link";
 import useClickOutside from "../../../hooks/useClickOutside";
+import { useAuth } from "../../../context";
 
 export const Menu = ({ optionList, setState, action }) => {
   const menuRef = createRef();
+
+  const { logout } = useAuth();
 
   useClickOutside(menuRef, () => setState(false));
 
@@ -19,7 +22,10 @@ export const Menu = ({ optionList, setState, action }) => {
               return (
                 <li
                   key={index}
-                  onClick={() => action(element.link)}
+                  onClick={() => {
+                    +setState(false);
+                    action(element.name);
+                  }}
                   className={
                     element.disabled
                       ? "item-disabled"
@@ -28,20 +34,18 @@ export const Menu = ({ optionList, setState, action }) => {
                       : ""
                   }
                 >
-                  <SCTextSMedium
-                    color={element.disabled ? "lightGray" : "black"}
-                  >
-                    {element.option}
-                  </SCTextSMedium>
+                  <SCTextM color={element.disabled ? "lightGray" : "white"}>
+                    {element.value}
+                  </SCTextM>
                 </li>
               );
             })}
         </ul>
 
         <div className="actions-wrapper">
-          <Link href="">
-            <SCTextSMedium color="black">Salir</SCTextSMedium>
-          </Link>
+          <SCTextM onClick={() => logout()} color="black">
+            Salir
+          </SCTextM>
         </div>
       </nav>
     </SCMenu>

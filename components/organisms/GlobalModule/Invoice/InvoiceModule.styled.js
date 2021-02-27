@@ -40,17 +40,7 @@ export const SCInvoiceModule = styled.div`
   }
 
   .type-data-wrapper {
-    display: grid;
-    grid-template-columns: 0.4fr 0.5fr 1fr 0.5fr 0.5fr 1fr 0.5fr 0.5fr 0.4fr;
-
-    padding-left: 46px;
-    padding-right: 16px;
-    column-gap: ${({ theme }) => theme.spaces.s.desktopSize};
-
-    text-align: center;
-
-    margin-top: ${({ theme }) => theme.spaces.l.desktopSize};
-    margin-bottom: ${({ theme }) => theme.spaces.xs.desktopSize};
+    display: none;
   }
 
   .contract-empty-wrapper {
@@ -59,6 +49,8 @@ export const SCInvoiceModule = styled.div`
   }
 
   .list-contract-wrapper {
+    margin-top: ${({ theme }) => theme.spaces.s.desktopSize};
+
     & > * {
       &:not(:first-child) {
         margin-top: ${({ theme }) => theme.spaces.xs.desktopSize};
@@ -70,6 +62,26 @@ export const SCInvoiceModule = styled.div`
       justify-content: center;
 
       margin-top: ${({ theme }) => theme.spaces.s.desktopSize};
+    }
+  }
+
+  @media only screen and (min-width: 769px) {
+    .type-data-wrapper {
+      display: grid;
+      grid-template-columns: 0.4fr 0.5fr 1fr 0.5fr 0.5fr 1fr 0.5fr 0.5fr 0.4fr;
+
+      padding-left: 46px;
+      padding-right: 16px;
+      column-gap: ${({ theme }) => theme.spaces.s.desktopSize};
+
+      text-align: center;
+
+      margin-top: ${({ theme }) => theme.spaces.l.desktopSize};
+      margin-bottom: ${({ theme }) => theme.spaces.xs.desktopSize};
+    }
+
+    .list-contract-wrapper {
+      margin-top: 0;
     }
   }
 `;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useLayoutEffect, useState } from "react";
 
 import { SCItemManagement } from "./ItemManagement.styled";
 import { SCTextSLight } from "../../atoms/Text/TextS.styled";
@@ -14,6 +14,8 @@ export const ItemManagement = ({
   validateAction,
   user,
 }) => {
+  const [reduceStatus, setReduceStatus] = useState();
+
   const handleColor = (tag) => {
     switch (tag) {
       case "Pendiente":
@@ -40,38 +42,48 @@ export const ItemManagement = ({
     }/${formatDate.getFullYear()}`;
   };
 
+  const handleStatus = (status) => {
+    return reduceStatus ? status.toUpperCase().split("")[0] : status;
+  };
+
+  useLayoutEffect(() => {
+    if (window.innerWidth <= 800) {
+      setReduceStatus(true);
+    } else {
+      setReduceStatus(false);
+    }
+  }, []);
+
   return (
     <SCItemManagement>
       <div className="content-wrapper" onClick={action}>
-        <SCTextSLight color="black">
-          {data["ProcessTypeDescription"] || "-"}
-        </SCTextSLight>
+        <p color="black">{data["ProcessTypeDescription"] || "-"}</p>
 
         {data["Status"] ? (
           <SCTagManagement color={handleColor(data["Status"])}>
-            {data["Status"]}
+            {handleStatus(data["Status"])}
           </SCTagManagement>
         ) : (
-          <SCTextSLight color="black">-</SCTextSLight>
+          <p color="black">-</p>
         )}
 
-        <SCTextSLight color="black">{data["CUPS"] || "-"}</SCTextSLight>
+        <p color="black">{data["CUPS"] || "-"}</p>
 
-        <SCTextSLight color="black">
+        <p className="responsive-wrapper" color="black">
           {data["SupplyAddress"] || "-"}
-        </SCTextSLight>
+        </p>
 
-        <SCTextSLight color="black">
+        <p className="responsive-wrapper" color="black">
           {handleDate(data["Created"]) || "-"}
-        </SCTextSLight>
+        </p>
 
-        <SCTextSLight color="black">
+        <p className="responsive-wrapper" color="black">
           {handleDate(data["LastModified"]) || "-"}
-        </SCTextSLight>
+        </p>
       </div>
 
       {user?.roleCode == 3 || (
-        <div className="button-check-wrapper">
+        <div className="responsive-wrapper" className="button-check-wrapper">
           <ButtonCheck action={validateAction} withOutOptions />
         </div>
       )}

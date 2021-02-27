@@ -148,6 +148,7 @@ export default function PasswordTemplate({ action = "create" }) {
             { option: "Contratar", link: "/", visible: true },
             { option: "Área cliente", link: "/", visible: true },
           ]}
+          withoutMenu
         />
       </div>
 

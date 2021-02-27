@@ -407,13 +407,15 @@ export const HomeModule = ({ contracts, user, optionsList }) => {
               Facturas:
             </SCTextXL>
 
-            <BarChart
-              indexBy="month"
-              keys={buildData().key}
-              action={() => {}}
-              dataInfo={buildData().info}
-              dataChart={buildData().chart}
-            />
+            <div className="barchart-wrapper">
+              <BarChart
+                indexBy="month"
+                keys={buildData().key}
+                action={() => {}}
+                dataInfo={buildData().info}
+                dataChart={buildData().chart}
+              />
+            </div>
           </div>
           <div className="friend-wrapper">
             <CardFriend

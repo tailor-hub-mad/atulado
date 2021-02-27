@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const SCTagManagement = styled.div`
   white-space: nowrap;
 
-  height: 16px;
+  width: 24px;
 
   background: ${({ color }) => color};
 
@@ -13,6 +13,7 @@ export const SCTagManagement = styled.div`
   font-size: ${({ theme }) => theme.typographySizes.s.desktopSize};
   line-height: ${({ theme }) => theme.typographySizes.s.desktopLine};
   color: ${({ theme }) => theme.color.white};
+  text-transform: capitalize;
 
   span {
     font-family: ${({ theme }) => theme.typography.poppinsRegular};
@@ -23,4 +24,8 @@ export const SCTagManagement = styled.div`
   align-items: center;
   justify-content: center;
   padding: 12px 10px;
+
+  @media only screen and (min-width: 769px) {
+    width: auto;
+  }
 `;

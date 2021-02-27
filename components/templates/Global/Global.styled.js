@@ -13,7 +13,7 @@ export const SCGlobal = styled.section`
     position: relative;
     left: 0;
     padding: ${({ theme }) =>
-      `${theme.spaces.s.mobileSize} ${theme.spaces.m.mobileSize}`};
+      `${theme.spaces.s.mobileSize} ${theme.spaces.xs.mobileSize}`};
   }
 
   @media only screen and (min-width: 769px) {

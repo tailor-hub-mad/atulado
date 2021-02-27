@@ -24,24 +24,15 @@ export const SCContractModule = styled.div`
     }
   }
 
+  .type-data-wrapper {
+    display: none;
+  }
+
   .spinner-wrapper {
     display: flex;
     justify-content: center;
 
     margin-top: ${({ theme }) => theme.spaces.s.desktopSize};
-  }
-
-  .type-data-wrapper {
-    display: grid;
-    grid-template-columns: 0.5fr 1fr 0.5fr 0.5fr 1fr 1fr 0.5fr 0.5fr;
-    column-gap: 32px;
-
-    padding-left: 46px;
-    padding-right: 16px;
-
-    text-align: center;
-
-    margin-bottom: ${({ theme }) => theme.spaces.xs.desktopSize};
   }
 
   .contract-empty-wrapper {
@@ -54,6 +45,21 @@ export const SCContractModule = styled.div`
       &:not(:first-child) {
         margin-top: ${({ theme }) => theme.spaces.xs.desktopSize};
       }
+    }
+  }
+
+  @media only screen and (min-width: 769px) {
+    .type-data-wrapper {
+      display: grid;
+      grid-template-columns: 0.5fr 1fr 0.5fr 0.5fr 1fr 1fr 0.5fr 0.5fr;
+      column-gap: 32px;
+
+      padding-left: 46px;
+      padding-right: 16px;
+
+      text-align: center;
+
+      margin-bottom: ${({ theme }) => theme.spaces.xs.desktopSize};
     }
   }
 `;

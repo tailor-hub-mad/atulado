@@ -15,11 +15,13 @@ export const SCSubscription = styled.section`
       position: sticky;
       top: ${({ theme }) => theme.spaces.m.desktopSize};
 
-      width: 100%;
-      max-width: 100%;
-      overflow-x: scroll;
-      align-items: center;
-      display: flex;
+      ul {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: scroll;
+        align-items: center;
+        display: flex;
+      }
 
       z-index: 1;
 
@@ -153,14 +155,16 @@ export const SCSubscription = styled.section`
         position: sticky;
         top: 238px;
 
-        min-height: 100vh;
-        width: 20vw;
-        min-width: 166px;
-        max-width: 166px;
-        display: block;
-        flex-direction: column;
-        justify-content: flex-start;
-        align-items: flex-end;
+        ul {
+          min-height: 100vh;
+          width: 20vw;
+          min-width: 166px;
+          max-width: 166px;
+          display: block;
+          flex-direction: column;
+          justify-content: flex-start;
+          align-items: flex-end;
+        }
 
         p {
           white-space: normal;

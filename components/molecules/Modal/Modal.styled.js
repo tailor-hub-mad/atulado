@@ -14,6 +14,8 @@ export const SCModal = styled.div`
 
   z-index: 8;
 
+  padding: ${({ theme }) => `0 ${theme.spaces.xs.desktopSize}`};
+
   background: linear-gradient(
     0deg,
     rgba(161, 215, 192, 0.7),

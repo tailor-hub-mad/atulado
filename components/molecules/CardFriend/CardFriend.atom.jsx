@@ -11,7 +11,7 @@ import FacesImage from "../../../public/image/faces_image.svg";
 export const CardFriend = ({ options = [], helperAction, cardAction }) => {
   return (
     <SCCardFriend>
-      <div className="title-wrapper">
+      <div className="title-wrapper-friend">
         <SCTextXL>Plan amigo</SCTextXL>
         <div onClick={helperAction}>
           <Helper />
