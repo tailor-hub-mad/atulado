@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useLayoutEffect } from "react";
 import { useRouter } from "next/router";
 import { isEmpty, pick } from "lodash";
 import FileDownload from "js-file-download";
@@ -29,6 +29,7 @@ import {
 import {
   contractKeysTable,
   contractFilterAttributeTable,
+  contractFilterAttributeTableMobile,
 } from "../../../../utils/contract";
 
 export const ContractModule = ({
@@ -37,6 +38,8 @@ export const ContractModule = ({
   optionsList,
   setOpenDownloadScreen,
 }) => {
+  const [screenSizeMobile, setScreenSizeMobile] = useState();
+
   const [fullContractData, setFullContractData] = useState();
   const [contractData, setContractData] = useState();
   const [selectedContract, setSelectedContract] = useState([]);
@@ -62,9 +65,13 @@ export const ContractModule = ({
   const router = useRouter();
 
   const filterAttributes = (element) => {
-    const contract = pick(element, contractFilterAttributeTable);
+    const contract = screenSizeMobile
+      ? pick(element, contractFilterAttributeTableMobile)
+      : pick(element, contractFilterAttributeTable);
 
-    contract.State = contract.State ? "Activo" : "Inactivo";
+    if (!screenSizeMobile) {
+      contract.State = contract.State ? "Activo" : "Inactivo";
+    }
 
     return contract;
   };
@@ -185,6 +192,14 @@ export const ContractModule = ({
     setContractData(contracts);
     setLoadingSpinner(false);
   }, [contracts]);
+
+  useLayoutEffect(() => {
+    if (window.innerWidth <= 769) {
+      setScreenSizeMobile(true);
+    } else {
+      setScreenSizeMobile(false);
+    }
+  }, []);
 
   return (
     <>

@@ -84,15 +84,11 @@ export const AddUserModule = ({ clientData, user, optionsList }) => {
       },
     };
 
-    console.log(updatedUser);
-
     const response = await updateAccount(
       user.roleCode,
       user.UserId,
       updatedUser
     );
-
-    console.log(response);
 
     if (response?.error) {
       setOpenInfoUpdateModal({
@@ -116,9 +112,6 @@ export const AddUserModule = ({ clientData, user, optionsList }) => {
   };
 
   const handleCreateUser = async (data) => {
-    console.log(data);
-    console.log(selectedRoles);
-
     const { client_dni, client_email, client_name, client_surname } = data;
 
     const [lastName, secondLastName] = client_surname.split(" ");
@@ -133,8 +126,6 @@ export const AddUserModule = ({ clientData, user, optionsList }) => {
           return { roleId: 3, profileId: 3 };
       }
     });
-
-    console.log(roleProfileCollection);
 
     const roleProfile = uniqBy(roleProfileCollection, "roleId");
 

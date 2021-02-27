@@ -8,6 +8,22 @@ export const SCCardFriend = styled.section`
 
   padding: ${({ theme }) => theme.spaces.xs.desktopSize};
 
+  .title-wrapper-friend {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: ${({ theme }) => theme.spaces.s.desktopSize};
+    .icons-wrapper {
+      display: flex;
+      align-items: center;
+      & > * {
+        &:not(:first-child) {
+          margin-left: ${({ theme }) => theme.spaces.xs.desktopSize};
+        }
+      }
+    }
+  }
+
   .img-faces-wrapper {
     display: flex;
     justify-content: center;

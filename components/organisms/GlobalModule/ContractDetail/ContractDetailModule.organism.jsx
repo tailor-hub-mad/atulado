@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
 import { useRouter } from "next/router";
 import { findIndex, pick, isEmpty } from "lodash";
 import FileDownload from "js-file-download";
@@ -36,7 +36,10 @@ import {
   updateContractDeliveryAddress,
 } from "../../../../lib/api/contract";
 import { downloadInvoiceById } from "../../../../lib/api/invoice";
-import { getProcess, deleteProcessById } from "../../../../lib/api/process";
+import {
+  getProcessByContract,
+  deleteProcessById,
+} from "../../../../lib/api/process";
 
 import {
   findInvoiceByAddress,
@@ -44,6 +47,7 @@ import {
   findInvoiceByMonth,
   invoiceKeysTable,
   invoiceFilterAttributeTable,
+  invoiceFilterAttributeTableMobile,
 } from "../../../../utils/invoice";
 import { dataYearTemplate, chartTemplate } from "../../../../utils/contract";
 import {
@@ -71,6 +75,7 @@ export const ContractDetailModule = ({
 }) => {
   const { contractId, contractList } = options;
 
+  const [screenSizeMobile, setScreenSizeMobile] = useState();
   const [openMenu, setOpenMenu] = useState(false);
   const [loadingSpinner, setLoadingSpinner] = useState(true);
   const [dataManagement, setDataManagement] = useState([]);
@@ -166,10 +171,15 @@ export const ContractDetailModule = ({
   };
 
   const filterAttributes = (element) => {
-    const invoice = pick(element, invoiceFilterAttributeTable);
+    const invoice = screenSizeMobile
+      ? pick(element, invoiceFilterAttributeTableMobile)
+      : pick(element, invoiceFilterAttributeTable);
 
     invoice.Amount = invoice.Amount.toString() + ` €`;
-    invoice.Address = invoice.Address.Street;
+
+    if (!screenSizeMobile) {
+      invoice.Address = invoice.Address.Street;
+    }
 
     return invoice;
   };
@@ -298,32 +308,31 @@ export const ContractDetailModule = ({
     setOpenDownloadScreen({ error: false, open: true });
 
     if (type == "invoice") {
-      await Promise.all(
-        selectedInvoice.map((element) => {
-          return downloadInvoiceById(
-            user.roleCode,
-            user.UserId,
-            element.contractId,
-            element.invoiceId
-          ).then((response) => {
-            if (response.data) {
-              const buf = Buffer.from(response.data.Content, "base64");
-              FileDownload(buf, response.data.FileName);
-
-              setOpenDownloadScreen({
-                error: false,
-                open: false,
-              });
-            }
-            if (response?.error) {
-              setOpenDownloadScreen({
-                error: true,
-                open: true,
-              });
-            }
-          });
-        })
-      );
+      // await Promise.all(
+      //   selectedInvoice.map((element) => {
+      //     return downloadInvoiceById(
+      //       user.roleCode,
+      //       user.UserId,
+      //       element.contractId,
+      //       element.invoiceId
+      //     ).then((response) => {
+      //       if (response.data) {
+      //         const buf = Buffer.from(response.data.Content, "base64");
+      //         FileDownload(buf, response.data.FileName);
+      //         setOpenDownloadScreen({
+      //           error: false,
+      //           open: false,
+      //         });
+      //       }
+      //       if (response?.error) {
+      //         setOpenDownloadScreen({
+      //           error: true,
+      //           open: true,
+      //         });
+      //       }
+      //     });
+      //   })
+      // );
     } else {
       await downloadContractById(user.roleCode, user.UserId, _contractId).then(
         (response) => {
@@ -427,14 +436,12 @@ export const ContractDetailModule = ({
   };
 
   const handleGetProcessById = async () => {
-    getProcess(user.roleCode, user.UserId).then(({ data }) => {
-      const managementData = data.filter((element) => {
-        return element.ContractCode == _contractId;
-      });
-
-      setDataManagement(managementData);
-      setLoadingSpinner(false);
-    });
+    getProcessByContract(user.roleCode, user.UserId, _contractId).then(
+      ({ data }) => {
+        setDataManagement(data);
+        setLoadingSpinner(false);
+      }
+    );
   };
 
   const handleClickManagementItem = (index) => {
@@ -513,6 +520,14 @@ export const ContractDetailModule = ({
     setDataFilterInvoices(newFilterInvoices);
   }, [filterInvoicesParameters]);
 
+  useLayoutEffect(() => {
+    if (window.innerWidth <= 769) {
+      setScreenSizeMobile(true);
+    } else {
+      setScreenSizeMobile(false);
+    }
+  }, []);
+
   const iconRef = useRef();
 
   useClickOutside(iconRef, () => setOpenMenu(false));
@@ -551,7 +566,6 @@ export const ContractDetailModule = ({
             setOpenUnsubscriptionModal({ open: false, contractId: null })
           }
           action={() => handleDeleteContrat(openUnsubscriptionModal.contractId)}
-          message="¿Estás seguro que quieres dar de baja el contrato?"
         />
       )}
       <SCContractDetailModule>
@@ -668,6 +682,7 @@ export const ContractDetailModule = ({
                             }
                             action={() => handleClickManagementItem(index)}
                             data={element}
+                            user={user}
                           />
                         ))
                     ) : (
@@ -684,6 +699,20 @@ export const ContractDetailModule = ({
           </div>
 
           <div className="contract-wrapper">
+            <div className="title-wrapper">
+              <SCTextXL color="primary">Facturas:</SCTextXL>
+              <div className="icons-invoice-container">
+                <Search action={handleSearchInvoice} />
+                {/* <ButtonIcon
+                  disabled={isEmpty(selectedInvoice)}
+                  action={() => handleDownloadDoc("invoice")}
+                  icon={<DownloadIcon />}
+                >
+                  Descargar factura/s
+                </ButtonIcon> */}
+              </div>
+            </div>
+
             <div className="action-wrapper">
               <div className="select-wrapper">
                 {getInvoiceYears().map((element, index) => (
@@ -694,16 +723,6 @@ export const ContractDetailModule = ({
                     {element}
                   </ButtonSelect>
                 ))}
-              </div>
-              <div className="icons-invoice-container">
-                <Search action={handleSearchInvoice} />
-                <ButtonIcon
-                  disabled={isEmpty(selectedInvoice)}
-                  action={() => handleDownloadDoc("invoice")}
-                  icon={<DownloadIcon />}
-                >
-                  Descargar factura/s
-                </ButtonIcon>
               </div>
             </div>
 
@@ -738,6 +757,7 @@ export const ContractDetailModule = ({
                   dataFilterInvoices.map((element, index) => {
                     return (
                       <ItmeInvoiceList
+                        withOutCheck
                         key={index}
                         data={filterAttributes(element)}
                         actionCheck={(value) =>
@@ -751,7 +771,7 @@ export const ContractDetailModule = ({
                         }
                         optionsMenu={[
                           "Reclamar factura",
-                          "Descargar factura",
+                          // "Descargar factura",
                           "Descargar detalle factura",
                         ]}
                         type="invoice"
@@ -775,18 +795,20 @@ export const ContractDetailModule = ({
           </div>
         </div>
 
-        <ButtonSelect
-          color="red"
-          checked={openUnsubscriptionModal.open}
-          action={() =>
-            setOpenUnsubscriptionModal({
-              open: true,
-              contractId: dataContract.ContractCode,
-            })
-          }
-        >
-          Dar de baja
-        </ButtonSelect>
+        <div className="button-select-wrapper">
+          <ButtonSelect
+            color="red"
+            checked={openUnsubscriptionModal.open}
+            action={() =>
+              setOpenUnsubscriptionModal({
+                open: true,
+                contractId: dataContract.ContractCode,
+              })
+            }
+          >
+            Dar de baja
+          </ButtonSelect>
+        </div>
       </SCContractDetailModule>
     </>
   );

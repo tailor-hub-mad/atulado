@@ -10,8 +10,8 @@ export const SCMenu = styled.div`
 
   background: linear-gradient(
     0deg,
-    rgba(161, 215, 192, 0.7),
-    rgba(161, 215, 192, 0.7)
+    rgba(10, 117, 208, 0.7),
+    rgba(10, 117, 208, 0.7)
   );
 
   overflow: hidden;
@@ -44,12 +44,7 @@ export const SCMenu = styled.div`
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-
-      padding: ${({ theme }) => `${theme.spaces.l.desktopSize} 0`};
-
-      p {
-        font-family: ${({ theme }) => theme.typography.poppinsBold};
-      }
+      height: ${({ theme }) => theme.spaces.xl.desktopSize};
 
       .item-disabled {
         pointer-events: none;
@@ -57,17 +52,16 @@ export const SCMenu = styled.div`
 
       .item-active {
         p {
+          font-family: ${({ theme }) => theme.typography.poppinsBold};
           color: ${({ theme }) => theme.color.primary};
           text-decoration: underline;
         }
       }
-    }
 
-    .actions-wrapper {
-    }
-
-    p {
-      cursor: pointer;
+      p {
+        margin-top: ${({ theme }) => theme.spaces.s.desktopSize};
+        color: ${({ theme }) => theme.color.black};
+      }
     }
   }
 `;

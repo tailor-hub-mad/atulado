@@ -54,8 +54,10 @@ export const SCCard = styled.div`
 
     button {
       width: 0;
-      min-width: 142px;
+      min-width: 172px;
       height: 40px;
+
+      margin-top: ${({ theme }) => theme.spaces.xs.mobileSize};
 
       padding: 8px 16px 6px 16px;
 

@@ -230,7 +230,6 @@ const withItemList = (Component) => ({
       <div className="content-wrapper">
         {Object.keys(data).map((element, index) => {
           if (element != "RateId") {
-            console.log(element);
             return (
               <div
                 key={index}

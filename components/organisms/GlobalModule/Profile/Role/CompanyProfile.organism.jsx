@@ -1,12 +1,22 @@
-import React from "react";
+import React, { useLayoutEffect, useState } from "react";
 
 import { InputText } from "../../../../atoms/Input/Input.atom";
 
 export const CompanyProfile = ({ data, setHaveChange }) => {
+  const [screenSizeMobile, setScreenSizeMobile] = useState();
+
   const handleHaveChenge = (value) => {
     if (value == "") return;
     setHaveChange(true);
   };
+
+  useLayoutEffect(() => {
+    if (window.innerWidth <= 769) {
+      setScreenSizeMobile(true);
+    } else {
+      setScreenSizeMobile(false);
+    }
+  }, []);
 
   return (
     <div className="company-wrapper">
@@ -16,21 +26,21 @@ export const CompanyProfile = ({ data, setHaveChange }) => {
         name="company_cif"
         placeholder={data?.LegalNIFCIF}
       />
-      <div />
+      {screenSizeMobile || <div />}
       <InputText
         disabled
         label="Nombre empresa"
         name="company_name"
         placeholder={data?.Name}
       />
-      <div />
+      {screenSizeMobile || <div />}
       <InputText
         disabled
         label="DNI / NIE"
         name="company_dni"
         placeholder={data?.NIF}
       />
-      <div />
+      {screenSizeMobile || <div />}
       <InputText
         disabled
         label="Nombre"

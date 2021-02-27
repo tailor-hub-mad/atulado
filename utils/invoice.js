@@ -46,6 +46,14 @@ export const invoiceFilterAttributeTable = [
   "Amount",
 ];
 
+export const invoiceFilterAttributeTableMobile = [
+  "Id",
+  "CUPS",
+  "ContractCode",
+  "StartDate",
+  "Amount",
+];
+
 export const invoiceDetailInfo = [
   "Nº Factura",
   "Titular",

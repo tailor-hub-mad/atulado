@@ -25,6 +25,14 @@ export const contractFilterAttributeTable = [
   "RateId",
 ];
 
+export const contractFilterAttributeTableMobile = [
+  "ContractCode",
+  "CUPS",
+  "InitDate",
+  "Address",
+  "Payer",
+];
+
 export const dataYearTemplate = {
   Ene: [],
   Feb: [],

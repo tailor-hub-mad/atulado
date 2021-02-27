@@ -1,12 +1,22 @@
-import React from "react";
+import React, { useLayoutEffect, useState } from "react";
 
 import { InputText } from "../../../../atoms/Input/Input.atom";
 
 export const ClientProfile = ({ data, setHaveChange }) => {
+  const [screenSizeMobile, setScreenSizeMobile] = useState();
+
   const handleHaveChenge = (value) => {
     if (value == "") return;
     setHaveChange(true);
   };
+
+  useLayoutEffect(() => {
+    if (window.innerWidth <= 769) {
+      setScreenSizeMobile(true);
+    } else {
+      setScreenSizeMobile(false);
+    }
+  }, []);
 
   return (
     <div className="client-wrapper">
@@ -16,7 +26,8 @@ export const ClientProfile = ({ data, setHaveChange }) => {
         name="client_dni"
         placeholder={data?.NIF}
       />
-      <div />
+      {screenSizeMobile || <div />}
+
       <InputText
         disabled
         label="Nombre"

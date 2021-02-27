@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const SCItemContractList = styled.div`
   width: 100%;
-  height: ${({ theme }) => theme.spaces.s.desktopSize};
+  height: ${({ theme }) => theme.spaces.m.desktopSize};
 
   z-index: 0;
 
@@ -15,9 +15,9 @@ export const SCItemContractList = styled.div`
   background: ${({ theme, disabled }) =>
     disabled ? theme.color.gray : theme.color.ligthPrimary};
 
-  border-radius: 34px;
-
   pointer-events: ${({ disabled }) => (disabled ? "none" : "all")};
+
+  border-radius: 15px;
 
   cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
 
@@ -46,8 +46,8 @@ export const SCItemContractList = styled.div`
   .content-wrapper {
     width: 100%;
     display: grid;
-    grid-template-columns: 0.5fr 1fr 0.5fr 0.5fr 1fr 1fr 0.5fr 0.5fr;
-    column-gap: ${({ theme }) => theme.spaces.s.desktopSize};
+    grid-template-columns: 1fr 1fr 1fr;
+    column-gap: ${({ theme }) => theme.spaces.xs.mobileSize};
 
     padding-left: ${({ theme }) => theme.spaces.xs.desktopSize};
 
@@ -116,10 +116,41 @@ export const SCItemContractList = styled.div`
       }};
     }
   }
+
+  @media only screen and (min-width: 769px) {
+    height: ${({ theme }) => theme.spaces.s.desktopSize};
+    border-radius: 34px;
+
+    .content-wrapper {
+      grid-template-columns: 0.5fr 1fr 0.5fr 0.5fr 1fr 1fr 0.5fr 0.5fr;
+      column-gap: ${({ theme }) => theme.spaces.s.desktopSize};
+
+      .menu-wrapper {
+        position: relative;
+
+        .option-list-wrapper {
+          width: 220px;
+          position: absolute;
+          top: 25px;
+          left: -150px;
+        }
+      }
+    }
+  }
 `;
 
 export const SCItemInvoiceList = styled(SCItemContractList)`
   .content-wrapper {
-    grid-template-columns: 0.5fr 0.5fr 1fr 0.5fr 0.5fr 1fr 0.5fr 0.5fr 0.4fr;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  @media only screen and (min-width: 769px) {
+    height: ${({ theme }) => theme.spaces.s.desktopSize};
+    border-radius: 34px;
+
+    .content-wrapper {
+      grid-template-columns: 0.5fr 0.5fr 1fr 0.5fr 0.5fr 1fr 0.5fr 0.5fr 0.4fr;
+      column-gap: ${({ theme }) => theme.spaces.s.desktopSize};
+    }
   }
 `;

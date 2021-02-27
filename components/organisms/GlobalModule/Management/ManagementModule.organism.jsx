@@ -162,7 +162,7 @@ export const ManagementModule = ({
             ? options.CUPS
             : options.ContractCode}
         </SCTextXL>
-        {options?.Alerts?.length == 0 || (
+        {options?.Alerts?.length == 0 || user.UserId != 3 || (
           <ButtonCheck
             action={handleValidateAllOptions}
             options={{

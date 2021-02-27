@@ -5,7 +5,7 @@ import FileDownload from "js-file-download";
 import { SCInvoiceDetailModule } from "./InvoiceDetailModule.styled";
 import { SCTextXL } from "../../../atoms/Text/TextXL.styled";
 import { ButtonIcon } from "../../../atoms/ButtonIcon/ButtonIcon.atom";
-import { SCTextM } from "../../../atoms/Text/TextM.styled";
+import { SCTextSLight } from "../../../atoms/Text/TextS.styled";
 import { BarChart } from "../../../molecules/BarChart/BarChart.molecule";
 import { ButtonSelect } from "../../../atoms/ButtonSelect/ButtonSelect.atom";
 import { OptionList } from "../../../atoms/OptionList/OptionList.atom";
@@ -304,14 +304,20 @@ export const InvoiceDetailModule = ({
           </div>
         </div>
 
-        <div className="detail-wrapper ">
-          <SCTextM color="black">Nº Factura: {dataInvoice?.InvoiceId}</SCTextM>
-          <SCTextM color="black">Titular: {dataInvoice?.InvoiceId}</SCTextM>
-          <SCTextM color="black">
+        <div className="detail-wrapper">
+          <SCTextSLight color="black">
+            Nº Factura: {dataInvoice?.InvoiceId}
+          </SCTextSLight>
+          <SCTextSLight color="black">
+            Titular: {dataInvoice?.InvoiceId}
+          </SCTextSLight>
+          <SCTextSLight color="black">
             Fecha Inicio: {dataInvoice?.StartDate}
-          </SCTextM>
-          <SCTextM color="black">Contrato: {dataInvoice?.ContractCode}</SCTextM>
-          <SCTextM color="black">
+          </SCTextSLight>
+          <SCTextSLight color="black">
+            Contrato: {dataInvoice?.ContractCode}
+          </SCTextSLight>
+          <SCTextSLight color="black">
             Dirección:{" "}
             {dataInvoice?.Address
               ? `${dataInvoice?.Address?.Street} 
@@ -319,11 +325,17 @@ export const InvoiceDetailModule = ({
               ${dataInvoice?.Address?.CountyId}`
               : ""}
             {}
-          </SCTextM>
-          <SCTextM color="black">Fecha Fin: {dataInvoice?.EndDate}</SCTextM>
-          <SCTextM color="black">CUPS: {dataInvoice?.CUPS}</SCTextM>
-          <SCTextM color="black">Importe: {dataInvoice?.InvoiceId}</SCTextM>
-          <SCTextM color="black">Emisión: {dataInvoice?.DocumentDate}</SCTextM>
+          </SCTextSLight>
+          <SCTextSLight color="black">
+            Fecha Fin: {dataInvoice?.EndDate}
+          </SCTextSLight>
+          <SCTextSLight color="black">CUPS: {dataInvoice?.CUPS}</SCTextSLight>
+          <SCTextSLight color="black">
+            Importe: {dataInvoice?.InvoiceId}
+          </SCTextSLight>
+          <SCTextSLight color="black">
+            Emisión: {dataInvoice?.DocumentDate}
+          </SCTextSLight>
         </div>
 
         <div className="download-wrapper">
@@ -350,16 +362,17 @@ export const InvoiceDetailModule = ({
             action={() => {}}
             dataInfo={buildData().info}
             dataChart={buildData().chart}
+            invoiceDetail
           />
         </div>
       </div>
 
       {openError && (
         <div className="error-message">
-          <SCTextM color="red">
+          <SCTextSLight color="red">
             Ha ocurrido un error con la visualización de su factura. Por favor,
             vuelva a intentarlo mas tarde.
-          </SCTextM>
+          </SCTextSLight>
         </div>
       )}
 

@@ -33,6 +33,7 @@ export const SCPassword = styled.section`
         `${theme.spaces.m.mobileSize} ${theme.spaces.s.mobileSize}`};
       border-radius: 4px;
       background: ${({ theme }) => theme.color.white};
+      margin: ${({ theme }) => `0 ${theme.spaces.s.mobileSize}`};
     }
 
     form {
