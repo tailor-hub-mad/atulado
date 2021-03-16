@@ -23,6 +23,7 @@ import { ProcessModal } from "../../Modal/ProcessModal/ProcessModal.organism";
 import { getInvoicesByContract } from "../../../../lib/api/invoice";
 import {
   getProcess,
+  getProcessByClient,
   deleteProcessById,
   validateDocumentation,
 } from "../../../../lib/api/process";
@@ -178,7 +179,8 @@ export const HomeModule = ({ contracts, user, optionsList }) => {
 
       return;
     } else {
-      getProcess(user.roleCode).then(({ data }) => {
+
+      getProcessByClient(user.roleCode, user.UserId).then(({ data }) => {
         setDataManagement(
           data.filter((element) => element["Status"] != "Procesado")
         );
@@ -294,7 +296,7 @@ export const HomeModule = ({ contracts, user, optionsList }) => {
       });
     }
 
-    getProcess(user.roleCode).then(({ data }) => {
+    getProcessByClient(user.roleCode, user.UserId).then(({ data }) => {
       setDataManagement(
         data.filter((element) => element["Status"] != "Procesado")
       );
