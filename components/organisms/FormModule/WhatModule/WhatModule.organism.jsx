@@ -87,6 +87,7 @@ export const WhatModule = ({
   const [ATRPowerErrors, setATRPowerErrors] = useState();
   const [newATR, setNewATR] = useState();
   const [newPowersValues, setNewPowersValues] = useState({});
+  const [desiredObject, setDesiredObject] = useState({});
   const { user } = useAuth();
 
   ////////////////////////////////////////////////////
@@ -781,16 +782,19 @@ export const WhatModule = ({
         NewSupplyContract,
       } = defaultInfoUpdateContract["contract"];
 
-      const sipsPower = getPowersDataByObject(
+      const desiredPowers = getPowersDataByObject(
         defaultInfoUpdateContract["contract"],
-        "SipsPower"
+        "PowerP"
       );
+
       const newPowers = getPowersDataByObject(
         defaultInfoUpdateContract["contract"],
         "SipsPowerP"
       );
       const currentATR = getATRFullDataById(offeredRate, SipsATR);
       const newAtr = getATRFullDataById(offeredRate, ATR);
+
+      setDesiredObject({ atr: newAtr, powers: desiredPowers });
 
       const measurementType = !isEmpty(sipsInformation) && !isEmpty(sipsInformation?.sips)
         ? sipsInformation.MeasurementType
@@ -910,7 +914,7 @@ export const WhatModule = ({
                   newNormalizePowers={newNormalizePowers}
                 />
               </>
-            ) : (
+            ) : isEmpty(desiredObject) ? (
               <>
                 <ATRPowerWithSipsInformation
                   oppeners={oppeners}
@@ -927,7 +931,26 @@ export const WhatModule = ({
                   SIPSPower={SIPSPower}
                 />
               </>
-            )}
+            ) :
+              <ATRPowerUpdate
+                oppeners={oppeners}
+                handleButtonCheck={handleButtonCheck}
+                handleAdditionalErrors={handleAdditionalErrors}
+                ATRPowerErrors={ATRPowerErrors}
+                ATRPowerCurrentErrors={ATRPowerCurrentErrors}
+                handleOptionSelectedATRValue={handleOptionSelectedATRValue}
+                handlePowers={handlePowers}
+                ATRTypes={ATRTypes}
+                handlePowerValues={handlePowerValues}
+                currentNormalizePowers={currentNormalizePowers}
+                newNormalizePowers={newNormalizePowers}
+                desiredObject={desiredObject}
+                ATR={
+                  sipsInformation?.ATR?.Description || currentATR?.description
+                }
+                SIPSPower={SIPSPower}
+              />
+            }
             {/* ///////// */}
             {/* Aun no está implementada la lógica que hace posible el funcinamiento correcto de este adjunto */}
             {/* ///////// */}
@@ -1490,6 +1513,284 @@ const ATRPowerNewSubscription = ({
                 action={() => handleButtonCheck("power_check", true)}
               >
                 Seleccionar potencia
+              </ButtonSelect>
+            )}
+          </div>
+        </InfoCard>
+      )}
+    </>
+  );
+};
+
+const ATRPowerUpdate = ({
+  oppeners,
+  handleButtonCheck,
+  handleAdditionalErrors,
+  ATRPowerErrors,
+  ATRPowerCurrentErrors,
+  handleOptionSelectedATRValue,
+  handlePowerValues,
+  handlePowers,
+  ATRTypes,
+  newNormalizePowers,
+  currentNormalizePowers,
+  desiredObject,
+  ATR,
+  SIPSPower
+}) => {
+  const [atrValue, setAtrValue] = useState("");
+  const [currentATRValue, setCurrentATRValue] = useState("");
+  const [powerValues, setPowerValues] = useState([]);
+  const [currentPowerValues, setCurrentPowerValues] = useState([]);
+
+  const handleCheckValueATRIsSelected = (value, type) => {
+    const checked =
+      (type == "current" && atrValue != "") ||
+      (type != "current" && currentATRValue != "");
+
+    handleOptionSelectedATRValue(value, checked, type);
+  };
+
+  useEffect(() => {
+    if (newNormalizePowers) {
+      const newPowerValues = handlePowers(atrValue);
+      setPowerValues(newPowerValues);
+    }
+  }, [atrValue, newNormalizePowers]);
+
+  useEffect(() => {
+    if (currentNormalizePowers) {
+      const newPowerValues = handlePowers(currentATRValue, "current");
+      setCurrentPowerValues(newPowerValues);
+    }
+  }, [currentATRValue, currentNormalizePowers]);
+
+  return (
+    <>
+      <InfoCard checked={!oppeners["atr_check"]} action={(value) => handleButtonCheck("atr_check", false)}>
+        <div className="info-card">
+          <div className="info-card">
+            <SCTextM color={oppeners["atr_check"] ? "gray" : "primary"}>
+              Tu tarifa actual
+          </SCTextM>
+            <div className="data-container">
+              <SCTextL color={oppeners["atr_check"] ? "gray" : "primary"}>
+                {ATR}
+              </SCTextL>
+            </div>
+          </div>
+          {
+            desiredObject && (
+              <>
+                <SCTextM color={oppeners["atr_check"] ? "gray" : "primary"}>
+                  Tu tarifa ideal
+          </SCTextM>
+                <div className="data-container">
+                  <SCTextL color={oppeners["atr_check"] ? "gray" : "primary"}>
+                    {desiredObject?.atr?.Description || desiredObject?.atr?.TollName}
+                  </SCTextL>
+                </div>
+              </>
+            )
+          }
+          {oppeners["atr_check"] ? (
+            <>
+              <div className="options-container">
+                <SingleDropdown
+                  label="Tu tarifa actual"
+                  name="invoice_type"
+                  options={ATRTypes.map((element) => `${element.name}`)}
+                  validation={{
+                    validate: async (value) => {
+                      setCurrentATRValue(value);
+                      handleCheckValueATRIsSelected(value, "current");
+                    },
+                  }}
+                  additionalErrors={handleAdditionalErrors(
+                    "single",
+                    ATRPowerCurrentErrors
+                  )}
+                />
+              </div>
+              <div className="options-container">
+                <SingleDropdown
+                  label="Tu tarifa ideal"
+                  name="invoice_type"
+                  options={ATRTypes.map((element) => `${element.name}`)}
+                  validation={{
+                    validate: async (value) => {
+                      setAtrValue(value);
+                      handleCheckValueATRIsSelected(value);
+                    },
+                  }}
+                  additionalErrors={handleAdditionalErrors(
+                    "single",
+                    ATRPowerErrors
+                  )}
+                />
+              </div>
+            </>
+          ) : (
+            <ButtonSelect action={() => handleButtonCheck("atr_check", true)}>
+              Modificar tarifa
+            </ButtonSelect>
+          )}
+        </div>
+      </InfoCard>
+      {(
+        <InfoCard
+          checked={!oppeners["power_value"]}
+          action={() => handleButtonCheck("power_value", false)}
+        >
+
+          <div className="info-card">
+            <SCTextM color={oppeners["power_value"] ? "gray" : "primary"}>
+              Tu potencia actual
+          </SCTextM>
+            <div className="power-wrapper">
+              {SIPSPower.map((element, index) => {
+                return (
+                  <SCTextL
+                    key={index}
+                    color={oppeners["power_value"] ? "gray" : "primary"}
+                  >
+                    {element}
+                  </SCTextL>
+                );
+              })}
+            </div>
+
+            <SCTextM color={oppeners["power_value"] ? "gray" : "primary"}>
+              Tu potencia ideal
+            </SCTextM>
+
+            <div className="power-wrapper">
+              {Object.values(desiredObject?.powers).filter(p => p).map((element, index) => {
+                return (
+                  <SCTextL
+                    key={index}
+                    color={oppeners["power_value"] ? "gray" : "primary"}
+                  >
+                    P{index + 1} {element}kW
+                  </SCTextL>
+                );
+              })}
+            </div>
+
+            {oppeners["power_value"] ? (
+              <>
+                <div className="options-container">
+                  {currentPowerValues && currentPowerValues.length > 0 ? <MultiDropdown
+                    label="Elige tu potencia actual"
+                    options={currentPowerValues.map((element, index) => {
+                      return {
+                        name: `power_${index}`,
+                        values: element,
+                      };
+                    })}
+                    validation={{
+                      required: true,
+                    }}
+                    additionalErrors={handleAdditionalErrors(
+                      "multi",
+                      ATRPowerCurrentErrors
+                    )}
+                    setValue={(index, value) =>
+                      handlePowerValues(
+                        index,
+                        value,
+                        currentATRValue,
+                        "current"
+                      )
+                    }
+                  />
+                    :
+                    (
+                      <MultiDropdown
+                        label="Elige tus potencias"
+                        options={handlePowers(
+                          ATR,
+                          ATR == ATR ? "current" : ""
+                        ).map((element, index) => {
+                          return {
+                            name: `power_${index}`,
+                            values: element,
+                          };
+                        })}
+                        validation={{ required: true }}
+                        additionalErrors={handleAdditionalErrors(
+                          "multi",
+                          ATRPowerErrors
+                        )}
+                        setValue={(index, value) =>
+                          handlePowerValues(
+                            index,
+                            value,
+                            ATR || '',
+                            "current"
+                          )
+                        }
+                      />
+                    )
+                  }
+                </div>
+                <div className="options-container">
+                  {
+                    powerValues && powerValues?.length > 0 ? (
+                      <MultiDropdown
+                        label="Elige tu potencia ideal"
+                        options={powerValues.map((element, index) => {
+                          return {
+                            name: `power_${index}`,
+                            values: element,
+                          };
+                        })}
+                        validation={{
+                          required: true,
+                        }}
+                        additionalErrors={handleAdditionalErrors(
+                          "multi",
+                          ATRPowerErrors
+                        )}
+                        setValue={(index, value) =>
+                          handlePowerValues(index, value, atrValue)
+                        }
+                      />
+                    ) :
+                      (
+                        <MultiDropdown
+                          label="Elige tus potencias ideales"
+                          options={handlePowers(
+                            desiredObject?.atr?.Description || desiredObject?.atr?.TollName,
+                            desiredObject?.atr?.Description == ATR || desiredObject?.atr?.TollName == ATR ? "current" : ""
+                          ).map((element, index) => {
+                            return {
+                              name: `power_${index}`,
+                              values: element,
+                            };
+                          })}
+                          validation={{ required: true }}
+                          additionalErrors={handleAdditionalErrors(
+                            "multi",
+                            ATRPowerErrors
+                          )}
+                          setValue={(index, value) =>
+                            handlePowerValues(
+                              index,
+                              value,
+                              desiredObject?.atr?.Description || desiredObject?.atr?.TollName || '',
+                            )
+                          }
+                        />
+                      )
+                  }
+                </div>
+              </>
+            ) : (
+              <ButtonSelect
+                action={() => handleButtonCheck("power_value", true)}
+              >
+                Modificar potencias
               </ButtonSelect>
             )}
           </div>

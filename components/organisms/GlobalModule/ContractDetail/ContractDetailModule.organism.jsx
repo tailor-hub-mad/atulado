@@ -206,7 +206,7 @@ export const ContractDetailModule = ({
       const month = date.getMonth();
 
       const codeMonth = getCodeMonthByPosition(month);
-      dataYear[codeMonth].push(element.Amount);
+      dataYear[codeMonth]?.push(element.Amount);
     });
 
     Object.keys(dataYear).forEach((element) => {
@@ -469,6 +469,8 @@ export const ContractDetailModule = ({
     if (error) {
       // handle error
     }
+
+    await handleGetProcessById();
 
     setCloseManagementModal({
       open: false,
