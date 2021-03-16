@@ -93,6 +93,10 @@ export const SCRateCard = styled.div`
     }   
   }
 
+  .terms {
+    margin-top: 28px;
+  }
+
   @media only screen and (min-width: 769px) {
     .green-card-wrapper {
       max-width: 266px;

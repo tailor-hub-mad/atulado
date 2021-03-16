@@ -691,23 +691,23 @@ const SummaryContractData = ({ dataContract }) => {
           {dataContract.fee?.supplyFee && (
             <>
               {dataContract.fee.supplyFee?.PowerP1 && (
-                <SCTextSLight color="black">{`Consumo punta: ${dataContract.fee.supplyFee.PowerP1} €/kw`}</SCTextSLight>
+                <SCTextSLight color="black">{`Consumo punta: ${dataContract.fee.supplyFee.PowerP1} €/kWh`}</SCTextSLight>
               )}
               {dataContract.fee.supplyFee?.PowerP2 && (
-                <SCTextSLight color="black">{`Consumo valle: ${dataContract.fee.supplyFee.PowerP2} €/kw`}</SCTextSLight>
+                <SCTextSLight color="black">{`Consumo valle: ${dataContract.fee.supplyFee.PowerP2} €/kWh`}</SCTextSLight>
               )}
               {dataContract.fee.supplyFee?.PowerP3 && (
-                <SCTextSLight color="black">{`Consumo super valle: ${dataContract.fee.supplyFee.PowerP3} €/kw`}</SCTextSLight>
+                <SCTextSLight color="black">{`Consumo super valle: ${dataContract.fee.supplyFee.PowerP3} €/kWh`}</SCTextSLight>
               )}
               <div className="separator" />
               {dataContract.fee.supplyFee?.EnergyP1 && (
-                <SCTextSLight color="black">{`Potencia punta: ${dataContract.fee.supplyFee.EnergyP1} €kw día`}</SCTextSLight>
+                <SCTextSLight color="black">{`Potencia punta: ${dataContract.fee.supplyFee.EnergyP1} €/kW día`}</SCTextSLight>
               )}
               {dataContract.fee.supplyFee?.EnergyP2 && (
-                <SCTextSLight color="black">{`Potencia valle: ${dataContract.fee.supplyFee.EnergyP2} €kw día`}</SCTextSLight>
+                <SCTextSLight color="black">{`Potencia valle: ${dataContract.fee.supplyFee.EnergyP2} €/kW día`}</SCTextSLight>
               )}
               {dataContract.fee.supplyFee.EnergyP3 && (
-                <SCTextSLight color="black">{`Potencia super valle: ${dataContract.fee.supplyFee.EnergyP3} €kw día`}</SCTextSLight>
+                <SCTextSLight color="black">{`Potencia super valle: ${dataContract.fee.supplyFee.EnergyP3} €/kW día`}</SCTextSLight>
               )}
             </>
           )}

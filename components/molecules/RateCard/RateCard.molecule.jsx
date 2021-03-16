@@ -91,6 +91,11 @@ export default function RateCard({
       <SCTextSLight className="rate-description">{description}</SCTextSLight>
       {hours && <div className="hours">{displayHours()}</div>}
       {rates && <div className="rates-cards">{displayRates()}</div>}
+
+      <div className="terms">
+        <SCTextXSLight>Válida desde: 01/01/2021</SCTextXSLight>
+        <SCTextXSLight>Precios antes de impuesto eléctrico (5,113%) e IVA (21%)</SCTextXSLight>
+      </div>
     </SCRateCard>
   );
 }
