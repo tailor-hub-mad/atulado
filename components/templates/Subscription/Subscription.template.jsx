@@ -107,6 +107,7 @@ export default function SubscriptionTemplate() {
     change_titularity: false,
     newContractReason: 0,
   });
+  const [disactiveNav, setDisactiveNav] = useState(false);
 
   const methods = useForm({
     mode: "onBlur",
@@ -183,6 +184,7 @@ export default function SubscriptionTemplate() {
       setDefaultUserNewContract(user);
 
       if (newContract) {
+        setDisactiveNav(true);
         setDefaultAddressNewContract(user.FiscalAddress);
       }
     }
@@ -390,6 +392,7 @@ export default function SubscriptionTemplate() {
                     defaultInfoUpdateContract={defaultInfoUpdateContract}
                     setHasFormErros={setHasFormErros}
                     hasFormErrors={hasFormErrors}
+                    disactiveNav={disactiveNav}
                   />
                 </div>
 

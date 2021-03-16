@@ -475,7 +475,7 @@ export const handleDataRegistration = async (data) => {
     };
     dataRegister["fiscalAddress"] = {
       ...dataRegister["fiscalAddress"],
-      addressId: data?.update?.FiscalAddress.AddressId,
+      addressId: data?.update?.FiscalAddress?.AddressId,
     };
     dataRegister["deliveryAddress"] = {
       ...dataRegister["deliveryAddress"],
@@ -489,7 +489,7 @@ export const handleDataRegistration = async (data) => {
 
     dataRegister["payer"] = {
       ...dataRegister["payer"],
-      customerId: data?.update?.Payer.CustomerId,
+      customerId: data?.update?.Payer?.CustomerId,
     };
 
     dataRegister["promotionalCode"] = data?.update?.PromotionalCode || "";

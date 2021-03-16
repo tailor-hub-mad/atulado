@@ -24,6 +24,7 @@ export const DataModule = ({
   defaultInfoUpdateContract,
   setHasFormErros,
   hasFormErrors,
+  disactiveNav = false
 }) => {
   const [defaultAddress, setDefaultAddress] = useState({
     fiscal: null,
@@ -494,7 +495,7 @@ export const DataModule = ({
                   validate: async (value) =>
                     handleDataClient("company_cif", value),
                 }}
-                apiValidation={!isEmpty(defaultInfoUpdateContract) ? validatePayerNIF : validateNIF}
+                apiValidation={!isEmpty(defaultInfoUpdateContract) || disactiveNav ? validatePayerNIF : validateNIF}
                 defaultValue={defaultUser?.company_cif}
               //disabled={!isEmpty(defaultInfoUpdateContract)}
               />
@@ -588,7 +589,7 @@ export const DataModule = ({
                   validate: async (value) =>
                     handleDataClient("client_dni", value),
                 }}
-                apiValidation={!isEmpty(defaultInfoUpdateContract) ? validatePayerNIF : validateNIF}
+                apiValidation={!isEmpty(defaultInfoUpdateContract) || disactiveNav ? validatePayerNIF : validateNIF}
                 defaultValue={defaultUser?.client_dni}
                 setHasFormErros={setHasFormErros}
                 hasFormErrors={hasFormErrors}
