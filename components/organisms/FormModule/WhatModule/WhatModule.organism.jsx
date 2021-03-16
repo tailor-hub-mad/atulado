@@ -792,7 +792,11 @@ export const WhatModule = ({
       const currentATR = getATRFullDataById(offeredRate, SipsATR);
       const newAtr = getATRFullDataById(offeredRate, ATR);
 
-      handleATRValue(currentATR.TollName, "A", "current");
+      const measurementType = !isEmpty(sipsInformation) && !isEmpty(sipsInformation?.sips)
+        ? sipsInformation.MeasurementType
+        : installationType;
+
+      handleATRValue(currentATR.TollName, measurementType, "current");
       handleATRValue(newAtr.TollName);
 
       const {
@@ -1018,7 +1022,7 @@ export const WhatModule = ({
 
           {oppeners["stop_service"] &&
             oppeners?.bie["stop_service"] &&
-            sipsInformation?.PowerControlMode?.Code != "2" && (
+            (sipsInformation?.PowerControlMode?.Code != "2") && (
               <>
                 <BIEAttachment
                   attachmentFile={attachmentFile}

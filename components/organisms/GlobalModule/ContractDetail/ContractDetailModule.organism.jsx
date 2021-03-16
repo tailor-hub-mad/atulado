@@ -532,6 +532,19 @@ export const ContractDetailModule = ({
 
   useClickOutside(iconRef, () => setOpenMenu(false));
 
+  const handleValidateProcess = (index) => {
+    const process = dataManagement[index];
+
+    const { RegistrationId, ProcessId } = process;
+
+    validateDocumentation(
+      user.roleCode,
+      user.UserId,
+      ProcessId,
+      RegistrationId
+    );
+  };
+
   return (
     <>
       {openInfoUpdateModal.open && (
@@ -683,6 +696,7 @@ export const ContractDetailModule = ({
                             action={() => handleClickManagementItem(index)}
                             data={element}
                             user={user}
+                            validateAction={() => handleValidateProcess(index)}
                           />
                         ))
                     ) : (
