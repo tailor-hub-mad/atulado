@@ -170,6 +170,7 @@ export const WhatModule = ({
           stop_service: true,
         };
       } else {
+        newExtraDataRegister["powerControlMode"] = true;
         newOppeners["bie"] = {
           new_subscription: true,
           error_power: false,

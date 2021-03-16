@@ -454,7 +454,7 @@ export const handleDataRegistration = async (data) => {
     filesSupplyBIEDocumentation: attachmentData.supplyBIEDocumentation,
     supplyBIEDocumentationReason: 0, // this value its default
     selfSupplyType: String(data?.selfSupplyReason || "00"),
-    selfSupplyBIE: data?.selfSupplyReason != "00" ? true : false,
+    selfSupplyBIE: data?.selfSupplyReason ? data?.selfSupplyReason != "00" ? true : false : false,
     selfSupplyBIEDocumentation: !isEmpty(
       attachmentData.selfSupplyBIEDocumentation
     ),
