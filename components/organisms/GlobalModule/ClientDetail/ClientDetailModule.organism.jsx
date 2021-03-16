@@ -31,6 +31,7 @@ import {
   getProcess,
   deleteProcessById,
   validateDocumentation,
+  getProcessByClient,
 } from "../../../../lib/api/process";
 import { getContractsByAccount } from "../../../../lib/api/contract";
 import { getInvoicesByContract } from "../../../../lib/api/invoice";
@@ -170,7 +171,7 @@ export const ClientDetailModule = ({
   };
 
   const handleDeleteManagement = async (index) => {
-    const process = dataManagement[index];
+    const process = dataManagement?.filter((element) => element["Status"] != "Procesado")[index];
 
     const { ContractCode, RegistrationId, ProcessId } = process;
 
@@ -463,7 +464,7 @@ export const ClientDetailModule = ({
     }
 
     async function getProcessById(id) {
-      const { data } = await getProcess(user.roleCode, id);
+      const { data } = await getProcessByClient(user?.roleCode, id);
 
       setDataManagement(data);
       setFullDataManagement(data);
@@ -725,7 +726,7 @@ export const ClientDetailModule = ({
                           key={index}
                           closeAction={() => {
                             const getProcessById = async (id) => {
-                              const { data } = await getProcess(user.roleCode, id);
+                              const { data } = await getProcessByClient(user.roleCode, id);
 
                               setDataManagement(data);
                               setFullDataManagement(data);
