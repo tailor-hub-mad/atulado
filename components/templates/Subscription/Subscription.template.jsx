@@ -711,14 +711,14 @@ const SummaryContractData = ({ dataContract }) => {
               )}
             </>
           )}
-
-          {dataContract?.selfSupply && (
+          <div className="separator" />
+          {dataContract?.selfSupply && dataContract.fee?.selfSupplyFee != 0 && dataContract.fee?.selfSupplyFee && (
             <SCTextSLight color="black">
               Comisión de autoconsumo: {dataContract.fee?.selfSupplyFee}{" "}
               {dataContract.fee?.feeType == "Fixed" ? "€/mes" : "€/kWh"}
             </SCTextSLight>
           )}
-          {dataContract?.paperInvoice && (
+          {dataContract?.paperInvoice && dataContract.fee?.paperFee != 0 && dataContract.fee?.paperFee && (
             <SCTextSLight color="black">
               Comisión de factura papel: {dataContract.fee?.paperFee}{" "}
               {dataContract.fee?.feeType == "Fixed" ? "€/mes" : "€/kWh"}
