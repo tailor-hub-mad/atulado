@@ -4,11 +4,13 @@ import { SCProcessModal } from "./ProcessModal.styled";
 import { SCTextXL } from "../../../atoms/Text/TextXL.styled";
 import { Modal } from "../../../molecules/Modal/Modal.molecule";
 import Button from "../../../atoms/Button/Button.atom";
+import { SCTextSLight } from "../../../atoms/Text/TextS.styled";
 
 export const ProcessModal = ({
   setCloseManagementModal,
   handleDeleteManagement,
   index,
+  errorMessage
 }) => {
   return (
     <Modal closeAction={() => setCloseManagementModal(false)}>
@@ -26,6 +28,11 @@ export const ProcessModal = ({
           </Button>
           <Button onClick={() => handleDeleteManagement(index)}>Aceptar</Button>
         </div>
+        {errorMessage && (
+          <SCTextSLight className="error-message" color="red">
+            {errorMessage}
+          </SCTextSLight>
+        )}
       </SCProcessModal>
     </Modal>
   );

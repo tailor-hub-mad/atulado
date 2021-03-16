@@ -35,6 +35,9 @@ export const AuthProvider = ({ children }) => {
         } catch (e) {
           console.error(e);
         }
+      } else {
+        Cookies.remove("token");
+        Cookies.remove("roleCode");
       }
 
       setLoading(false);

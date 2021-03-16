@@ -44,6 +44,7 @@ export const ClientProfile = ({ data, setHaveChange }) => {
         label="Email"
         name="client_email"
         placeholder={data?.Email}
+        defaultValue={data?.Email}
         validation={{
           validate: async (value) => handleHaveChenge(value),
         }}
@@ -52,6 +53,7 @@ export const ClientProfile = ({ data, setHaveChange }) => {
         label="Nº de teléfono"
         name="client_phone"
         placeholder={data?.PhoneNumber}
+        defaultValue={data?.PhoneNumber}
         validation={{
           validate: async (value) => handleHaveChenge(value),
         }}

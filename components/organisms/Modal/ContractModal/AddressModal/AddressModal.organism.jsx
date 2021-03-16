@@ -57,10 +57,11 @@ export const AddressModal = ({ closeAction, action }) => {
           <form onSubmit={methods.handleSubmit(onSubmit)}>
             <AddressModule
               summaryData={{}}
-              setSummaryData={() => {}}
+              setSummaryData={() => { }}
               defaultAddress={{}}
               extraDataRegister={{}}
-              setExtraDataRegister={() => {}}
+              setExtraDataRegister={() => { }}
+              setHasFormErros={() => { }}
               cups={""}
             />
             <div className="button-modal-wrapper">

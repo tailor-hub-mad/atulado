@@ -13,6 +13,7 @@ export const HowModule = ({
   defaultInfoUpdateContract,
   attachmentFile,
   setAttachmentFile,
+  changeTitularyProp
 }) => {
   const [changeTitulary, setChangeTitulary] = useState(false);
   const [paperInvoice, setPaperInvoice] = useState(false);
@@ -20,7 +21,7 @@ export const HowModule = ({
   const [openInfoAttachment, setOpenInfoAttachment] = useState(true);
 
   const handleCheckButton = (name, value) => {
-    if (name == "paper_invoice") {
+    if (name == "electronic_invoice") {
       setPaperInvoice(value);
 
       const newSummaryData = { ...summaryData };
@@ -62,7 +63,11 @@ export const HowModule = ({
     }
 
     const newExtraDataRegister = { ...extraDataRegister };
-    newExtraDataRegister[name] = value;
+    if (name == "electronic_invoice") {
+      newExtraDataRegister[name] = !value;
+    } else {
+      newExtraDataRegister[name] = value;
+    }
 
     setExtraDataRegister(newExtraDataRegister);
   };
@@ -70,16 +75,30 @@ export const HowModule = ({
   useEffect(() => {
     if (!defaultInfoUpdateContract) return;
 
-    const { eInvoice } = defaultInfoUpdateContract.contract;
+    const {
+      eInvoice,
+      Subrogation,
+      HolderChange,
+    } = defaultInfoUpdateContract.contract;
 
-    if (!eInvoice) {
-      setPaperInvoice(true);
+    const newExtraDataRegister = { ...extraDataRegister };
+    newExtraDataRegister[electronic_invoice] = eInvoice;
+
+    setExtraDataRegister(newExtraDataRegister);
+    setIsSubrogate(Subrogation);
+    if (changeTitularyProp) {
+      setChangeTitulary(changeTitularyProp);
+      handleCheckButton("change_titularity", changeTitularyProp)
+    } else {
+      setChangeTitulary(HolderChange);
     }
+    setPaperInvoice(!eInvoice);
   }, [defaultInfoUpdateContract]);
 
   return (
     <SCHowModule>
       <ButtonCheck
+        checked={changeTitulary}
         action={(value) => handleCheckButton("change_titularity", value)}
       >
         ¿Es un cambio de titularidad?
@@ -118,6 +137,7 @@ export const HowModule = ({
       {changeTitulary && (
         <>
           <ButtonCheck
+            checked={isSubrogate}
             action={(value) => handleCheckButton("previous_contract", value)}
           >
             ¿Quieres subrogarte al contrato anterior?
@@ -146,7 +166,7 @@ export const HowModule = ({
 
       <ButtonCheck
         checked={paperInvoice}
-        action={(value) => handleCheckButton("paper_invoice", value)}
+        action={(value) => handleCheckButton("electronic_invoice", value)}
       >
         Factura en papel
       </ButtonCheck>

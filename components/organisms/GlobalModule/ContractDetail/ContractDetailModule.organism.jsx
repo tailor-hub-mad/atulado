@@ -206,7 +206,7 @@ export const ContractDetailModule = ({
       const month = date.getMonth();
 
       const codeMonth = getCodeMonthByPosition(month);
-      dataYear[codeMonth].push(element.Amount);
+      dataYear[codeMonth]?.push(element.Amount);
     });
 
     Object.keys(dataYear).forEach((element) => {
@@ -470,6 +470,8 @@ export const ContractDetailModule = ({
       // handle error
     }
 
+    await handleGetProcessById();
+
     setCloseManagementModal({
       open: false,
       index: null,
@@ -531,6 +533,19 @@ export const ContractDetailModule = ({
   const iconRef = useRef();
 
   useClickOutside(iconRef, () => setOpenMenu(false));
+
+  const handleValidateProcess = (index) => {
+    const process = dataManagement[index];
+
+    const { RegistrationId, ProcessId } = process;
+
+    validateDocumentation(
+      user.roleCode,
+      user.UserId,
+      ProcessId,
+      RegistrationId
+    );
+  };
 
   return (
     <>
@@ -683,6 +698,7 @@ export const ContractDetailModule = ({
                             action={() => handleClickManagementItem(index)}
                             data={element}
                             user={user}
+                            validateAction={() => handleValidateProcess(index)}
                           />
                         ))
                     ) : (

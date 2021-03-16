@@ -14,28 +14,32 @@ const handleDataHolder = (data) => {
       company_cif,
       company_name,
       company_email,
+      company_phone,
       company_admin_dni,
       company_admin_name,
       company_admin_surname,
     } = data;
 
-    holderData["legalNIFCIF"] = company_cif;
-    holderData["legalName"] = company_name;
+    holderData["nif"] = company_cif;
+    holderData["name"] = company_name;
+    holderData["lastName"] = "";
+    holderData["secondLastName"] = "";
     holderData["email"] = company_email;
-    holderData["nif"] = company_admin_dni;
-    holderData["name"] = company_admin_name;
+    holderData["phoneNumber"] = company_phone;
+    holderData["legalNIFCIF"] = company_admin_dni;
+    holderData["legalName"] = company_admin_name;
 
     if (company_admin_surname) {
       const auxSurname = company_admin_surname.split(" ");
-      holderData["lastName"] = auxSurname[0];
+      holderData["legalLastName"] = auxSurname[0];
       if (auxSurname.length > 1) {
-        holderData["secondLastName"] = auxSurname[1];
+        holderData["legalSecondLastName"] = auxSurname[1];
       } else {
-        holderData["secondLastName"] = "";
+        holderData["legalSecondLastName"] = "";
       }
     } else {
-      holderData["lastName"] = "";
-      holderData["secondLastName"] = "";
+      holderData["legalLastName"] = "";
+      holderData["legalSecondLastName"] = "";
     }
   } else {
     const {
@@ -82,23 +86,26 @@ const handleDataPayer = (data) => {
         company_payer_admin_surname,
       } = data;
 
-      payerData["legalNIFCIF"] = company_payer_cif;
-      payerData["legalName"] = company_payer_name;
+      payerData["nif"] = company_payer_cif;
+      payerData["name"] = company_payer_name;
+      payerData["lastName"] = "";
+      payerData["secondLastName"] = "";
       payerData["email"] = company_payer_email;
-      payerData["nif"] = company_payer_admin_dni;
-      payerData["name"] = company_payer_admin_name;
+
+      payerData["legalNIFCIF"] = company_payer_admin_dni;
+      payerData["legalName"] = company_payer_admin_name;
 
       if (company_payer_admin_surname) {
         const auxSurname = company_payer_admin_surname.split(" ");
-        payerData["lastName"] = auxSurname[0];
+        payerData["legalLastName"] = auxSurname[0];
         if (auxSurname.length > 1) {
-          payerData["secondLastName"] = auxSurname[1];
+          payerData["legalSecondLastName"] = auxSurname[1];
         } else {
-          payerData["secondLastName"] = "";
+          payerData["legalSecondLastName"] = "";
         }
       } else {
-        payerData["lastName"] = "";
-        payerData["secondLastName"] = "";
+        payerData["legalLastName"] = "";
+        payerData["legalSecondLastName"] = "";
       }
     } else {
       const {
@@ -243,7 +250,7 @@ const handleSupply = (data) => {
     if (atrSIPSInformation.checkSips) {
       supplyData["checkSips"] = true;
       supplyData["sipsCUPS"] = data.cups;
-      supplyData["sipsATR"] = atrSIPSInformation.ATR.Code;
+      supplyData["sipsATR"] = atrSIPSInformation.ATR?.Code;
       supplyData["sipsPowerP1"] = atrSIPSInformation.SipsPowerP1 || 0;
       supplyData["sipsPowerP2"] = atrSIPSInformation.SipsPowerP2 || 0;
       supplyData["sipsPowerP3"] = atrSIPSInformation.SipsPowerP3 || 0;
@@ -251,10 +258,10 @@ const handleSupply = (data) => {
       supplyData["sipsPowerP5"] = atrSIPSInformation.SipsPowerP5 || 0;
       supplyData["sipsPowerP6"] = atrSIPSInformation.SipsPowerP6 || 0;
       supplyData["sipsTensionLevel"] = atrSIPSInformation?.TensionLevel?.Code
-        ? Number(atrSIPSInformation.TensionLevel.Code)
+        ? Number(atrSIPSInformation.TensionLevel?.Code)
         : 0;
       supplyData["sipsPowerControlMode"] = Number(
-        atrSIPSInformation.PowerControlMode.Code
+        atrSIPSInformation.PowerControlMode?.Code
       );
       supplyData["sipsMaxBIEPower"] = Number(
         atrSIPSInformation.SipsMaxBIEPower
@@ -266,7 +273,7 @@ const handleSupply = (data) => {
         atrSIPSInformation.SipsAccessRights
       );
       supplyData["sipsDistributor"] =
-        atrSIPSInformation.DistributionCompany.Code;
+        atrSIPSInformation.DistributionCompany?.Code;
       supplyData["sipsCNAE"] = atrSIPSInformation.CNAE.toString();
     } else {
       supplyData["checkSips"] = false;
@@ -338,8 +345,8 @@ const handleSupply = (data) => {
 
   supplyData["cups"] = data.cups;
 
-  if (atrInformation?.newATR.code) {
-    supplyData["atr"] = atrInformation.newATR.code;
+  if (atrInformation?.newATR?.code) {
+    supplyData["atr"] = atrInformation.newATR?.code;
     supplyData["rateId"] = Number(atrInformation.RateId) || 1;
     supplyData["powerP1"] = 0;
     supplyData["powerP2"] = 0;
@@ -375,7 +382,7 @@ const handleSupply = (data) => {
       supplyData["powerControlMode"] =
         Number(atrSIPSInformation?.PowerControlMode) || 1;
     } else {
-      supplyData["atr"] = atrSIPSInformation.ATR.Code;
+      supplyData["atr"] = atrSIPSInformation.ATR?.Code;
       supplyData["rateId"] = Number(atrSIPSInformation.RateId) || 1;
       supplyData["powerP1"] = atrSIPSInformation.SipsPowerP1 || 0;
       supplyData["powerP2"] = atrSIPSInformation.SipsPowerP2 || 0;
@@ -387,8 +394,12 @@ const handleSupply = (data) => {
       supplyData["tensionLevel"] = atrSIPSInformation.TensionLevel;
 
       supplyData["powerControlMode"] =
-        Number(atrSIPSInformation?.PowerControlMode.Code) || 1;
+        Number(atrSIPSInformation?.PowerControlMode?.Code) || 1;
     }
+  }
+
+  if (data?.powerControlMode) {
+    supplyData["powerControlMode"] = 2;
   }
 
   return supplyData;
@@ -438,12 +449,12 @@ export const handleDataRegistration = async (data) => {
     holderChange: data.change_titularity,
     holderChangeDocumentation: !isEmpty(attachmentData.changeDocumentation),
     filesHolderChangeDocumentation: attachmentData.changeDocumentation,
-    supplyBIE: !isEmpty(attachmentData.supplyBIEDocumentation),
+    supplyBIE: data?.powerControlMode || false,
     supplyBIEDocumentation: !isEmpty(attachmentData.supplyBIEDocumentation),
     filesSupplyBIEDocumentation: attachmentData.supplyBIEDocumentation,
     supplyBIEDocumentationReason: 0, // this value its default
     selfSupplyType: String(data?.selfSupplyReason || "00"),
-    selfSupplyBIE: !isEmpty(attachmentData.selfSupplyBIEDocumentation),
+    selfSupplyBIE: data?.selfSupplyReason ? data?.selfSupplyReason != "00" ? true : false : false,
     selfSupplyBIEDocumentation: !isEmpty(
       attachmentData.selfSupplyBIEDocumentation
     ),
@@ -451,13 +462,13 @@ export const handleDataRegistration = async (data) => {
     newSupplyContract: data?.atrSIPSInformation?.newSupplyContract || false,
     newSupplyContractReason: data.newContractReason,
     fixedContractDate: data.date != "",
-    contractDate: data.date != "" ? data.date : "01/01/1753",
+    contractDate: data.date != "" ? data.date : null,
     promotionalCode: data?.friend_code || "",
     subrogation: data.previous_contract,
     supplyAddress: address,
     fiscalAddress: fiscalAddress,
     deliveryAddress: contactAddress,
-    eInvoice: data.paper_invoice,
+    eInvoice: data.electronic_invoice,
     holderEqualsCustomer: !data.isPayer,
   };
 
@@ -468,7 +479,7 @@ export const handleDataRegistration = async (data) => {
     };
     dataRegister["fiscalAddress"] = {
       ...dataRegister["fiscalAddress"],
-      addressId: data?.update?.FiscalAddress.AddressId,
+      addressId: data?.update?.FiscalAddress?.AddressId,
     };
     dataRegister["deliveryAddress"] = {
       ...dataRegister["deliveryAddress"],
@@ -482,13 +493,13 @@ export const handleDataRegistration = async (data) => {
 
     dataRegister["payer"] = {
       ...dataRegister["payer"],
-      customerId: data?.update?.Payer.CustomerId,
+      customerId: data?.update?.Payer?.CustomerId,
     };
 
     dataRegister["promotionalCode"] = data?.update?.PromotionalCode || "";
 
-    dataRegister["subrogation"] = data?.update?.Subrogation || "";
-    dataRegister["contractDate"] = data?.update?.ContractDate || "01/01/1753";
+    dataRegister["subrogation"] = data?.update?.Subrogation || false;
+    dataRegister["contractDate"] = data?.update?.ContractDate || null;
     dataRegister["fixedContractDate"] =
       data?.update?.FixedContractDate || false;
 
@@ -540,7 +551,7 @@ export const getFormatLimitPowers = (data) => {
       minPowerValue = Math.min(minPowerValue, data[element]);
 
       if (data[element] != 0) {
-        return `P${index + 1} ${data[element]}kw`;
+        return `P${index + 1} ${data[element]}kW`;
       }
     })
     .filter((element) => element);

@@ -26,6 +26,7 @@ import {
   updateRegistration,
   updateRegistrationContract,
   readRegistration,
+  readTechnicalRegistration,
 } from "../../../lib/api/register";
 import { getContractById } from "../../../lib/api/contract";
 import { handleDataRegistration } from "../../../utils/register";
@@ -43,6 +44,7 @@ export default function SubscriptionTemplate() {
     proccessId,
     refWindow,
     contractCode: modifyContractCode,
+    proccessCode
   } = router.query;
 
   const { user } = useAuth();
@@ -55,7 +57,13 @@ export default function SubscriptionTemplate() {
   );
 
   const [offeredName, setOfferedName] = useState("");
-  const [hasFormErrors, setHasFormErros] = useState(false);
+  const [hasFormErrors, setHasFormErros] = useState({
+    dni: false,
+    address: false,
+    email: false,
+    offered: false,
+    general: false,
+  });
   const [defaultAddressNewContract, setDefaultAddressNewContract] = useState();
   const [defaultInfoUpdateContract, setDefaultInfoUpdateContract] = useState();
   const [defaultUserNewContract, setDefaultUserNewContract] = useState();
@@ -96,11 +104,13 @@ export default function SubscriptionTemplate() {
     isFiscalAddress: false,
     isContactAddress: false,
     isPayer: false,
-    paper_invoice: false,
+    electronic_invoice: true,
     previous_contract: false,
     change_titularity: false,
     newContractReason: 0,
   });
+  const [disactiveNav, setDisactiveNav] = useState(false);
+  const [changeTitulary, setChangeTitulary] = useState(false);
 
   const methods = useForm({
     mode: "onBlur",
@@ -127,19 +137,28 @@ export default function SubscriptionTemplate() {
         dataRegister
       );
     } else if (updateProcess) {
-      response = await updateRegistration(
-        user.roleCode,
-        defaultInfoUpdateContract.contract.RegistrationId,
-        dataRegister
-      );
+      if (proccessId > 0) {
+        response = await updateRegistration(
+          user.roleCode,
+          defaultInfoUpdateContract.contract.RegistrationId,
+          dataRegister
+        );
+      } else {
+        response = await updateRegistrationContract(
+          user.roleCode,
+          user.UserId,
+          modifyContractCode,
+          dataRegister
+        );
+      }
     } else {
       response = user
         ? await createContract(user.roleCode, user.UserId, dataRegister)
         : await createRegistration(dataRegister);
     }
 
-    if (response?.error) {
-      setHasFormErros(true);
+    if (response?.error || response == null) {
+      setHasFormErros({ ...hasFormErrors, general: true });
     } else {
       setOpenModal(true);
     }
@@ -177,6 +196,7 @@ export default function SubscriptionTemplate() {
       setDefaultUserNewContract(user);
 
       if (newContract) {
+        setDisactiveNav(true);
         setDefaultAddressNewContract(user.FiscalAddress);
       }
     }
@@ -184,6 +204,11 @@ export default function SubscriptionTemplate() {
 
   useEffect(() => {
     if (!refWindow || !refs) return;
+
+    if (refWindow == 3) {
+      console.log('Change titularity!')
+      setChangeTitulary(true);
+    }
 
     refs[refWindow].current?.scrollIntoView({
       behavior: "smooth",
@@ -218,10 +243,15 @@ export default function SubscriptionTemplate() {
     if (!updateProcess) return;
 
     async function getInfoRegistration(proccessId) {
-      const { data: dataResgistration } = await readRegistration(
+      const { data: dataResgistration } = proccessId > 0 ? await readRegistration(
         user.roleCode,
         proccessId
-      );
+      ) : await readTechnicalRegistration(
+        user.roleCode,
+        user.UserId,
+        modifyContractCode,
+        proccessCode
+      )
 
       const newDefaultInfoUpdateContract = { ...defaultInfoUpdateContract };
       newDefaultInfoUpdateContract["updateRegistration"] = true;
@@ -324,6 +354,7 @@ export default function SubscriptionTemplate() {
                       defaultAddressNewContract={defaultAddressNewContract}
                       defaultInfoUpdateContract={defaultInfoUpdateContract}
                       setHasFormErros={setHasFormErros}
+                      hasFormErrors={hasFormErrors}
                     />
                   </div>
                 </div>
@@ -345,6 +376,7 @@ export default function SubscriptionTemplate() {
                       requiredData={requiredData}
                       setHasFormErros={setHasFormErros}
                       setOfferedName={setOfferedName}
+                      hasFormErrors={hasFormErrors}
                     />
                   </div>
                 </div>
@@ -356,7 +388,7 @@ export default function SubscriptionTemplate() {
                     />
                   </div>
                 </div>
-                <div className="section-wrapper" id="section-4">
+                <div className="section-wrapper" id="section-4" ref={refs[3]}>
                   <SCTextXL color="black">¿Cómo te facturamos?</SCTextXL>
                   <div className="content-wrapper">
                     <HowModule
@@ -367,11 +399,12 @@ export default function SubscriptionTemplate() {
                       defaultInfoUpdateContract={defaultInfoUpdateContract}
                       attachmentFile={attachmentFile}
                       setAttachmentFile={setAttachmentFile}
+                      changeTitularyProp={changeTitulary}
                     />
                   </div>
                 </div>
 
-                <div className="data-wrapper" ref={refs[3]}>
+                <div className="data-wrapper">
                   <DataModule
                     handleRequiredDataForm={handleRequiredDataForm}
                     summaryData={summaryData}
@@ -381,6 +414,8 @@ export default function SubscriptionTemplate() {
                     defaultUserNewContract={defaultUserNewContract}
                     defaultInfoUpdateContract={defaultInfoUpdateContract}
                     setHasFormErros={setHasFormErros}
+                    hasFormErrors={hasFormErrors}
+                    disactiveNav={disactiveNav}
                   />
                 </div>
 
@@ -460,7 +495,10 @@ export default function SubscriptionTemplate() {
                     disabled={
                       Object.keys(requiredData).some(
                         (element) => !requiredData[element]
-                      ) || hasFormErrors
+                      ) ||
+                      Object.keys(hasFormErrors).some(
+                        (element) => hasFormErrors[element]
+                      )
                     }
                     type="submit"
                   >
@@ -472,11 +510,14 @@ export default function SubscriptionTemplate() {
                   {Object.keys(requiredData).every(
                     (element) => requiredData[element]
                   ) &&
-                    hasFormErrors && (
+                    Object.keys(hasFormErrors).some(
+                      (element) => hasFormErrors[element]
+                    ) && (
                       <SCTextSLight color="red">
                         No se puede terminar{" "}
                         {updateContract ? "la actualización" : "el alta"} del
-                        formulario porque contiene errores.
+                        formulario porque ha ocurrido un error. Póngase en
+                        contacto con nosotros.
                       </SCTextSLight>
                     )}
                   {requiredData.conditions && !requiredData.inputs && (
@@ -637,9 +678,9 @@ const SummaryContractData = ({ dataContract }) => {
       <SCTextSLight color="black">
         {dataContract?.powers &&
           Object.keys(dataContract?.powers).reduce((acc, value, index) => {
-            acc += `P${index + 1}: ${dataContract.powers[value]} ${
-              dataContract.powers[value].includes("kw") ? "" : "kw"
-            }, `;
+            acc += `${dataContract.powers[value].includes("P") ? "" : `P${index + 1}:`
+              } ${dataContract.powers[value]} ${dataContract.powers[value].includes("kW") ? "" : "kW"
+              }, `;
             return acc;
           }, "")}
       </SCTextSLight>
@@ -673,12 +714,14 @@ const SummaryContractData = ({ dataContract }) => {
 
           {dataContract?.selfSupply && (
             <SCTextSLight color="black">
-              Comisión de autoconsumo: {dataContract.fee?.selfSupplyFee} €/mes
+              Comisión de autoconsumo: {dataContract.fee?.selfSupplyFee}{" "}
+              {dataContract.fee?.feeType == "Fixed" ? "€/mes" : "€/kWh"}
             </SCTextSLight>
           )}
           {dataContract?.paperInvoice && (
             <SCTextSLight color="black">
-              Comisión de factura papel: {dataContract.fee?.paperFee} €/mes
+              Comisión de factura papel: {dataContract.fee?.paperFee}{" "}
+              {dataContract.fee?.feeType == "Fixed" ? "€/mes" : "€/kWh"}
             </SCTextSLight>
           )}
         </>

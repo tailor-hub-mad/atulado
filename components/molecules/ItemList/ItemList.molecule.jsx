@@ -32,6 +32,7 @@ const withItemList = (Component) => ({
   setOpenIbanModal,
   setOpenAddressModal,
   setOpenUnsubscriptionModal,
+  admin = false
 }) => {
   const router = useRouter();
   const { user } = useAuth();
@@ -180,14 +181,14 @@ const withItemList = (Component) => ({
           break;
         }
       case 2:
-        if (type == "contract") {
+        if (type == "contract" && !admin) {
           setOpenMenu(false);
           setOpenUnsubscriptionModal({ open: true, contractId: contractID });
           break;
         } else {
           // setOpenMenu(false);
           // downloadInvoice(contractID, invoiceID);
-          // break;
+          break;
         }
       case 3:
         return router.push(

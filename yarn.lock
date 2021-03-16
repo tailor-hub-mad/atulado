@@ -9148,6 +9148,11 @@ raf@^3.1.0:
   dependencies:
     performance-now "^2.1.0"
 
+ramda.pickall@^0.26.1:
+  version "0.26.1"
+  resolved "https://registry.yarnpkg.com/ramda.pickall/-/ramda.pickall-0.26.1.tgz#3f9e5a9aeeb1ac8a6740615cd542f0a5a3d060ed"
+  integrity sha512-YWm6AMf5E/1A+/DyLyR2XwpUMe080qGcBqeWOI1y1DPelUP1hRKpipi+Uz0FZNSg475PRZZW6Lu3KUfP7MoSLw==
+
 ramda@^0.21.0:
   version "0.21.0"
   resolved "https://registry.yarnpkg.com/ramda/-/ramda-0.21.0.tgz#a001abedb3ff61077d4ff1d577d44de77e8d0a35"

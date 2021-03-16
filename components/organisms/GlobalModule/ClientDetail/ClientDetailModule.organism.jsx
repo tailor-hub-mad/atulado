@@ -31,6 +31,7 @@ import {
   getProcess,
   deleteProcessById,
   validateDocumentation,
+  getProcessByClient,
 } from "../../../../lib/api/process";
 import { getContractsByAccount } from "../../../../lib/api/contract";
 import { getInvoicesByContract } from "../../../../lib/api/invoice";
@@ -50,6 +51,9 @@ import {
   findProcessByContract,
   findProcessByCups,
 } from "../../../../utils/process";
+import { IbanModal } from "../../Modal/ContractModal/IbanModal/IbanModal.organism";
+import { AddressModal } from "../../Modal/ContractModal/AddressModal/AddressModal.organism";
+import { InfoModal } from "../../Modal/InfoModal/InfoModal.organism";
 
 const INCREMENT = 3;
 
@@ -85,6 +89,19 @@ export const ClientDetailModule = ({
     open: false,
     index: null,
   });
+  const [openIbanModal, setOpenIbanModal] = useState({
+    contractId: null,
+    open: false,
+  });
+  const [openAddressModal, setOpenAddressModal] = useState({
+    contractId: null,
+    open: false,
+  });
+
+  const [openInfoUpdateModal, setOpenInfoUpdateModal] = useState({
+    message: null,
+    open: false,
+  });
   const [filterManagementParameters, setFilterManagementParameters] = useState({
     search: null,
   });
@@ -101,6 +118,7 @@ export const ClientDetailModule = ({
   const [filterInvoicesParameters, setFilterInvoicesParameters] = useState({
     search: null,
   });
+  const [errorMessage, setErrorMessage] = useState("");
 
   const router = useRouter();
 
@@ -153,11 +171,11 @@ export const ClientDetailModule = ({
   };
 
   const handleDeleteManagement = async (index) => {
-    const process = dataManagement[index];
+    const process = dataManagement?.filter((element) => element["Status"] != "Procesado")[index];
 
     const { ContractCode, RegistrationId, ProcessId } = process;
 
-    await deleteProcessById(
+    const response = await deleteProcessById(
       user.roleCode,
       user.UserId,
       ContractCode,
@@ -165,10 +183,34 @@ export const ClientDetailModule = ({
       ProcessId
     );
 
-    setCloseManagementModal({
-      open: false,
-      index: null,
-    });
+    if (response?.error) {
+      setErrorMessage("El registro ya ha sido gestionado.");
+
+      setTimeout(() => {
+        setErrorMessage();
+        setCloseManagementModal({
+          open: false,
+          index: null,
+        });
+      }, 5000);
+
+      return;
+    } else {
+      const getProcessById = async (id) => {
+        const { data } = await getProcessByClient(user.roleCode, id);
+
+        setDataManagement(data);
+        setFullDataManagement(data);
+      }
+
+      getProcessById(_userId);
+      setTimeout(() => {
+        setCloseManagementModal({
+          open: false,
+          index: null,
+        });
+      }, 1000);
+    }
   };
 
   const handleFilterManagement = () => {
@@ -233,7 +275,42 @@ export const ClientDetailModule = ({
   const filterAttributesContract = (element) => {
     const contract = pick(element, contractFilterAttributeTable);
 
-    contract.State = contract.State ? "Activo" : "Inactivo";
+    //contract.State = contract.State ? "Activo" : "Inactivo";
+    switch (contract.ContractStatus) {
+      case 1:
+        contract.State = "Firmado cliente";
+        break;
+      case 2:
+        contract.State = "Tramitación ATR";
+        break;
+      case 3:
+        contract.State = "Anulado";
+        break;
+      case 4:
+        contract.State = "Aceptado ATR";
+        break;
+      case 5:
+        contract.State = "Rechazado ATR";
+        break;
+      case 6:
+        contract.State = "Activado";
+        break;
+      case 7:
+        contract.State = "Baja";
+        break;
+      case 8:
+        contract.State = "Pendiente Firma";
+        break;
+      case 9:
+        contract.State = "Creado Web";
+        break;
+      case 10:
+        contract.State = "Corte";
+        break;
+      default:
+        contract.State = "Inactivo"
+    }
+    delete contract.ContractStatus;
 
     return contract;
   };
@@ -316,17 +393,21 @@ export const ClientDetailModule = ({
           <ItemContractList
             key={index}
             data={filterAttributesContract(element)}
-            actionCheck={() => {}}
+            actionCheck={() => { }}
             action={() => handleOnClikContract(element?.ContractCode)}
             optionsMenu={[
               "Cambiar IBAN",
               "Cambiar Info contacto",
+              "Baja contrato",
               "Cambiar titular y/o pagador",
               "Cambiar tarifa y/o potencia",
               "Descargar contrato",
             ]}
             setOpenDownloadScreen={setOpenDownloadScreen}
+            setOpenIbanModal={setOpenIbanModal}
+            setOpenAddressModal={setOpenAddressModal}
             withOutCheck
+            admin
           />
         );
       });
@@ -346,7 +427,7 @@ export const ClientDetailModule = ({
           <ItmeInvoiceList
             key={index}
             data={filterAttributesInvoice(element)}
-            actionCheck={() => {}}
+            actionCheck={() => { }}
             action={() =>
               handleOnClikInvoice(element?.Id, element?.ContractCode)
             }
@@ -393,7 +474,7 @@ export const ClientDetailModule = ({
     }
 
     async function getProcessById(id) {
-      const { data } = await getProcess(user.roleCode, id);
+      const { data } = await getProcessByClient(user?.roleCode, id);
 
       setDataManagement(data);
       setFullDataManagement(data);
@@ -475,8 +556,66 @@ export const ClientDetailModule = ({
     setInvoiceData(newFilterInvoices);
   }, [filterInvoicesParameters]);
 
+  const handleUpdateContractIban = async (id, iban) => {
+    const response = await updateContractIban(
+      user.roleCode,
+      user.UserId,
+      id,
+      iban
+    );
+
+    const message = response?.error
+      ? "Este contrato ya tiene una solicitud de camibio de IBAN pendiente."
+      : "Hemos recibido tu solicitud de cambio de IBAN.";
+
+    setOpenInfoUpdateModal({ open: true, message });
+    setOpenIbanModal({ open: false, index: null });
+  };
+
+  const handleUpdateContractDeliberyAddress = async (id, address) => {
+    const response = await updateContractDeliveryAddress(
+      user.roleCode,
+      user.UserId,
+      id,
+      address
+    );
+
+    const message = response?.error
+      ? "Este contrato ya tiene una solicitud de cambio de dirección pendiente."
+      : "Hemos recibido tu solicitud de cambio de dirección.";
+
+    setOpenInfoUpdateModal({ open: true, message });
+    setOpenAddressModal({ open: false, index: null });
+  };
+
   return (
     <>
+      {openInfoUpdateModal.open && (
+        <InfoModal
+          setOpenInfoModal={setOpenInfoUpdateModal}
+          openInfoModal={openInfoUpdateModal}
+        />
+      )}
+
+      {openIbanModal.open && (
+        <IbanModal
+          closeAction={() => setOpenIbanModal(false)}
+          action={(iban) =>
+            handleUpdateContractIban(openIbanModal.contractId, iban)
+          }
+        />
+      )}
+      {openAddressModal.open && (
+        <AddressModal
+          closeAction={() => setOpenAddressModal(false)}
+          action={(address) =>
+            handleUpdateContractDeliberyAddress(
+              openAddressModal.contractId,
+              address
+            )
+          }
+        />
+      )}
       {openUnsubscriptionModal.open && (
         <UnsubscriptionModal
           closeAction={() =>
@@ -491,6 +630,7 @@ export const ClientDetailModule = ({
           handleDeleteManagement={handleDeleteManagement}
           setCloseManagementModal={setCloseManagementModal}
           index={closeManagementModal.index}
+          errorMessage={errorMessage}
         />
       )}
       <SCClientDetailModule>
@@ -594,12 +734,19 @@ export const ClientDetailModule = ({
                       .map((element, index) => (
                         <ItemManagement
                           key={index}
-                          closeAction={() =>
+                          closeAction={() => {
+                            const getProcessById = async (id) => {
+                              const { data } = await getProcessByClient(user.roleCode, id);
+
+                              setDataManagement(data);
+                              setFullDataManagement(data);
+                            }
                             setCloseManagementModal({
                               open: true,
                               index,
                             })
-                          }
+                            getProcessById(_userId);
+                          }}
                           action={() => handleClickManagementItem(index)}
                           validateAction={() => handleValidateProcess(index)}
                           data={element}
@@ -664,8 +811,8 @@ export const ClientDetailModule = ({
                       setVisibleContracts(
                         visibleContracts + INCREMENT >= contractData?.length
                           ? visibleContracts +
-                              contractData?.length -
-                              visibleContracts
+                          contractData?.length -
+                          visibleContracts
                           : visibleContracts + INCREMENT
                       )
                     }
@@ -720,8 +867,8 @@ export const ClientDetailModule = ({
                       setVisibleInvoices(
                         visibleInvoices + INCREMENT >= invoiceData?.length
                           ? visibleInvoices +
-                              invoiceData?.length -
-                              visibleInvoices
+                          invoiceData?.length -
+                          visibleInvoices
                           : visibleInvoices + INCREMENT
                       )
                     }

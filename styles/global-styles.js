@@ -181,6 +181,9 @@ body{
   background-color: ${({ background }) => background || "white"};
 }
 
+.error-message {
+  text-align: center;
+}
 
 @media only screen and (min-width: 769px) {
   

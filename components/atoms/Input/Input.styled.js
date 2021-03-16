@@ -24,22 +24,22 @@ export const SCInputText = styled.div`
     font-size: ${({ theme }) => theme.typographySizes.s.mobileSize};
     line-height: ${({ theme }) => theme.typographySizes.s.mobileLine};
     color: ${({ theme, error, disabled }) => {
-      if (disabled) return theme.color.gray;
-      if (error) return theme.color.red;
-      return theme.color.primary;
-    }};
+    if (disabled) return theme.color.gray;
+    if (error) return theme.color.red;
+    return theme.color.primary;
+  }};
 
     background: ${({ theme, error }) =>
-      error ? theme.color.lightRed : theme.color.ligthPrimary};
+    error ? theme.color.lightRed : theme.color.ligthPrimary};
 
     border-radius: 4px;
     border-width: 1px;
     border-style: solid;
     border-color: ${({ theme, error, disabled }) => {
-      if (disabled) return theme.color.gray;
-      if (error) return theme.color.red;
-      return theme.color.primary;
-    }};
+    if (disabled) return theme.color.gray;
+    if (error) return theme.color.red;
+    return theme.color.primary;
+  }};
 
     &::placeholder {
       color: ${({ theme }) => theme.color.gray};
@@ -62,6 +62,10 @@ export const SCInputText = styled.div`
     max-height: 150px;
   }
 
+  input {
+    max-width: 100%;
+  }
+
   label {
     pointer-events: none;
 
@@ -69,7 +73,7 @@ export const SCInputText = styled.div`
     font-size: 15px;
     line-height: 18px;
     color: ${({ theme, disabled }) =>
-      disabled ? theme.color.gray : theme.color.black};
+    disabled ? theme.color.gray : theme.color.black};
 
     transition: 0.2s ease all;
     -moz-transition: 0.2s ease all;
@@ -94,10 +98,10 @@ export const SCInputText = styled.div`
 export const SCInputPassword = styled(SCInputText)`
   input {
     background: ${({ theme, error, disabled }) => {
-      if (disabled) return theme.color.white;
-      if (error) return theme.color.lightRed;
-      return theme.color.ligthPrimary;
-    }};
+    if (disabled) return theme.color.white;
+    if (error) return theme.color.lightRed;
+    return theme.color.ligthPrimary;
+  }};
   }
 
   .show-password-wrapper {
@@ -108,7 +112,7 @@ export const SCInputPassword = styled(SCInputText)`
     font-family: ${({ theme }) => theme.typography.poppinsBold};
     font-size: ${({ theme }) => theme.typographySizes.s.mobileSize};
     color: ${({ theme, disabled }) =>
-      disabled ? theme.color.gray : theme.color.black};
+    disabled ? theme.color.gray : theme.color.black};
 
     cursor: pointer;
 

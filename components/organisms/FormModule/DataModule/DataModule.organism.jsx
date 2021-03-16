@@ -23,6 +23,8 @@ export const DataModule = ({
   defaultUserNewContract,
   defaultInfoUpdateContract,
   setHasFormErros,
+  hasFormErrors,
+  disactiveNav = false
 }) => {
   const [defaultAddress, setDefaultAddress] = useState({
     fiscal: null,
@@ -81,7 +83,7 @@ export const DataModule = ({
     const newExtraDataRegister = { ...extraDataRegister };
     newExtraDataRegister["isPayer"] = value;
 
-    setExtraDataRegister(newExtraDataRegister);
+    setExtraDataRegister({ ...extraDataRegister, ...newExtraDataRegister });
   };
 
   const handleIsCompany = (value) => {
@@ -90,7 +92,7 @@ export const DataModule = ({
     const newExtraDataRegister = { ...extraDataRegister };
     newExtraDataRegister["isCompany"] = value;
 
-    setExtraDataRegister(newExtraDataRegister);
+    setExtraDataRegister({ ...extraDataRegister, ...newExtraDataRegister });
   };
 
   const handleIsCompanyPayer = (value) => {
@@ -99,7 +101,7 @@ export const DataModule = ({
 
     newExtraDataRegister["isCompanyPayer"] = value;
 
-    setExtraDataRegister(newExtraDataRegister);
+    setExtraDataRegister({ ...extraDataRegister, ...newExtraDataRegister });
   };
 
   const handleIsFiscalAddress = (value) => {
@@ -108,7 +110,7 @@ export const DataModule = ({
     const newExtraDataRegister = { ...extraDataRegister };
     newExtraDataRegister["isFiscalAddress"] = value;
 
-    setExtraDataRegister(newExtraDataRegister);
+    setExtraDataRegister({ ...extraDataRegister, ...newExtraDataRegister });
   };
 
   const handleIsContactAddress = (value) => {
@@ -117,14 +119,14 @@ export const DataModule = ({
     const newExtraDataRegister = { ...extraDataRegister };
     newExtraDataRegister["isContactAddress"] = value;
 
-    setExtraDataRegister(newExtraDataRegister);
+    setExtraDataRegister({ ...extraDataRegister, ...newExtraDataRegister });
   };
 
   const handleDataIban = (iban) => {
     const newExtraDataRegister = { ...extraDataRegister };
     newExtraDataRegister["iban"] = iban;
 
-    setExtraDataRegister(newExtraDataRegister);
+    setExtraDataRegister({ ...extraDataRegister, ...newExtraDataRegister });
   };
 
   const handleDataPayer = (name, value) => {
@@ -198,9 +200,9 @@ export const DataModule = ({
         Object.keys(newClientInfo).some((element) =>
           isEmpty(newClientInfo[element])
         )
-      )
+      ) {
         return;
-
+      }
       const newSummaryData = { ...summaryData };
       newSummaryData["client"] = {
         ...newClientInfo,
@@ -235,7 +237,7 @@ export const DataModule = ({
         company_name: Name,
         company_email: Email,
         company_phone: PhoneNumber,
-        company_admin_dni: NIF.toUpperCase(),
+        company_admin_dni: NIF?.toUpperCase(),
         company_admin_name: LegalName,
         company_admin_surname: `${LegalLastName} ${LegalSecondLastName}`,
       };
@@ -250,10 +252,10 @@ export const DataModule = ({
 
       setIsCompany(true);
       setDefaultUser(newCompanyDefualtUser);
-      setExtraDataRegister(newExtraDataRegister);
+      setExtraDataRegister({ ...extraDataRegister, ...newExtraDataRegister });
     } else {
       const newClientDefualtUser = {
-        client_dni: NIF.toUpperCase(),
+        client_dni: NIF?.toUpperCase(),
         client_name: Name,
         client_surname: `${LastName} ${SecondLastName}`,
         client_email: Email,
@@ -294,8 +296,8 @@ export const DataModule = ({
 
       const {
         PostalCode: postalCode,
-        County: province,
-        City: city,
+        CountyId: province,
+        CityId: city,
         Street,
         Number: number_road,
         Portal: doorway,
@@ -323,12 +325,14 @@ export const DataModule = ({
     }
 
     if (DeliveryAddress && !isEqual(DeliveryAddress, SupplyAddress)) {
-      setIsContactAddress(true);
+      setTimeout(() => {
+        setIsContactAddress(true);
+      }, 1000);
 
       const {
         PostalCode: postalCode,
-        County: province,
-        City: city,
+        CountyId: province,
+        CityId: city,
         Street,
         Number: number_road,
         Portal: doorway,
@@ -359,7 +363,7 @@ export const DataModule = ({
 
     const { Payer, Holder } = defaultInfoUpdateContract.contract;
 
-    if (Payer && Holder.NIF != Payer.NIF) {
+    if (Payer && Holder?.NIF != Payer?.NIF) {
       setIsPayer(true);
 
       const {
@@ -379,7 +383,7 @@ export const DataModule = ({
           company_payer_name: LegalName,
           company_payer_email: Email,
           company_payer_phone: PhoneNumber,
-          company_payer_admin_dni: NIF.toUpperCase(),
+          company_payer_admin_dni: NIF?.toUpperCase(),
           company_payer_admin_name: Name,
           company_payer_admin_surname: `${LastName} ${SecondLastName}`,
         };
@@ -393,7 +397,7 @@ export const DataModule = ({
         };
       } else {
         const newClientDefualtPayer = {
-          client_payer_dni: NIF.toUpperCase(),
+          client_payer_dni: NIF?.toUpperCase(),
           client_payer_name: Name,
           client_payer_surname: `${LastName} ${SecondLastName}`,
           client_payer_email: Email,
@@ -409,55 +413,57 @@ export const DataModule = ({
       }
     }
 
-    const {
-      Email,
-      LastName,
-      LegalNIFCIF,
-      LegalName,
-      NIF,
-      Name,
-      PhoneNumber,
-      SecondLastName,
-      LegalSecondLastName,
-      LegalLastName,
-    } = Holder;
+    if (Holder) {
+      const {
+        Email,
+        LastName,
+        LegalNIFCIF,
+        LegalName,
+        NIF,
+        Name,
+        PhoneNumber,
+        SecondLastName,
+        LegalSecondLastName,
+        LegalLastName,
+      } = Holder;
 
-    if (LegalName) {
-      const newCompanyDefualtUser = {
-        company_cif: LegalNIFCIF.toUpperCase(),
-        company_name: Name,
-        company_email: Email,
-        company_phone: PhoneNumber,
-        company_admin_dni: NIF.toUpperCase(),
-        company_admin_name: LegalName,
-        company_admin_surname: `${LegalLastName} ${LegalSecondLastName}`,
-      };
+      if (LegalName) {
+        const newCompanyDefualtUser = {
+          company_cif: LegalNIFCIF.toUpperCase(),
+          company_name: Name,
+          company_email: Email,
+          company_phone: PhoneNumber,
+          company_admin_dni: NIF?.toUpperCase(),
+          company_admin_name: LegalName,
+          company_admin_surname: `${LegalLastName} ${LegalSecondLastName}`,
+        };
 
-      newSummaryData["client"] = {
-        ...newCompanyDefualtUser,
-        type: "company",
-      };
+        newSummaryData["client"] = {
+          ...newCompanyDefualtUser,
+          type: "company",
+        };
 
-      const newExtraDataRegister = { ...extraDataRegister };
-      newExtraDataRegister["isCompany"] = true;
+        const newExtraDataRegister = { ...extraDataRegister };
+        newExtraDataRegister["isCompany"] = true;
 
-      setIsCompany(true);
-      setDefaultUser(newCompanyDefualtUser);
-      setExtraDataRegister(newExtraDataRegister);
-    } else {
-      const newClientDefualtUser = {
-        client_dni: NIF.toUpperCase(),
-        client_name: Name,
-        client_surname: `${LastName} ${SecondLastName}`,
-        client_email: Email,
-        client_phone: PhoneNumber,
-      };
-      setDefaultUser(newClientDefualtUser);
+        setIsCompany(true);
+        setDefaultUser(newCompanyDefualtUser);
+        setExtraDataRegister({ ...extraDataRegister, ...newExtraDataRegister });
+      } else {
+        const newClientDefualtUser = {
+          client_dni: NIF?.toUpperCase(),
+          client_name: Name,
+          client_surname: `${LastName} ${SecondLastName}`,
+          client_email: Email,
+          client_phone: PhoneNumber,
+        };
+        setDefaultUser(newClientDefualtUser);
 
-      newSummaryData["client"] = {
-        ...newClientDefualtUser,
-        type: "client",
-      };
+        newSummaryData["client"] = {
+          ...newClientDefualtUser,
+          type: "client",
+        };
+      }
     }
 
     setSummaryData(newSummaryData);
@@ -491,7 +497,9 @@ export const DataModule = ({
                   validate: async (value) =>
                     handleDataClient("company_cif", value),
                 }}
+                apiValidation={!isEmpty(defaultInfoUpdateContract) || disactiveNav ? validatePayerNIF : validateNIF}
                 defaultValue={defaultUser?.company_cif}
+              //disabled={!isEmpty(defaultInfoUpdateContract)}
               />
             </div>
             <div className="wrapper-2column">
@@ -518,6 +526,7 @@ export const DataModule = ({
                 }}
                 defaultValue={defaultUser?.company_email}
                 setHasFormErros={setHasFormErros}
+                hasFormErrors={hasFormErrors}
               />
             </div>
             <div className="wrapper-2column">
@@ -541,9 +550,10 @@ export const DataModule = ({
                   validate: async (value) =>
                     handleDataClient("company_admin_dni", value),
                 }}
-                apiValidation={validateNIF}
+                apiValidation={validatePayerNIF}
                 defaultValue={defaultUser?.company_admin_dni}
                 setHasFormErros={setHasFormErros}
+                hasFormErrors={hasFormErrors}
               />
             </div>
             <div className="wrapper-2column">
@@ -581,9 +591,11 @@ export const DataModule = ({
                   validate: async (value) =>
                     handleDataClient("client_dni", value),
                 }}
-                apiValidation={validateNIF}
+                apiValidation={!isEmpty(defaultInfoUpdateContract) || disactiveNav ? validatePayerNIF : validateNIF}
                 defaultValue={defaultUser?.client_dni}
                 setHasFormErros={setHasFormErros}
+                hasFormErrors={hasFormErrors}
+              //disabled={!isEmpty(defaultInfoUpdateContract)}
               />
             </div>
             <div className="wrapper-2column">
@@ -622,6 +634,7 @@ export const DataModule = ({
                 apiValidation={validateEmail}
                 defaultValue={defaultUser?.client_email}
                 setHasFormErros={setHasFormErros}
+                hasFormErrors={hasFormErrors}
               />
 
               <InputText
@@ -702,6 +715,7 @@ export const DataModule = ({
                   }}
                   defaultValue={defaultPayer?.company_payer_email}
                   setHasFormErros={setHasFormErros}
+                  hasFormErrors={hasFormErrors}
                 />
               </div>
               <div className="wrapper-2column">
@@ -728,6 +742,7 @@ export const DataModule = ({
                   apiValidation={validatePayerNIF}
                   defaultValue={defaultPayer?.company_payer_admin_dni}
                   setHasFormErros={setHasFormErros}
+                  hasFormErrors={hasFormErrors}
                 />
               </div>
               <div className="wrapper-2column">
@@ -758,7 +773,7 @@ export const DataModule = ({
             <div>
               <div className="wrapper-1column">
                 <InputText
-                  label="DNI / NIE del titular del contrato"
+                  label="DNI / NIE del pagador del contrato"
                   name="client_payer_dni"
                   validation={{
                     required: true,
@@ -768,6 +783,7 @@ export const DataModule = ({
                   apiValidation={validatePayerNIF}
                   defaultValue={defaultPayer?.client_payer_dni}
                   setHasFormErros={setHasFormErros}
+                  hasFormErrors={hasFormErrors}
                 />
               </div>
               <div className="wrapper-2column">
@@ -806,6 +822,7 @@ export const DataModule = ({
                   apiValidation={validateEmail}
                   defaultValue={defaultPayer?.client_payer_email}
                   setHasFormErros={setHasFormErros}
+                  hasFormErrors={hasFormErrors}
                 />
                 <InputText
                   label="Teléfono"
@@ -857,6 +874,7 @@ export const DataModule = ({
             setExtraDataRegister={setExtraDataRegister}
             defaultAddress={defaultAddress?.fiscal}
             setHasFormErros={setHasFormErros}
+            hasFormErrors={hasFormErrors}
           />
         )}
       </div>
@@ -894,6 +912,7 @@ export const DataModule = ({
             setExtraDataRegister={setExtraDataRegister}
             defaultAddress={defaultAddress?.delivery}
             setHasFormErros={setHasFormErros}
+            hasFormErrors={hasFormErrors}
           />
         )}
       </div>
@@ -940,6 +959,7 @@ export const DataModule = ({
                     : ""
                 }
                 setHasFormErros={setHasFormErros}
+                hasFormErrors={hasFormErrors}
               />
             )}
           </div>

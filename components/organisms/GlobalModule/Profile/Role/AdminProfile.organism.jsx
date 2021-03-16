@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 
 import { InputText } from "../../../../atoms/Input/Input.atom";
 
-export const AdminProfile = ({ data = {} }) => {
+export const AdminProfile = ({ data = {}, setHaveChange }) => {
   const router = useRouter();
 
   const handleHaveChenge = (value) => {

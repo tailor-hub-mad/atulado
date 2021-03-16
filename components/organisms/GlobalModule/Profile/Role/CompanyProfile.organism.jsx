@@ -24,7 +24,7 @@ export const CompanyProfile = ({ data, setHaveChange }) => {
         disabled
         label="CIF empresa"
         name="company_cif"
-        placeholder={data?.LegalNIFCIF}
+        placeholder={data?.LegalNIFCIF || data?.NIF}
       />
       {screenSizeMobile || <div />}
       <InputText
@@ -45,18 +45,19 @@ export const CompanyProfile = ({ data, setHaveChange }) => {
         disabled
         label="Nombre"
         name="company_name"
-        placeholder={data?.LegalName}
+        placeholder={data?.LegalNIFCIF ? data?.LegalName : data?.Name}
       />
       <InputText
         disabled
         label="Apellidos"
         name="company_surname"
-        placeholder={data?.LegalLastName}
+        placeholder={data?.LegalNIFCIF ? data?.LegalLastName : data?.LastName}
       />
       <InputText
         label="Email"
         name="company_email"
         placeholder={data?.Email}
+        defaultValue={data?.Email}
         validation={{
           validate: async (value) => handleHaveChenge(value),
         }}
@@ -65,6 +66,7 @@ export const CompanyProfile = ({ data, setHaveChange }) => {
         label="Nº de teléfono"
         name="company_phone"
         placeholder={data?.PhoneNumber}
+        defaultValue={data?.PhoneNumber}
         validation={{
           validate: async (value) => handleHaveChenge(value),
         }}

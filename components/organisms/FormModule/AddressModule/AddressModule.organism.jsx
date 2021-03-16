@@ -10,6 +10,7 @@ import { SingleDropdown } from "../../../molecules/Dropdown/Single/SingleDropdow
 import {
   getMunicipalitiesByPostalCode,
   getProvinceCode,
+  getMunicipalitiesCode,
 } from "../../../../lib/api/address";
 import { validateAddress } from "../../../../lib/api/validators";
 
@@ -36,6 +37,7 @@ export const AddressModule = ({
   defaultAddress = {},
   cups,
   setHasFormErros,
+  hasFormErrors,
 }) => {
   // General
   const [provinceData, setProvinceData] = useState();
@@ -64,7 +66,7 @@ export const AddressModule = ({
     };
 
     setNotRequiredAddress(newNotRequiredAddress);
-    setExtraDataRegister(newExtraDataRegister);
+    setExtraDataRegister({ ...extraDataRegister, ...newExtraDataRegister });
   };
 
   const handleMunicipalitiesList = (name, value) => {
@@ -84,7 +86,7 @@ export const AddressModule = ({
     };
 
     setAddressInfo(newAddressInfo);
-    setExtraDataRegister(newExtraDataRegister);
+    setExtraDataRegister({ ...extraDataRegister, ...newExtraDataRegister });
   };
 
   const handleValidationAddress = async (name, value) => {
@@ -96,7 +98,7 @@ export const AddressModule = ({
 
     if (name == inputsId.postal_code) {
       setAddressError("");
-      setHasFormErros(false);
+      setHasFormErros({ ...hasFormErrors, address: false });
 
       // Se obtiene el CountyCode y las diferentes localidades que comprenden ese Código Postal.
       const {
@@ -107,12 +109,14 @@ export const AddressModule = ({
       // Si el código postal no existe -> error
       if (municipalitiesByPostalCodeError) {
         setAddressError(municipalitiesByPostalCodeError);
-        setHasFormErros(true);
+        setHasFormErros({ ...hasFormErrors, address: true });
         return;
       }
 
       const { CountyCode, Municipalities } = municipalitiesByPostalCodeData;
-      newExtraDataRegister[addressType]["countyId"] = CountyCode;
+      if (newExtraDataRegister[addressType]) {
+        newExtraDataRegister[addressType]["countyId"] = CountyCode;
+      }
 
       // Se valida que el código postal está dentro de los limites de suministro.
       const { error: validateAddressError } = await validateAddress(CountyCode);
@@ -120,14 +124,16 @@ export const AddressModule = ({
       // Si el código postal está fuera del límite de suministro -> error.
       if (validateAddressError) {
         setAddressError(validateAddressError);
-        setHasFormErros(true);
+        setHasFormErros({ ...hasFormErrors, address: true });
         return;
       }
 
       // Se obtienen las diferentes localidades del código postal.
       const cities = Municipalities.map((element) => element.MunicipalityName);
-      newExtraDataRegister[addressType]["cityId"] =
-        Municipalities[0].MunicipalityCode;
+      if (newExtraDataRegister[addressType]) {
+        newExtraDataRegister[addressType]["cityId"] =
+          Municipalities[0].MunicipalityCode;
+      }
       setMunicipalitiesCode(Municipalities);
 
       // Obetenemos el nombre de la provincia asociada al código postal
@@ -150,23 +156,28 @@ export const AddressModule = ({
     setAddressInfo(newAddressInfo);
 
     // EXTRA DATA REGISTER
-    newExtraDataRegister[addressType][name] = value;
-    newExtraDataRegister[addressType] = {
-      ...newAddressInfo,
-      ...newExtraDataRegister[addressType],
-    };
-    setExtraDataRegister(newExtraDataRegister);
+    if (newExtraDataRegister[addressType]) {
+      newExtraDataRegister[addressType][name] = value;
+      newExtraDataRegister[addressType] = {
+        ...newAddressInfo,
+        ...newExtraDataRegister[addressType],
+      };
+      setExtraDataRegister({ ...extraDataRegister, ...newExtraDataRegister });
+    }
 
     // SUMMARY DATA
-    newSummaryData["address"] = {
-      postal_code: newAddressInfo[inputsId.postal_code],
-      city: newAddressInfo[inputsId.city],
-      name_road: newAddressInfo[inputsId.name_road],
-      number_road: newAddressInfo[inputsId.number_road],
-      province: newAddressInfo[inputsId.province],
-      type_road: newAddressInfo[inputsId.type_road] || "Calle",
-    };
-    setSummaryData(newSummaryData);
+    if (addressType == "address_general") {
+      newSummaryData["address"] = {
+        postal_code: newAddressInfo[inputsId.postal_code],
+        city: newAddressInfo[inputsId.city],
+        name_road: newAddressInfo[inputsId.name_road],
+        number_road: newAddressInfo[inputsId.number_road],
+        province: newAddressInfo[inputsId.province],
+        type_road: newAddressInfo[inputsId.type_road] || "Calle",
+      };
+
+      setSummaryData(newSummaryData);
+    }
   };
 
   useEffect(() => {
@@ -211,7 +222,10 @@ export const AddressModule = ({
     if (addressInfo) return;
 
     const newSummaryData = { ...summaryData };
-    newSummaryData["address"] = {};
+
+    if (addressType == "address_general") {
+      newSummaryData["address"] = {};
+    }
 
     const newExtraDataRegister = { ...extraDataRegister };
     const addressTypeObject = {};
@@ -219,7 +233,7 @@ export const AddressModule = ({
     newExtraDataRegister[addressType] = addressTypeObject;
 
     setSummaryData(newSummaryData);
-    setExtraDataRegister(newExtraDataRegister);
+    setExtraDataRegister({ ...extraDataRegister, ...newExtraDataRegister });
   }, [addressInfo]);
 
   useEffect(() => {
@@ -245,12 +259,57 @@ export const AddressModule = ({
       addressInfoObject[inputsId.number_road] = defaultAddress?.number_road;
       newAddressTypeInfo[inputsId.number_road] = defaultAddress?.number_road;
     }
+
+    let newDetectedAddress = {
+      province: null,
+      cities: [],
+    };
+
     if (defaultAddress?.province) {
-      addressInfoObject[inputsId.province] = defaultAddress?.province;
+      if (!isNaN(defaultAddress?.province)) {
+        getProvinceCode().then(({ data }) => {
+          const infoProvince = data.find((element) => {
+            return String(element.Code) == String(defaultAddress.province);
+          });
+
+          newDetectedAddress = {
+            ...newDetectedAddress,
+            province: infoProvince?.Description,
+          };
+
+          setDetectedAddress(newDetectedAddress);
+
+          addressInfoObject[inputsId.province] = infoProvince?.Description;
+          newAddressTypeInfo["countyId"] = defaultAddress.province;
+        });
+      } else {
+        addressInfoObject[inputsId.province] = defaultAddress?.province;
+      }
     }
     if (defaultAddress?.city) {
-      addressInfoObject[inputsId.city] = defaultAddress?.city;
+      if (!isNaN(defaultAddress?.city)) {
+        if (defaultAddress?.province) {
+          getMunicipalitiesCode(defaultAddress?.province).then(({ data }) => {
+            const infoCity = data.find((element) => {
+              return String(element.Code) == String(defaultAddress.city);
+            });
+
+            newDetectedAddress = {
+              ...newDetectedAddress,
+              cities: [infoCity?.Description],
+            };
+
+            setDetectedAddress(newDetectedAddress);
+
+            addressInfoObject[inputsId.city] = [infoCity?.Description];
+            newAddressTypeInfo["cityId"] = defaultAddress.city;
+          });
+        }
+      } else {
+        addressInfoObject[inputsId.city] = defaultAddress?.city;
+      }
     }
+
     if (defaultAddress?.door) {
       newAddressTypeInfo[inputsId.door] = defaultAddress.door;
     }
@@ -273,16 +332,35 @@ export const AddressModule = ({
     newExtraDataRegister[addressType] = newAddressTypeInfo;
 
     // SUMMARY DATA
-    newSummaryData["address"] = {
-      ...defaultAddress,
-      type_road: defaultAddress?.type_road || "Calle",
-    };
+    if (addressType == "address_general") {
+      newSummaryData["address"] = {
+        ...defaultAddress,
+        postal_code: defaultAddress?.postalCode,
+        type_road: defaultAddress?.type_road || "Calle",
+      };
+    }
 
     setDefaultDataAddress(defaultAddress);
-    setExtraDataRegister(newExtraDataRegister);
+    setExtraDataRegister({ ...extraDataRegister, ...newExtraDataRegister });
+
     setSummaryData(newSummaryData);
     setAddressInfo({ ...addressInfoObject });
   }, [defaultAddress]);
+
+  useEffect(() => {
+    const newSummaryData = { ...summaryData };
+
+    // SUMMARY DATA
+    if (addressType == "address_general") {
+      newSummaryData["address"] = {
+        ...newSummaryData["address"],
+        city: detectedAddress?.cities[0],
+        province: detectedAddress?.province,
+      };
+    }
+
+    setSummaryData(newSummaryData);
+  }, [detectedAddress]);
 
   return (
     <SCAddressModule>

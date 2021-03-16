@@ -1,19 +1,37 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import { SCWhenModule } from "./WhenModule.styled";
 import { InputText } from "../../../atoms/Input/Input.atom";
 import { ButtonRound } from "../../../atoms/ButtonRound/ButtonRound.atom";
 
-export const WhenModule = () => {
+export const WhenModule = ({ defaultInfoUpdateContract }) => {
   const [optionSelected, setOptionSelected] = useState(true);
+  const [defaultDate, setDefaultDate] = useState("");
 
-  const handleRoundButton = (name, value) => {};
+  useEffect(() => {
+    if (!defaultInfoUpdateContract) return;
+
+    if (defaultInfoUpdateContract?.contract?.ContractDate != "" && defaultInfoUpdateContract?.contract?.ContractDate) {
+      const dateFormat = defaultInfoUpdateContract?.contract?.ContractDate.split("/")
+      const old = new Date(`${dateFormat[1]}/${dateFormat[0]}/${dateFormat[2]}`);
+
+      const newDate = new Date(
+        defaultInfoUpdateContract?.contract?.ContractDate
+      );
+
+      const formatDate = `${String(old.getFullYear())}-${String(old.getMonth() + 1).padStart("2", 0)}-${String(
+        old.getDate()
+      ).padStart("2", 0)}`;
+
+      setDefaultDate(formatDate);
+      setOptionSelected(false);
+    }
+  }, [defaultInfoUpdateContract]);
 
   return (
     <SCWhenModule>
       <ButtonRound
         action={(value) => {
-          handleRoundButton("date_soon", value);
           setOptionSelected(true);
         }}
         checked={optionSelected}
@@ -22,7 +40,6 @@ export const WhenModule = () => {
       </ButtonRound>
       <ButtonRound
         action={(value) => {
-          handleRoundButton("date_later", value);
           setOptionSelected(false);
         }}
         checked={!optionSelected}
@@ -33,8 +50,8 @@ export const WhenModule = () => {
         <InputText
           type="date"
           name="date"
-          placeholder="00/00/00"
           disabled={optionSelected}
+          defaultValue={defaultDate}
         />
       </div>
     </SCWhenModule>

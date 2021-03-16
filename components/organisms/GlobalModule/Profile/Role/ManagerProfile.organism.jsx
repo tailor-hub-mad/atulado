@@ -2,7 +2,12 @@ import React from "react";
 
 import { InputText } from "../../../../atoms/Input/Input.atom";
 
-export const ManagerProfile = ({ data = {} }) => {
+export const ManagerProfile = ({ data = {}, setHaveChange }) => {
+
+  const handleHaveChenge = (value) => {
+    if (value == "") return;
+    setHaveChange(true);
+  };
   return (
     <div className="manager-wrapper">
       <InputText
@@ -16,6 +21,7 @@ export const ManagerProfile = ({ data = {} }) => {
         label="Email"
         name="manager_email"
         placeholder={data?.Email}
+        defaultValue={data?.Email}
         validation={{
           validate: async (value) => handleHaveChenge(value),
         }}
@@ -24,6 +30,7 @@ export const ManagerProfile = ({ data = {} }) => {
         label="Nº de teléfono"
         name="manager_phone"
         placeholder={data?.PhoneNumber}
+        defaultValue={data?.PhoneNumber}
         validation={{
           validate: async (value) => handleHaveChenge(value),
         }}

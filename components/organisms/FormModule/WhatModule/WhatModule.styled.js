@@ -86,6 +86,7 @@ export const SCWhatModule = styled.div`
 
     .options-wrapper {
       width: 65vh;
+      max-width: 100%;
     }
   }
 `;
