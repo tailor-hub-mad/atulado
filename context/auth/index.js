@@ -7,6 +7,8 @@ import { GENERAL_ERROR } from "../../utils/constants";
 import LoadingScreen from "../../components/molecules/LoadingScreen/LoadingScreen.molecule";
 import { isEmpty } from "lodash";
 
+const whitelist = ["/", "/aviso-legal", "/politica-privacidad"]
+
 const AuthContext = createContext({});
 
 export const AuthProvider = ({ children }) => {
@@ -98,6 +100,7 @@ export const ProtectRoute = ({ children }) => {
   const { isAuthenticated, isLoading } = useAuth();
   const router = useRouter();
 
+  if (whitelist.includes(router.pathname)) return children;
   if (isLoading) return <LoadingScreen />;
   else {
     if (router.pathname === "/alta" && isEmpty(router.query)) {

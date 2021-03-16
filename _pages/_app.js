@@ -5,6 +5,7 @@ import theme from '../styles/theme';
 import smoothscroll from 'smoothscroll-polyfill';
 import { useEffect } from 'react';
 import { AuthProvider, ProtectRoute } from '../context';
+import { ParallaxProvider } from 'react-scroll-parallax';
 
 export default function App({ Component, pageProps }) {
 
@@ -16,12 +17,14 @@ export default function App({ Component, pageProps }) {
     <>
       <GlobalStyles />
       <AuthProvider>
-        <ThemeProvider theme={theme}>
-          <Meta />
-          <ProtectRoute>
-            <Component {...pageProps} />
-          </ProtectRoute>
-        </ThemeProvider>
+        <ParallaxProvider>
+          <ThemeProvider theme={theme}>
+            <Meta />
+            <ProtectRoute>
+              <Component {...pageProps} />
+            </ProtectRoute>
+          </ThemeProvider>
+        </ParallaxProvider>
       </AuthProvider>
     </>
   )
