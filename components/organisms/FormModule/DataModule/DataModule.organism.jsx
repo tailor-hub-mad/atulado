@@ -23,6 +23,7 @@ export const DataModule = ({
   defaultUserNewContract,
   defaultInfoUpdateContract,
   setHasFormErros,
+  hasFormErrors,
 }) => {
   const [defaultAddress, setDefaultAddress] = useState({
     fiscal: null,
@@ -491,7 +492,9 @@ export const DataModule = ({
                   validate: async (value) =>
                     handleDataClient("company_cif", value),
                 }}
+                apiValidation={validateNIF}
                 defaultValue={defaultUser?.company_cif}
+                disabled={!isEmpty(defaultInfoUpdateContract)}
               />
             </div>
             <div className="wrapper-2column">
@@ -518,6 +521,7 @@ export const DataModule = ({
                 }}
                 defaultValue={defaultUser?.company_email}
                 setHasFormErros={setHasFormErros}
+                hasFormErrors={hasFormErrors}
               />
             </div>
             <div className="wrapper-2column">
@@ -541,9 +545,10 @@ export const DataModule = ({
                   validate: async (value) =>
                     handleDataClient("company_admin_dni", value),
                 }}
-                apiValidation={validateNIF}
+                apiValidation={validatePayerNIF}
                 defaultValue={defaultUser?.company_admin_dni}
                 setHasFormErros={setHasFormErros}
+                hasFormErrors={hasFormErrors}
               />
             </div>
             <div className="wrapper-2column">
@@ -584,6 +589,8 @@ export const DataModule = ({
                 apiValidation={validateNIF}
                 defaultValue={defaultUser?.client_dni}
                 setHasFormErros={setHasFormErros}
+                hasFormErrors={hasFormErrors}
+                disabled={!isEmpty(defaultInfoUpdateContract)}
               />
             </div>
             <div className="wrapper-2column">
@@ -622,6 +629,7 @@ export const DataModule = ({
                 apiValidation={validateEmail}
                 defaultValue={defaultUser?.client_email}
                 setHasFormErros={setHasFormErros}
+                hasFormErrors={hasFormErrors}
               />
 
               <InputText
@@ -702,6 +710,7 @@ export const DataModule = ({
                   }}
                   defaultValue={defaultPayer?.company_payer_email}
                   setHasFormErros={setHasFormErros}
+                  hasFormErrors={hasFormErrors}
                 />
               </div>
               <div className="wrapper-2column">
@@ -728,6 +737,7 @@ export const DataModule = ({
                   apiValidation={validatePayerNIF}
                   defaultValue={defaultPayer?.company_payer_admin_dni}
                   setHasFormErros={setHasFormErros}
+                  hasFormErrors={hasFormErrors}
                 />
               </div>
               <div className="wrapper-2column">
@@ -768,6 +778,7 @@ export const DataModule = ({
                   apiValidation={validatePayerNIF}
                   defaultValue={defaultPayer?.client_payer_dni}
                   setHasFormErros={setHasFormErros}
+                  hasFormErrors={hasFormErrors}
                 />
               </div>
               <div className="wrapper-2column">
@@ -806,6 +817,7 @@ export const DataModule = ({
                   apiValidation={validateEmail}
                   defaultValue={defaultPayer?.client_payer_email}
                   setHasFormErros={setHasFormErros}
+                  hasFormErrors={hasFormErrors}
                 />
                 <InputText
                   label="Teléfono"
@@ -857,6 +869,7 @@ export const DataModule = ({
             setExtraDataRegister={setExtraDataRegister}
             defaultAddress={defaultAddress?.fiscal}
             setHasFormErros={setHasFormErros}
+            hasFormErrors={hasFormErrors}
           />
         )}
       </div>
@@ -894,6 +907,7 @@ export const DataModule = ({
             setExtraDataRegister={setExtraDataRegister}
             defaultAddress={defaultAddress?.delivery}
             setHasFormErros={setHasFormErros}
+            hasFormErrors={hasFormErrors}
           />
         )}
       </div>
@@ -940,6 +954,7 @@ export const DataModule = ({
                     : ""
                 }
                 setHasFormErros={setHasFormErros}
+                hasFormErrors={hasFormErrors}
               />
             )}
           </div>

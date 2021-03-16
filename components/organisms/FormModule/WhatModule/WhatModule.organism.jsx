@@ -50,6 +50,7 @@ export const WhatModule = ({
   setExtraDataRegister,
   defaultInfoUpdateContract,
   setHasFormErros,
+  hasFormErrors,
   setRequiredData,
   requiredData,
   setOfferedName,
@@ -396,7 +397,7 @@ export const WhatModule = ({
 
       validationValues["SIPSInformation"] = validationSipsInformation;
 
-      setHasFormErros(false);
+      setHasFormErros({ ...hasFormErrors, offred: false });
       const { data } = await validateATRPower(validationValues);
 
       if (data) {
@@ -413,7 +414,7 @@ export const WhatModule = ({
           !NormalizedPowers?.Status ||
           !PowerByTensionLevel?.Status
         ) {
-          setHasFormErros(true);
+          setHasFormErros({ ...hasFormErrors, offred: true });
         }
       }
 
@@ -469,8 +470,8 @@ export const WhatModule = ({
             checkSips: defaultInfoUpdateContract?.updateContract
               ? false
               : defaultInfoUpdateContract?.updateRegistration
-              ? false
-              : true,
+                ? false
+                : true,
           };
         } else if (isEmpty(newExtraDataRegister["atrSIPSInformation"])) {
           newExtraDataRegister[
@@ -565,6 +566,10 @@ export const WhatModule = ({
 
       const rateId = getATRRateId(offeredRate, dataSipsInformation.ATR.Code);
 
+      // REQUIRED DATA
+      setRequiredData({ ...requiredData, inputs: true });
+
+
       // EXTRA DATA REGISTER
       newExtraDataRegister["selfSupplyReason"] = String(
         dataSipsInformation.SelfSupply.Code
@@ -592,7 +597,7 @@ export const WhatModule = ({
 
       setExtraDataRegister(newExtraDataRegister);
       setSummaryData(newSummaryData);
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const getOffereds = async (rateId) => {

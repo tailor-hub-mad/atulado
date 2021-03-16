@@ -36,6 +36,7 @@ export const AddressModule = ({
   defaultAddress = {},
   cups,
   setHasFormErros,
+  hasFormErrors,
 }) => {
   // General
   const [provinceData, setProvinceData] = useState();
@@ -96,7 +97,7 @@ export const AddressModule = ({
 
     if (name == inputsId.postal_code) {
       setAddressError("");
-      setHasFormErros(false);
+      setHasFormErros({ ...hasFormErrors, address: false });
 
       // Se obtiene el CountyCode y las diferentes localidades que comprenden ese Código Postal.
       const {
@@ -107,7 +108,7 @@ export const AddressModule = ({
       // Si el código postal no existe -> error
       if (municipalitiesByPostalCodeError) {
         setAddressError(municipalitiesByPostalCodeError);
-        setHasFormErros(true);
+        setHasFormErros({ ...hasFormErrors, address: true });
         return;
       }
 
@@ -120,7 +121,7 @@ export const AddressModule = ({
       // Si el código postal está fuera del límite de suministro -> error.
       if (validateAddressError) {
         setAddressError(validateAddressError);
-        setHasFormErros(true);
+        setHasFormErros({ ...hasFormErrors, address: true });
         return;
       }
 

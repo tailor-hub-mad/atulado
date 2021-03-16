@@ -25,6 +25,7 @@ export const WhereModule = ({
   defaultAddressNewContract = {},
   defaultInfoUpdateContract = {},
   setHasFormErros,
+  hasFormErrors,
 }) => {
   const [cups, setCups] = useState();
   const [cupsValidated, setCupsValidated] = useState(false);
@@ -180,6 +181,7 @@ export const WhereModule = ({
             setCupsValidated(value);
           }}
           defaultValue={defaultInfoUpdateContract?.cups}
+          disabled={!isEmpty(defaultInfoUpdateContract)}
         />
       </div>
       <AddressModule
@@ -191,6 +193,7 @@ export const WhereModule = ({
         cups={cups}
         updateRegistration={!isEmpty(defaultInfoUpdateContract)}
         setHasFormErros={setHasFormErros}
+        hasFormErrors={hasFormErrors}
       />
     </SCWhereModule>
   );

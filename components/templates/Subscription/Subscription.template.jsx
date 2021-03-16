@@ -55,7 +55,13 @@ export default function SubscriptionTemplate() {
   );
 
   const [offeredName, setOfferedName] = useState("");
-  const [hasFormErrors, setHasFormErros] = useState(false);
+  const [hasFormErrors, setHasFormErros] = useState({
+    dni: false,
+    address: false,
+    email: false,
+    offered: false,
+    general: false,
+  });
   const [defaultAddressNewContract, setDefaultAddressNewContract] = useState();
   const [defaultInfoUpdateContract, setDefaultInfoUpdateContract] = useState();
   const [defaultUserNewContract, setDefaultUserNewContract] = useState();
@@ -139,7 +145,7 @@ export default function SubscriptionTemplate() {
     }
 
     if (response?.error) {
-      setHasFormErros(true);
+      setHasFormErros({ ...hasFormErrors, general: true });
     } else {
       setOpenModal(true);
     }
@@ -324,6 +330,7 @@ export default function SubscriptionTemplate() {
                       defaultAddressNewContract={defaultAddressNewContract}
                       defaultInfoUpdateContract={defaultInfoUpdateContract}
                       setHasFormErros={setHasFormErros}
+                      hasFormErrors={hasFormErrors}
                     />
                   </div>
                 </div>
@@ -345,6 +352,7 @@ export default function SubscriptionTemplate() {
                       requiredData={requiredData}
                       setHasFormErros={setHasFormErros}
                       setOfferedName={setOfferedName}
+                      hasFormErrors={hasFormErrors}
                     />
                   </div>
                 </div>
@@ -381,6 +389,7 @@ export default function SubscriptionTemplate() {
                     defaultUserNewContract={defaultUserNewContract}
                     defaultInfoUpdateContract={defaultInfoUpdateContract}
                     setHasFormErros={setHasFormErros}
+                    hasFormErrors={hasFormErrors}
                   />
                 </div>
 
@@ -460,7 +469,10 @@ export default function SubscriptionTemplate() {
                     disabled={
                       Object.keys(requiredData).some(
                         (element) => !requiredData[element]
-                      ) || hasFormErrors
+                      ) ||
+                      Object.keys(hasFormErrors).some(
+                        (element) => hasFormErrors[element]
+                      )
                     }
                     type="submit"
                   >
@@ -472,7 +484,9 @@ export default function SubscriptionTemplate() {
                   {Object.keys(requiredData).every(
                     (element) => requiredData[element]
                   ) &&
-                    hasFormErrors && (
+                    Object.keys(hasFormErrors).some(
+                      (element) => hasFormErrors[element]
+                    ) && (
                       <SCTextSLight color="red">
                         No se puede terminar{" "}
                         {updateContract ? "la actualización" : "el alta"} del
@@ -637,9 +651,8 @@ const SummaryContractData = ({ dataContract }) => {
       <SCTextSLight color="black">
         {dataContract?.powers &&
           Object.keys(dataContract?.powers).reduce((acc, value, index) => {
-            acc += `P${index + 1}: ${dataContract.powers[value]} ${
-              dataContract.powers[value].includes("kw") ? "" : "kw"
-            }, `;
+            acc += `P${index + 1}: ${dataContract.powers[value]} ${dataContract.powers[value].includes("kw") ? "" : "kw"
+              }, `;
             return acc;
           }, "")}
       </SCTextSLight>

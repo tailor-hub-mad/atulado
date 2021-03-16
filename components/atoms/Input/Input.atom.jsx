@@ -3,6 +3,7 @@ import { useFormContext } from "react-hook-form";
 import { SCInputText, SCInputPassword } from "./Input.styled";
 import { hasError, generateErrorMessage } from "../../../utils/forms";
 import { isEmpty } from "lodash";
+import { validateNIF } from "../../../lib/api/validators";
 
 export const InputText = React.forwardRef(
   (
@@ -13,6 +14,7 @@ export const InputText = React.forwardRef(
       additionalErrors,
       setValidatedInput,
       setHasFormErros,
+      hasFormErrors,
       type = "text",
       defaultValue = "",
       placeholder = "",
@@ -32,7 +34,13 @@ export const InputText = React.forwardRef(
       const { error } = await apiValidation(getValues(name));
       if (error) {
         if (setValidatedInput) setValidatedInput(false);
-        if (setHasFormErros) setHasFormErros(true);
+        if (setHasFormErros) {
+          if (apiValidation.name == "validateNIF") {
+            setHasFormErros({ ...hasFormErrors, dni: true });
+          } else if (apiValidation.name == "validateEmail") {
+            setHasFormErros({ ...hasFormErrors, email: true });
+          }
+        }
 
         return setError(name, {
           type: "api_validation",
@@ -40,7 +48,13 @@ export const InputText = React.forwardRef(
         });
       }
       if (setValidatedInput) setValidatedInput(true);
-      if (setHasFormErros) setHasFormErros(false);
+      if (setHasFormErros) {
+        if (apiValidation.name == "validateNIF") {
+          setHasFormErros({ ...hasFormErrors, dni: false });
+        } else if (apiValidation.name == "validateEmail") {
+          setHasFormErros({ ...hasFormErrors, email: false });
+        }
+      }
     };
 
     return (

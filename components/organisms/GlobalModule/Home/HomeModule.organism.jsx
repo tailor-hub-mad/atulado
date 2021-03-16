@@ -156,17 +156,13 @@ export const HomeModule = ({ contracts, user, optionsList }) => {
 
     const { ContractCode, RegistrationId, ProcessId } = process;
 
-    const { error } = await deleteProcessById(
+    await deleteProcessById(
       user.roleCode,
       user.UserId,
       ContractCode,
       RegistrationId,
       ProcessId
     );
-
-    if (error) {
-      // handle error
-    }
 
     setCloseManagementModal({
       open: false,
@@ -276,7 +272,9 @@ export const HomeModule = ({ contracts, user, optionsList }) => {
     }
 
     getProcess(user.roleCode).then(({ data }) => {
-      setDataManagement(data);
+      setDataManagement(
+        data.filter((element) => element["Status"] != "Procesado")
+      );
       setFullDataManagement(data);
       setLoadingSpinner(false);
     });
@@ -371,23 +369,21 @@ export const HomeModule = ({ contracts, user, optionsList }) => {
           ) : (
             <>
               {dataManagement.length > 0 ? (
-                dataManagement
-                  .filter((element) => element["Status"] != "Procesado")
-                  .map((element, index) => (
-                    <ItemManagement
-                      key={index}
-                      closeAction={() =>
-                        setCloseManagementModal({
-                          open: true,
-                          index,
-                        })
-                      }
-                      action={() => handleClickManagementItem(index)}
-                      data={element}
-                      validateAction={() => handleValidateProcess(index)}
-                      user={user}
-                    />
-                  ))
+                dataManagement.map((element, index) => (
+                  <ItemManagement
+                    key={index}
+                    closeAction={() =>
+                      setCloseManagementModal({
+                        open: true,
+                        index,
+                      })
+                    }
+                    action={() => handleClickManagementItem(index)}
+                    data={element}
+                    validateAction={() => handleValidateProcess(index)}
+                    user={user}
+                  />
+                ))
               ) : (
                 <div className="empty-management">
                   <SCTextSLight color="black">
@@ -411,7 +407,7 @@ export const HomeModule = ({ contracts, user, optionsList }) => {
               <BarChart
                 indexBy="month"
                 keys={buildData().key}
-                action={() => {}}
+                action={() => { }}
                 dataInfo={buildData().info}
                 dataChart={buildData().chart}
               />
