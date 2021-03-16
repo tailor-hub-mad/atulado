@@ -547,7 +547,7 @@ export const getFormatLimitPowers = (data) => {
       minPowerValue = Math.min(minPowerValue, data[element]);
 
       if (data[element] != 0) {
-        return `P${index + 1} ${data[element]}kw`;
+        return `P${index + 1} ${data[element]}kW`;
       }
     })
     .filter((element) => element);

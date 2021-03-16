@@ -24,6 +24,7 @@ import {
   createAccount,
 } from "../../../../lib/api/account";
 import { getAccounts, getAccount } from "../../../../lib/api/account";
+import { validateNIF, validateEmail } from "../../../../lib/api/validators";
 
 export const AddUserModule = ({ clientData, user, optionsList }) => {
   const [haveChange, setHaveChange] = useState(false);
@@ -308,7 +309,7 @@ export const AddUserModule = ({ clientData, user, optionsList }) => {
       )}
       <SCAddUserModule>
         <div className="data-wrapper">
-          <SCTextXL color="primary">Añadir usaurio</SCTextXL>
+          <SCTextXL color="primary">Añadir usuario</SCTextXL>
 
           <FormProvider {...methods}>
             <form onSubmit={methods.handleSubmit(handleActionAccount)}>
@@ -320,6 +321,7 @@ export const AddUserModule = ({ clientData, user, optionsList }) => {
                     required: true,
                     validate: async (value) => handleHaveChange(value),
                   }}
+                  apiValidation={validateNIF}
                   defaultValue={clientDetail?.NIF}
                   disabled={!isEmpty(clientDetail)}
                 />
@@ -354,6 +356,7 @@ export const AddUserModule = ({ clientData, user, optionsList }) => {
                     required: true,
                     validate: async (value) => handleHaveChange(value),
                   }}
+                  apiValidation={validateEmail}
                   defaultValue={clientDetail?.Email}
                 />
                 <div />

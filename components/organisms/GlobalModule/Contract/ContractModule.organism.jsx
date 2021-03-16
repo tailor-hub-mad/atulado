@@ -70,7 +70,38 @@ export const ContractModule = ({
       : pick(element, contractFilterAttributeTable);
 
     if (!screenSizeMobile) {
-      contract.State = contract.State ? "Activo" : "Inactivo";
+      switch (contract.ContractStatus) {
+        case 1:
+          contract.ContractStatus = "Firmado cliente";
+          break;
+        case 2:
+          contract.ContractStatus = "Tramitación ATR";
+          break;
+        case 3:
+          contract.ContractStatus = "Anulado";
+          break;
+        case 4:
+          contract.ContractStatus = "Aceptado ATR";
+          break;
+        case 5:
+          contract.ContractStatus = "Rechazado ATR";
+          break;
+        case 6:
+          contract.ContractStatus = "Activado";
+          break;
+        case 7:
+          contract.ContractStatus = "Baja";
+          break;
+        case 8:
+          contract.ContractStatus = "Pendiente Firma";
+          break;
+        case 9:
+          contract.ContractStatus = "Creado Web";
+          break;
+        case 10:
+          contract.ContractStatus = "Corte";
+          break;
+      }
     }
 
     return contract;

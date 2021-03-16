@@ -653,7 +653,7 @@ const SummaryContractData = ({ dataContract }) => {
         {dataContract?.powers &&
           Object.keys(dataContract?.powers).reduce((acc, value, index) => {
             acc += `${dataContract.powers[value].includes("P") ? "" : `P${index + 1}:`
-              } ${dataContract.powers[value]} ${dataContract.powers[value].includes("kw") ? "" : "kw"
+              } ${dataContract.powers[value]} ${dataContract.powers[value].includes("kW") ? "" : "kW"
               }, `;
             return acc;
           }, "")}

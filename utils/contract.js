@@ -21,7 +21,7 @@ export const contractFilterAttributeTable = [
   "FinalDate",
   "Payer",
   "CUPS",
-  "State",
+  "ContractStatus",
   "RateId",
 ];
 

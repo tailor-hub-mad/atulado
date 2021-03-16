@@ -66,7 +66,7 @@ export const AddressModule = ({
     };
 
     setNotRequiredAddress(newNotRequiredAddress);
-    setExtraDataRegister(newExtraDataRegister);
+    setExtraDataRegister({ ...extraDataRegister, ...newExtraDataRegister });
   };
 
   const handleMunicipalitiesList = (name, value) => {
@@ -86,7 +86,7 @@ export const AddressModule = ({
     };
 
     setAddressInfo(newAddressInfo);
-    setExtraDataRegister(newExtraDataRegister);
+    setExtraDataRegister({ ...extraDataRegister, ...newExtraDataRegister });
   };
 
   const handleValidationAddress = async (name, value) => {
@@ -114,7 +114,9 @@ export const AddressModule = ({
       }
 
       const { CountyCode, Municipalities } = municipalitiesByPostalCodeData;
-      newExtraDataRegister[addressType]["countyId"] = CountyCode;
+      if (newExtraDataRegister[addressType]) {
+        newExtraDataRegister[addressType]["countyId"] = CountyCode;
+      }
 
       // Se valida que el código postal está dentro de los limites de suministro.
       const { error: validateAddressError } = await validateAddress(CountyCode);
@@ -128,8 +130,10 @@ export const AddressModule = ({
 
       // Se obtienen las diferentes localidades del código postal.
       const cities = Municipalities.map((element) => element.MunicipalityName);
-      newExtraDataRegister[addressType]["cityId"] =
-        Municipalities[0].MunicipalityCode;
+      if (newExtraDataRegister[addressType]) {
+        newExtraDataRegister[addressType]["cityId"] =
+          Municipalities[0].MunicipalityCode;
+      }
       setMunicipalitiesCode(Municipalities);
 
       // Obetenemos el nombre de la provincia asociada al código postal
@@ -152,12 +156,14 @@ export const AddressModule = ({
     setAddressInfo(newAddressInfo);
 
     // EXTRA DATA REGISTER
-    newExtraDataRegister[addressType][name] = value;
-    newExtraDataRegister[addressType] = {
-      ...newAddressInfo,
-      ...newExtraDataRegister[addressType],
-    };
-    setExtraDataRegister(newExtraDataRegister);
+    if (newExtraDataRegister[addressType]) {
+      newExtraDataRegister[addressType][name] = value;
+      newExtraDataRegister[addressType] = {
+        ...newAddressInfo,
+        ...newExtraDataRegister[addressType],
+      };
+      setExtraDataRegister({ ...extraDataRegister, ...newExtraDataRegister });
+    }
 
     // SUMMARY DATA
     if (addressType == "address_general") {
@@ -227,7 +233,7 @@ export const AddressModule = ({
     newExtraDataRegister[addressType] = addressTypeObject;
 
     setSummaryData(newSummaryData);
-    setExtraDataRegister(newExtraDataRegister);
+    setExtraDataRegister({ ...extraDataRegister, ...newExtraDataRegister });
   }, [addressInfo]);
 
   useEffect(() => {
@@ -335,7 +341,7 @@ export const AddressModule = ({
     }
 
     setDefaultDataAddress(defaultAddress);
-    setExtraDataRegister(newExtraDataRegister);
+    setExtraDataRegister({ ...extraDataRegister, ...newExtraDataRegister });
 
     setSummaryData(newSummaryData);
     setAddressInfo({ ...addressInfoObject });

@@ -82,7 +82,7 @@ export const DataModule = ({
     const newExtraDataRegister = { ...extraDataRegister };
     newExtraDataRegister["isPayer"] = value;
 
-    setExtraDataRegister(newExtraDataRegister);
+    setExtraDataRegister({ ...extraDataRegister, ...newExtraDataRegister });
   };
 
   const handleIsCompany = (value) => {
@@ -91,7 +91,7 @@ export const DataModule = ({
     const newExtraDataRegister = { ...extraDataRegister };
     newExtraDataRegister["isCompany"] = value;
 
-    setExtraDataRegister(newExtraDataRegister);
+    setExtraDataRegister({ ...extraDataRegister, ...newExtraDataRegister });
   };
 
   const handleIsCompanyPayer = (value) => {
@@ -100,7 +100,7 @@ export const DataModule = ({
 
     newExtraDataRegister["isCompanyPayer"] = value;
 
-    setExtraDataRegister(newExtraDataRegister);
+    setExtraDataRegister({ ...extraDataRegister, ...newExtraDataRegister });
   };
 
   const handleIsFiscalAddress = (value) => {
@@ -109,7 +109,7 @@ export const DataModule = ({
     const newExtraDataRegister = { ...extraDataRegister };
     newExtraDataRegister["isFiscalAddress"] = value;
 
-    setExtraDataRegister(newExtraDataRegister);
+    setExtraDataRegister({ ...extraDataRegister, ...newExtraDataRegister });
   };
 
   const handleIsContactAddress = (value) => {
@@ -118,14 +118,14 @@ export const DataModule = ({
     const newExtraDataRegister = { ...extraDataRegister };
     newExtraDataRegister["isContactAddress"] = value;
 
-    setExtraDataRegister(newExtraDataRegister);
+    setExtraDataRegister({ ...extraDataRegister, ...newExtraDataRegister });
   };
 
   const handleDataIban = (iban) => {
     const newExtraDataRegister = { ...extraDataRegister };
     newExtraDataRegister["iban"] = iban;
 
-    setExtraDataRegister(newExtraDataRegister);
+    setExtraDataRegister({ ...extraDataRegister, ...newExtraDataRegister });
   };
 
   const handleDataPayer = (name, value) => {
@@ -251,7 +251,7 @@ export const DataModule = ({
 
       setIsCompany(true);
       setDefaultUser(newCompanyDefualtUser);
-      setExtraDataRegister(newExtraDataRegister);
+      setExtraDataRegister({ ...extraDataRegister, ...newExtraDataRegister });
     } else {
       const newClientDefualtUser = {
         client_dni: NIF.toUpperCase(),
@@ -446,7 +446,7 @@ export const DataModule = ({
 
       setIsCompany(true);
       setDefaultUser(newCompanyDefualtUser);
-      setExtraDataRegister(newExtraDataRegister);
+      setExtraDataRegister({ ...extraDataRegister, ...newExtraDataRegister });
     } else {
       const newClientDefualtUser = {
         client_dni: NIF.toUpperCase(),
@@ -770,7 +770,7 @@ export const DataModule = ({
             <div>
               <div className="wrapper-1column">
                 <InputText
-                  label="DNI / NIE del titular del contrato"
+                  label="DNI / NIE del pagador del contrato"
                   name="client_payer_dni"
                   validation={{
                     required: true,

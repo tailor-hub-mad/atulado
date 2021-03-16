@@ -9,6 +9,8 @@ export const WhenModule = ({ defaultInfoUpdateContract }) => {
   const [defaultDate, setDefaultDate] = useState("");
 
   useEffect(() => {
+    if (!defaultInfoUpdateContract) return;
+
     if (defaultInfoUpdateContract?.contract?.ContractDate != "") {
       const newDate = new Date(
         defaultInfoUpdateContract?.contract?.ContractDate
