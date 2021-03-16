@@ -14,28 +14,32 @@ const handleDataHolder = (data) => {
       company_cif,
       company_name,
       company_email,
+      company_phone,
       company_admin_dni,
       company_admin_name,
       company_admin_surname,
     } = data;
 
-    holderData["legalNIFCIF"] = company_cif;
-    holderData["legalName"] = company_name;
+    holderData["nif"] = company_cif;
+    holderData["name"] = company_name;
+    holderData["lastName"] = "";
+    holderData["secondLastName"] = "";
     holderData["email"] = company_email;
-    holderData["nif"] = company_admin_dni;
-    holderData["name"] = company_admin_name;
+    holderData["phoneNumber"] = company_phone;
+    holderData["legalNIFCIF"] = company_admin_dni;
+    holderData["legalName"] = company_admin_name;
 
     if (company_admin_surname) {
       const auxSurname = company_admin_surname.split(" ");
-      holderData["lastName"] = auxSurname[0];
+      holderData["legalLastName"] = auxSurname[0];
       if (auxSurname.length > 1) {
-        holderData["secondLastName"] = auxSurname[1];
+        holderData["legalSecondLastName"] = auxSurname[1];
       } else {
-        holderData["secondLastName"] = "";
+        holderData["legalSecondLastName"] = "";
       }
     } else {
-      holderData["lastName"] = "";
-      holderData["secondLastName"] = "";
+      holderData["legalLastName"] = "";
+      holderData["legalSecondLastName"] = "";
     }
   } else {
     const {
@@ -82,23 +86,26 @@ const handleDataPayer = (data) => {
         company_payer_admin_surname,
       } = data;
 
-      payerData["legalNIFCIF"] = company_payer_cif;
-      payerData["legalName"] = company_payer_name;
+      payerData["nif"] = company_payer_cif;
+      payerData["name"] = company_payer_name;
+      payerData["lastName"] = "";
+      payerData["secondLastName"] = "";
       payerData["email"] = company_payer_email;
-      payerData["nif"] = company_payer_admin_dni;
-      payerData["name"] = company_payer_admin_name;
+
+      payerData["legalNIFCIF"] = company_payer_admin_dni;
+      payerData["legalName"] = company_payer_admin_name;
 
       if (company_payer_admin_surname) {
         const auxSurname = company_payer_admin_surname.split(" ");
-        payerData["lastName"] = auxSurname[0];
+        payerData["legalLastName"] = auxSurname[0];
         if (auxSurname.length > 1) {
-          payerData["secondLastName"] = auxSurname[1];
+          payerData["legalSecondLastName"] = auxSurname[1];
         } else {
-          payerData["secondLastName"] = "";
+          payerData["legalSecondLastName"] = "";
         }
       } else {
-        payerData["lastName"] = "";
-        payerData["secondLastName"] = "";
+        payerData["legalLastName"] = "";
+        payerData["legalSecondLastName"] = "";
       }
     } else {
       const {
@@ -438,12 +445,12 @@ export const handleDataRegistration = async (data) => {
     holderChange: data.change_titularity,
     holderChangeDocumentation: !isEmpty(attachmentData.changeDocumentation),
     filesHolderChangeDocumentation: attachmentData.changeDocumentation,
-    supplyBIE: !isEmpty(attachmentData.supplyBIEDocumentation),
+    supplyBIE: data?.powerControlMode || false,
     supplyBIEDocumentation: !isEmpty(attachmentData.supplyBIEDocumentation),
     filesSupplyBIEDocumentation: attachmentData.supplyBIEDocumentation,
     supplyBIEDocumentationReason: 0, // this value its default
     selfSupplyType: String(data?.selfSupplyReason || "00"),
-    selfSupplyBIE: !isEmpty(attachmentData.selfSupplyBIEDocumentation),
+    selfSupplyBIE: data?.selfSupplyReason != "00" ? true : false,
     selfSupplyBIEDocumentation: !isEmpty(
       attachmentData.selfSupplyBIEDocumentation
     ),
@@ -451,13 +458,13 @@ export const handleDataRegistration = async (data) => {
     newSupplyContract: data?.atrSIPSInformation?.newSupplyContract || false,
     newSupplyContractReason: data.newContractReason,
     fixedContractDate: data.date != "",
-    contractDate: data.date != "" ? data.date : "01/01/1753",
+    contractDate: data.date != "" ? data.date : "",
     promotionalCode: data?.friend_code || "",
     subrogation: data.previous_contract,
     supplyAddress: address,
     fiscalAddress: fiscalAddress,
     deliveryAddress: contactAddress,
-    eInvoice: data.paper_invoice,
+    eInvoice: data.electronic_invoice,
     holderEqualsCustomer: !data.isPayer,
   };
 
@@ -488,7 +495,7 @@ export const handleDataRegistration = async (data) => {
     dataRegister["promotionalCode"] = data?.update?.PromotionalCode || "";
 
     dataRegister["subrogation"] = data?.update?.Subrogation || "";
-    dataRegister["contractDate"] = data?.update?.ContractDate || "01/01/1753";
+    dataRegister["contractDate"] = data?.update?.ContractDate || "";
     dataRegister["fixedContractDate"] =
       data?.update?.FixedContractDate || false;
 

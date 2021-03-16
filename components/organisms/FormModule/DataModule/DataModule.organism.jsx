@@ -295,8 +295,8 @@ export const DataModule = ({
 
       const {
         PostalCode: postalCode,
-        County: province,
-        City: city,
+        CountyId: province,
+        CityId: city,
         Street,
         Number: number_road,
         Portal: doorway,
@@ -324,12 +324,14 @@ export const DataModule = ({
     }
 
     if (DeliveryAddress && !isEqual(DeliveryAddress, SupplyAddress)) {
-      setIsContactAddress(true);
+      setTimeout(() => {
+        setIsContactAddress(true);
+      }, 1000);
 
       const {
         PostalCode: postalCode,
-        County: province,
-        City: city,
+        CountyId: province,
+        CityId: city,
         Street,
         Number: number_road,
         Portal: doorway,

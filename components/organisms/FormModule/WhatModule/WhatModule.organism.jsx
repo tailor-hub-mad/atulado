@@ -106,10 +106,7 @@ export const WhatModule = ({
     if (name == "stop_service") {
       const newExtraDataRegister = { ...extraDataRegister };
 
-      newExtraDataRegister["atrInformation"] = {
-        ...newExtraDataRegister["atrInformation"],
-        powerControlMode: value,
-      };
+      newExtraDataRegister["powerControlMode"] = value;
 
       setExtraDataRegister(newExtraDataRegister);
 
@@ -123,6 +120,22 @@ export const WhatModule = ({
 
         setAttachmentFile(newAttachmentFile);
       }
+    }
+  };
+
+  const handleDefaultOptionsSelfSupply = () => {
+    if (defaultInfoUpdateContract?.contract?.SelfSupplyType) {
+      const oscumValue = oscumValues.find(
+        (element) =>
+          String(element.Code) ==
+          String(defaultInfoUpdateContract.contract.SelfSupplyType)
+      );
+
+      return oscumValue?.Description;
+    } else {
+      return (
+        sipsInformation?.SelfSupply?.Description || oscumValues[0]?.Description
+      );
     }
   };
 
@@ -450,6 +463,7 @@ export const WhatModule = ({
           supplyFee: newSummaryData["contract"]["fee"]["supplyFee"],
           selfSupplyFee: contractPrice?.SelfSupplyFee,
           paperFee: contractPrice?.PaperFee,
+          feeType: contractPrice?.Fee,
         },
       };
 
@@ -592,6 +606,7 @@ export const WhatModule = ({
           supplyFee: newSummaryData["contract"]["fee"]["supplyFee"],
           selfSupplyFee: contractPrice?.SelfSupplyFee,
           paperFee: contractPrice?.PaperFee,
+          feeType: contractPrice?.Fee,
         },
       };
 
@@ -747,6 +762,7 @@ export const WhatModule = ({
           supplyFee: newSummaryData["contract"]["fee"]["supplyFee"],
           selfSupplyFee: contractPrice?.SelfSupplyFee,
           paperFee: eInvoice || contractPrice?.PaperFee,
+          feeType: contractPrice?.Fee,
         },
       };
 
@@ -798,6 +814,9 @@ export const WhatModule = ({
 
       const rateId = getATRRateId(offeredRate, newAtr.TollId);
 
+      // REQUIRED DATA
+      setRequiredData({ ...requiredData, inputs: true });
+
       // EXTRA DATA REGISTER
       if (SelfSupplyType != "00") {
         newExtraDataRegister["selfSupplyReason"] = String(SelfSupplyType);
@@ -823,6 +842,7 @@ export const WhatModule = ({
           supplyFee: newSummaryData["contract"]["fee"]["supplyFee"],
           selfSupplyFee: contractPrice?.SelfSupplyFee,
           paperFee: EInvoice || contractPrice?.PaperFee,
+          feeType: contractPrice?.Fee,
         },
       };
 
@@ -1050,10 +1070,7 @@ export const WhatModule = ({
           <SingleDropdown
             label="Seleciona la modalidad de autoconsumo"
             name="type_road"
-            placeholder={
-              sipsInformation?.SelfSupply?.Description ||
-              oscumValues[0]?.Description
-            }
+            placeholder={handleDefaultOptionsSelfSupply()}
             options={oscumValues.map((element) => element.Description)}
             validation={{
               validate: async (value) => {

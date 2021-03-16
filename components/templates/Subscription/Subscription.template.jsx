@@ -102,7 +102,7 @@ export default function SubscriptionTemplate() {
     isFiscalAddress: false,
     isContactAddress: false,
     isPayer: false,
-    paper_invoice: false,
+    electronic_invoice: true,
     previous_contract: false,
     change_titularity: false,
     newContractReason: 0,
@@ -144,7 +144,7 @@ export default function SubscriptionTemplate() {
         : await createRegistration(dataRegister);
     }
 
-    if (response?.error) {
+    if (response?.error || response == null) {
       setHasFormErros({ ...hasFormErrors, general: true });
     } else {
       setOpenModal(true);
@@ -490,7 +490,8 @@ export default function SubscriptionTemplate() {
                       <SCTextSLight color="red">
                         No se puede terminar{" "}
                         {updateContract ? "la actualización" : "el alta"} del
-                        formulario porque contiene errores.
+                        formulario porque ha ocurrido un error. Póngase en
+                        contacto con nosotros.
                       </SCTextSLight>
                     )}
                   {requiredData.conditions && !requiredData.inputs && (
@@ -651,7 +652,8 @@ const SummaryContractData = ({ dataContract }) => {
       <SCTextSLight color="black">
         {dataContract?.powers &&
           Object.keys(dataContract?.powers).reduce((acc, value, index) => {
-            acc += `P${index + 1}: ${dataContract.powers[value]} ${dataContract.powers[value].includes("kw") ? "" : "kw"
+            acc += `${dataContract.powers[value].includes("P") ? "" : `P${index + 1}:`
+              } ${dataContract.powers[value]} ${dataContract.powers[value].includes("kw") ? "" : "kw"
               }, `;
             return acc;
           }, "")}
@@ -686,12 +688,14 @@ const SummaryContractData = ({ dataContract }) => {
 
           {dataContract?.selfSupply && (
             <SCTextSLight color="black">
-              Comisión de autoconsumo: {dataContract.fee?.selfSupplyFee} €/mes
+              Comisión de autoconsumo: {dataContract.fee?.selfSupplyFee}{" "}
+              {dataContract.fee?.feeType == "Fixed" ? "€/mes" : "€/kWh"}
             </SCTextSLight>
           )}
           {dataContract?.paperInvoice && (
             <SCTextSLight color="black">
-              Comisión de factura papel: {dataContract.fee?.paperFee} €/mes
+              Comisión de factura papel: {dataContract.fee?.paperFee}{" "}
+              {dataContract.fee?.feeType == "Fixed" ? "€/mes" : "€/kWh"}
             </SCTextSLight>
           )}
         </>
