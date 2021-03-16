@@ -736,6 +736,7 @@ export const WhatModule = ({
       );
 
       const rateId = getATRRateId(offeredRate, newAtr.TollId);
+      setRequiredData({ ...requiredData, inputs: true });
 
       // EXTRA DATA REGISTER
       if (SelfSupplyCode) {
@@ -1014,7 +1015,7 @@ export const WhatModule = ({
 
           {oppeners["stop_service"] &&
             oppeners?.bie["stop_service"] &&
-            sipsInformation.PowerControlMode?.Code != "2" && (
+            sipsInformation?.PowerControlMode?.Code != "2" && (
               <>
                 <BIEAttachment
                   attachmentFile={attachmentFile}

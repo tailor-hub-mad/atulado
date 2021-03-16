@@ -19,18 +19,18 @@ export const SCButtonCheck = styled.div`
       font-size: ${({ theme }) => theme.typographySizes.s.desktopSize};
       line-height: ${({ theme }) => theme.typographySizes.s.desktopLine};
       color: ${({ theme, disabled }) =>
-        disabled ? theme.color.gray : theme.color.black};
+    disabled ? theme.color.gray : theme.color.black};
     }
 
     .checked {
       font-family: ${({ theme, textCheck }) =>
-        textCheck
-          ? theme.typography.poppinsRegular
-          : theme.typography.poppinsBold};
+    textCheck
+      ? theme.typography.poppinsRegular
+      : theme.typography.poppinsBold};
       font-size: ${({ theme }) => theme.typographySizes.s.desktopSize};
       line-height: ${({ theme }) => theme.typographySizes.s.desktopLine};
       color: ${({ theme, textCheck }) =>
-        textCheck ? theme.color.black : theme.color.primary};
+    textCheck ? theme.color.black : theme.color.primary};
     }
 
     .checked-button-wrapper {
@@ -48,10 +48,10 @@ export const SCButtonCheck = styled.div`
       cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
 
       background: ${({ theme, checked, options }) => {
-        if (options) return theme.color.white;
-        if (checked) return theme.color.primary;
-        return theme.color.white;
-      }};
+    //if (options) return theme.color.white;
+    if (checked) return theme.color.primary;
+    return theme.color.white;
+  }};
 
       transition: 250ms ease-in-out;
 
@@ -59,10 +59,10 @@ export const SCButtonCheck = styled.div`
         position: absolute;
         top: -2px;
         left: ${({ checked, disabled }) => {
-          if (disabled) return "10.5px";
-          if (checked) return "21px";
-          return "-2px";
-        }};
+    if (disabled) return "10.5px";
+    if (checked) return "21px";
+    return "-2px";
+  }};
 
         width: 28px;
         height: 28px;

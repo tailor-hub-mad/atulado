@@ -199,9 +199,9 @@ export const DataModule = ({
         Object.keys(newClientInfo).some((element) =>
           isEmpty(newClientInfo[element])
         )
-      )
+      ) {
         return;
-
+      }
       const newSummaryData = { ...summaryData };
       newSummaryData["client"] = {
         ...newClientInfo,
@@ -494,9 +494,9 @@ export const DataModule = ({
                   validate: async (value) =>
                     handleDataClient("company_cif", value),
                 }}
-                apiValidation={validateNIF}
+                apiValidation={!isEmpty(defaultInfoUpdateContract) ? validatePayerNIF : validateNIF}
                 defaultValue={defaultUser?.company_cif}
-                disabled={!isEmpty(defaultInfoUpdateContract)}
+              //disabled={!isEmpty(defaultInfoUpdateContract)}
               />
             </div>
             <div className="wrapper-2column">
@@ -588,11 +588,11 @@ export const DataModule = ({
                   validate: async (value) =>
                     handleDataClient("client_dni", value),
                 }}
-                apiValidation={validateNIF}
+                apiValidation={!isEmpty(defaultInfoUpdateContract) ? validatePayerNIF : validateNIF}
                 defaultValue={defaultUser?.client_dni}
                 setHasFormErros={setHasFormErros}
                 hasFormErrors={hasFormErrors}
-                disabled={!isEmpty(defaultInfoUpdateContract)}
+              //disabled={!isEmpty(defaultInfoUpdateContract)}
               />
             </div>
             <div className="wrapper-2column">
