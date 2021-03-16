@@ -128,7 +128,7 @@ export const AddUserModule = ({ clientData, user, optionsList }) => {
       }
     });
 
-    const roleProfile = uniqBy(roleProfileCollection, "roleId");
+    const roleProfile = uniqBy(roleProfileCollection, "roleId")?.filter(e => e);
 
     const account = {
       email: client_email,

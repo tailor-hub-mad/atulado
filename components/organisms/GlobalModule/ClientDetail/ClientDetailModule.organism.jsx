@@ -263,7 +263,41 @@ export const ClientDetailModule = ({
   const filterAttributesContract = (element) => {
     const contract = pick(element, contractFilterAttributeTable);
 
-    contract.State = contract.State ? "Activo" : "Inactivo";
+    //contract.State = contract.State ? "Activo" : "Inactivo";
+    switch (contract.ContractStatus) {
+      case 1:
+        contract.State = "Firmado cliente";
+        break;
+      case 2:
+        contract.State = "Tramitación ATR";
+        break;
+      case 3:
+        contract.State = "Anulado";
+        break;
+      case 4:
+        contract.State = "Aceptado ATR";
+        break;
+      case 5:
+        contract.State = "Rechazado ATR";
+        break;
+      case 6:
+        contract.State = "Activado";
+        break;
+      case 7:
+        contract.State = "Baja";
+        break;
+      case 8:
+        contract.State = "Pendiente Firma";
+        break;
+      case 9:
+        contract.State = "Creado Web";
+        break;
+      case 10:
+        contract.State = "Corte";
+        break;
+      default:
+        contract.State = "Inactivo"
+    }
     delete contract.ContractStatus;
 
     return contract;

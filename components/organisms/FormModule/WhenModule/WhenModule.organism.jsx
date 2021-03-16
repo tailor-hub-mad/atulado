@@ -11,14 +11,19 @@ export const WhenModule = ({ defaultInfoUpdateContract }) => {
   useEffect(() => {
     if (!defaultInfoUpdateContract) return;
 
-    if (defaultInfoUpdateContract?.contract?.ContractDate != "") {
+    if (defaultInfoUpdateContract?.contract?.ContractDate != "" && defaultInfoUpdateContract?.contract?.ContractDate) {
+      const dateFormat = defaultInfoUpdateContract?.contract?.ContractDate.split("/")
+      const old = new Date(`${dateFormat[1]}/${dateFormat[0]}/${dateFormat[2]}`);
+      console.log(defaultInfoUpdateContract?.contract?.ContractDate, new Date(
+        defaultInfoUpdateContract?.contract?.ContractDate
+      ), 'IN')
       const newDate = new Date(
         defaultInfoUpdateContract?.contract?.ContractDate
       );
 
-      const formatDate = `${String(newDate.getFullYear())}-${String(
-        newDate.getDay()
-      ).padStart("2", 0)}-${String(newDate.getMonth()).padStart("2", 0)}`;
+      const formatDate = `${String(old.getFullYear())}-${String(old.getMonth() + 1).padStart("2", 0)}-${String(
+        old.getDate()
+      ).padStart("2", 0)}`;
 
       setDefaultDate(formatDate);
       setOptionSelected(false);

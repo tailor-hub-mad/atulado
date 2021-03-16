@@ -274,12 +274,12 @@ export const AddressModule = ({
 
           newDetectedAddress = {
             ...newDetectedAddress,
-            province: infoProvince.Description,
+            province: infoProvince?.Description,
           };
 
           setDetectedAddress(newDetectedAddress);
 
-          addressInfoObject[inputsId.province] = infoProvince.Description;
+          addressInfoObject[inputsId.province] = infoProvince?.Description;
           newAddressTypeInfo["countyId"] = defaultAddress.province;
         });
       } else {
@@ -296,12 +296,12 @@ export const AddressModule = ({
 
             newDetectedAddress = {
               ...newDetectedAddress,
-              cities: [infoCity.Description],
+              cities: [infoCity?.Description],
             };
 
             setDetectedAddress(newDetectedAddress);
 
-            addressInfoObject[inputsId.city] = [infoCity.Description];
+            addressInfoObject[inputsId.city] = [infoCity?.Description];
             newAddressTypeInfo["cityId"] = defaultAddress.city;
           });
         }
