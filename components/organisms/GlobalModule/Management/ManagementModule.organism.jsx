@@ -33,17 +33,17 @@ export const ManagementModule = ({
   };
 
   const handleAction = (type) => {
-    const { CUPS, ProcessId, RegistrationId } = options;
+    const { CUPS, ProcessId, RegistrationId, ContractCode } = options;
 
     switch (type) {
       case 1:
       case 2:
         return router.push(
-          `/alta?refWindow=1&cups=${CUPS}&updateProcess=true&proccessId=${RegistrationId}`
+          `/alta?refWindow=1&cups=${CUPS}&updateProcess=true&proccessId=${RegistrationId}&contractCode=${ContractCode}&proccessCode=${ProcessId}`
         );
       case 3:
         return router.push(
-          `/alta?refWindow=3&cups=${CUPS}&updateProcess=true&proccessId=${RegistrationId}`
+          `/alta?refWindow=3&cups=${CUPS}&updateProcess=true&proccessId=${RegistrationId}&contractCode=${ContractCode}&proccessCode=${ProcessId}`
         );
 
       case 5:
@@ -159,8 +159,8 @@ export const ManagementModule = ({
           {options.returnPageContract
             ? options._contractId
             : options.CUPS
-            ? options.CUPS
-            : options.ContractCode}
+              ? options.CUPS
+              : options.ContractCode}
         </SCTextXL>
         {options?.Alerts?.length == 0 || user.UserId != 3 || (
           <ButtonCheck

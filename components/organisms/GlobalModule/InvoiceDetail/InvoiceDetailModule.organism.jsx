@@ -324,7 +324,7 @@ export const InvoiceDetailModule = ({
               ${dataInvoice?.Address?.Number}, ${dataInvoice?.Address?.CityId}, 
               ${dataInvoice?.Address?.CountyId}`
               : ""}
-            {}
+            { }
           </SCTextSLight>
           <SCTextSLight color="black">
             Fecha Fin: {dataInvoice?.EndDate}
@@ -359,7 +359,7 @@ export const InvoiceDetailModule = ({
           <BarChart
             indexBy="day"
             keys={["data_1"]}
-            action={() => {}}
+            action={() => { }}
             dataInfo={buildData().info}
             dataChart={buildData().chart}
             invoiceDetail

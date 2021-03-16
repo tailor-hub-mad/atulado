@@ -26,6 +26,7 @@ import {
   updateRegistration,
   updateRegistrationContract,
   readRegistration,
+  readTechnicalRegistration,
 } from "../../../lib/api/register";
 import { getContractById } from "../../../lib/api/contract";
 import { handleDataRegistration } from "../../../utils/register";
@@ -43,6 +44,7 @@ export default function SubscriptionTemplate() {
     proccessId,
     refWindow,
     contractCode: modifyContractCode,
+    proccessCode
   } = router.query;
 
   const { user } = useAuth();
@@ -135,11 +137,20 @@ export default function SubscriptionTemplate() {
         dataRegister
       );
     } else if (updateProcess) {
-      response = await updateRegistration(
-        user.roleCode,
-        defaultInfoUpdateContract.contract.RegistrationId,
-        dataRegister
-      );
+      if (proccessId > 0) {
+        response = await updateRegistration(
+          user.roleCode,
+          defaultInfoUpdateContract.contract.RegistrationId,
+          dataRegister
+        );
+      } else {
+        response = await updateRegistrationContract(
+          user.roleCode,
+          user.UserId,
+          modifyContractCode,
+          dataRegister
+        );
+      }
     } else {
       response = user
         ? await createContract(user.roleCode, user.UserId, dataRegister)
@@ -232,10 +243,15 @@ export default function SubscriptionTemplate() {
     if (!updateProcess) return;
 
     async function getInfoRegistration(proccessId) {
-      const { data: dataResgistration } = await readRegistration(
+      const { data: dataResgistration } = proccessId > 0 ? await readRegistration(
         user.roleCode,
         proccessId
-      );
+      ) : await readTechnicalRegistration(
+        user.roleCode,
+        user.UserId,
+        modifyContractCode,
+        proccessCode
+      )
 
       const newDefaultInfoUpdateContract = { ...defaultInfoUpdateContract };
       newDefaultInfoUpdateContract["updateRegistration"] = true;

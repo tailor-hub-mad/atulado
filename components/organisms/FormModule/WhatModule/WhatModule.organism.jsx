@@ -622,7 +622,7 @@ export const WhatModule = ({
     const newSummaryData = { ...summaryData };
 
     const { data: dataOfferedRateById } = await getOfferedRatesById(rateId);
-    const { data: dataOfferedRate } = await getOfferedRates(user?.roleCode || 3);
+    const { data: dataOfferedRate } = await getOfferedRates(user ? user?.roleCode || 3 : null);
     const { data: dataSubscriptionReason } = await getSubscriptionReason();
     const { data: dataOscumValues } = await getOscumValues();
 
@@ -787,7 +787,7 @@ export const WhatModule = ({
       );
       const newPowers = getPowersDataByObject(
         defaultInfoUpdateContract["contract"],
-        "PowerP"
+        "SipsPowerP"
       );
       const currentATR = getATRFullDataById(offeredRate, SipsATR);
       const newAtr = getATRFullDataById(offeredRate, ATR);

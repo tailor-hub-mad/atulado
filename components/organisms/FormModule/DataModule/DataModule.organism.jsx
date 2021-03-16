@@ -363,7 +363,7 @@ export const DataModule = ({
 
     const { Payer, Holder } = defaultInfoUpdateContract.contract;
 
-    if (Payer && Holder.NIF != Payer.NIF) {
+    if (Payer && Holder?.NIF != Payer?.NIF) {
       setIsPayer(true);
 
       const {
@@ -413,55 +413,57 @@ export const DataModule = ({
       }
     }
 
-    const {
-      Email,
-      LastName,
-      LegalNIFCIF,
-      LegalName,
-      NIF,
-      Name,
-      PhoneNumber,
-      SecondLastName,
-      LegalSecondLastName,
-      LegalLastName,
-    } = Holder;
+    if (Holder) {
+      const {
+        Email,
+        LastName,
+        LegalNIFCIF,
+        LegalName,
+        NIF,
+        Name,
+        PhoneNumber,
+        SecondLastName,
+        LegalSecondLastName,
+        LegalLastName,
+      } = Holder;
 
-    if (LegalName) {
-      const newCompanyDefualtUser = {
-        company_cif: LegalNIFCIF.toUpperCase(),
-        company_name: Name,
-        company_email: Email,
-        company_phone: PhoneNumber,
-        company_admin_dni: NIF?.toUpperCase(),
-        company_admin_name: LegalName,
-        company_admin_surname: `${LegalLastName} ${LegalSecondLastName}`,
-      };
+      if (LegalName) {
+        const newCompanyDefualtUser = {
+          company_cif: LegalNIFCIF.toUpperCase(),
+          company_name: Name,
+          company_email: Email,
+          company_phone: PhoneNumber,
+          company_admin_dni: NIF?.toUpperCase(),
+          company_admin_name: LegalName,
+          company_admin_surname: `${LegalLastName} ${LegalSecondLastName}`,
+        };
 
-      newSummaryData["client"] = {
-        ...newCompanyDefualtUser,
-        type: "company",
-      };
+        newSummaryData["client"] = {
+          ...newCompanyDefualtUser,
+          type: "company",
+        };
 
-      const newExtraDataRegister = { ...extraDataRegister };
-      newExtraDataRegister["isCompany"] = true;
+        const newExtraDataRegister = { ...extraDataRegister };
+        newExtraDataRegister["isCompany"] = true;
 
-      setIsCompany(true);
-      setDefaultUser(newCompanyDefualtUser);
-      setExtraDataRegister({ ...extraDataRegister, ...newExtraDataRegister });
-    } else {
-      const newClientDefualtUser = {
-        client_dni: NIF?.toUpperCase(),
-        client_name: Name,
-        client_surname: `${LastName} ${SecondLastName}`,
-        client_email: Email,
-        client_phone: PhoneNumber,
-      };
-      setDefaultUser(newClientDefualtUser);
+        setIsCompany(true);
+        setDefaultUser(newCompanyDefualtUser);
+        setExtraDataRegister({ ...extraDataRegister, ...newExtraDataRegister });
+      } else {
+        const newClientDefualtUser = {
+          client_dni: NIF?.toUpperCase(),
+          client_name: Name,
+          client_surname: `${LastName} ${SecondLastName}`,
+          client_email: Email,
+          client_phone: PhoneNumber,
+        };
+        setDefaultUser(newClientDefualtUser);
 
-      newSummaryData["client"] = {
-        ...newClientDefualtUser,
-        type: "client",
-      };
+        newSummaryData["client"] = {
+          ...newClientDefualtUser,
+          type: "client",
+        };
+      }
     }
 
     setSummaryData(newSummaryData);
