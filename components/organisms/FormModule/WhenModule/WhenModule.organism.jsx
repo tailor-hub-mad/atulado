@@ -14,9 +14,7 @@ export const WhenModule = ({ defaultInfoUpdateContract }) => {
     if (defaultInfoUpdateContract?.contract?.ContractDate != "" && defaultInfoUpdateContract?.contract?.ContractDate) {
       const dateFormat = defaultInfoUpdateContract?.contract?.ContractDate.split("/")
       const old = new Date(`${dateFormat[1]}/${dateFormat[0]}/${dateFormat[2]}`);
-      console.log(defaultInfoUpdateContract?.contract?.ContractDate, new Date(
-        defaultInfoUpdateContract?.contract?.ContractDate
-      ), 'IN')
+
       const newDate = new Date(
         defaultInfoUpdateContract?.contract?.ContractDate
       );
