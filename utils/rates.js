@@ -204,25 +204,5 @@ export const rates = {
         },
       ],
     },
-    {
-      name: "Alta Tensión",
-      icon: <Tension />,
-      description:
-        "La tarifa de luz totalmente personalizada y a medida para las instalaciones de luz de alta tensión. Sabemos que cada instalación de Alta Tensión es un caso especial, con sus particularidades y necesidades.\nNuestra Tarifa de Luz a Medida se adapta a las necesidades de cada instalación y de cada cliente, tanto para instalaciones que ya tienen luz como para nuevas instalaciones de Alta Tensión",
-      rates: [
-        {
-          name: "ALTA TENSIÓN",
-          data: [],
-          info: {
-            "Oferta totalmente personalizada para instalaciones de alta tensión. LLámanos y te informamos.":
-              "",
-          },
-          button: {
-            name: "CONTRATAR",
-            link: "/",
-          },
-        },
-      ],
-    },
   ],
 };

@@ -60,7 +60,7 @@ export const SCRates = styled.section`
       display: grid;
       grid-template-columns: ${({ tab }) => {
     if (tab === 1) return `repeat(3, 1fr)`;
-    if (tab === 2) return `repeat(3, 1fr)`;
+    if (tab === 2) return `repeat(2, 1fr)`;
     return `repeat(3, 1fr)`;
   }};
       row-gap: 0px;
