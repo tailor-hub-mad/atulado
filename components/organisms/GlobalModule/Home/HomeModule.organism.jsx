@@ -296,13 +296,23 @@ export const HomeModule = ({ contracts, user, optionsList }) => {
       });
     }
 
-    getProcessByClient(user.roleCode, user.UserId).then(({ data }) => {
-      setDataManagement(
-        data.filter((element) => element["Status"] != "Procesado")
-      );
-      setFullDataManagement(data);
-      setLoadingSpinner(false);
-    });
+    if (user?.roleCode == "2") {
+      getProcess(user.roleCode, user.UserId).then(({ data }) => {
+        setDataManagement(
+          data.filter((element) => element["Status"] != "Procesado")
+        );
+        setFullDataManagement(data);
+        setLoadingSpinner(false);
+      });
+    } else {
+      getProcessByClient(user.roleCode, user.UserId).then(({ data }) => {
+        setDataManagement(
+          data.filter((element) => element["Status"] != "Procesado")
+        );
+        setFullDataManagement(data);
+        setLoadingSpinner(false);
+      });
+    }
 
     getFriendBalance(user.roleCode, user.UserId).then(({ data }) => {
       setFriendOptions(data);
