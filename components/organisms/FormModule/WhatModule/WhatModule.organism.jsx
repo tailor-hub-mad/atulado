@@ -1010,7 +1010,7 @@ export const WhatModule = ({
             <SelectHelper value={oppeners["stop_service"]} />
           </div>
           <ButtonCheck
-            checked={sipsInformation?.PowerControlMode?.Code == "2"}
+            checked={sipsInformation?.PowerControlMode?.Code == "2" || extraDataRegister["atrSIPSInformation"]?.PowerControlMode == "2"}
             action={(value) => handleButtonCheck("stop_service", value)}
           >
             ¿Tienes un servicio no interrumpible en casa?
