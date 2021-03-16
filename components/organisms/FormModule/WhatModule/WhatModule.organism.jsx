@@ -280,13 +280,13 @@ export const WhatModule = ({
 
     if (type == "current") {
       powers = flatten(
-        currentNormalizePowers.map((element) => {
+        currentNormalizePowers?.map((element) => {
           return element.Powers;
         })
       ).sort((a, b) => a - b);
     } else {
       powers = flatten(
-        newNormalizePowers.map((element) => {
+        newNormalizePowers?.map((element) => {
           return element.Powers;
         })
       ).sort((a, b) => a - b);
