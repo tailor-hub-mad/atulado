@@ -37,6 +37,7 @@ import {
   getATRRateId,
   handleAdditionalErrors,
 } from "../../../../utils/register";
+import { useAuth } from "../../../../context";
 
 export const WhatModule = ({
   cups,
@@ -86,6 +87,7 @@ export const WhatModule = ({
   const [ATRPowerErrors, setATRPowerErrors] = useState();
   const [newATR, setNewATR] = useState();
   const [newPowersValues, setNewPowersValues] = useState({});
+  const { user } = useAuth();
 
   ////////////////////////////////////////////////////
   ////////////////////////////////////////////////////
@@ -619,7 +621,7 @@ export const WhatModule = ({
     const newSummaryData = { ...summaryData };
 
     const { data: dataOfferedRateById } = await getOfferedRatesById(rateId);
-    const { data: dataOfferedRate } = await getOfferedRates(3);
+    const { data: dataOfferedRate } = await getOfferedRates(user?.roleCode || 3);
     const { data: dataSubscriptionReason } = await getSubscriptionReason();
     const { data: dataOscumValues } = await getOscumValues();
 

@@ -52,6 +52,7 @@ import {
 } from "../../../../utils/process";
 import { IbanModal } from "../../Modal/ContractModal/IbanModal/IbanModal.organism";
 import { AddressModal } from "../../Modal/ContractModal/AddressModal/AddressModal.organism";
+import { InfoModal } from "../../Modal/InfoModal/InfoModal.organism";
 
 const INCREMENT = 3;
 
@@ -543,6 +544,38 @@ export const ClientDetailModule = ({
 
     setInvoiceData(newFilterInvoices);
   }, [filterInvoicesParameters]);
+
+  const handleUpdateContractIban = async (id, iban) => {
+    const response = await updateContractIban(
+      user.roleCode,
+      user.UserId,
+      id,
+      iban
+    );
+
+    const message = response?.error
+      ? "Este contrato ya tiene una solicitud de camibio de IBAN pendiente."
+      : "Hemos recibido tu solicitud de cambio de IBAN.";
+
+    setOpenInfoUpdateModal({ open: true, message });
+    setOpenIbanModal({ open: false, index: null });
+  };
+
+  const handleUpdateContractDeliberyAddress = async (id, address) => {
+    const response = await updateContractDeliveryAddress(
+      user.roleCode,
+      user.UserId,
+      id,
+      address
+    );
+
+    const message = response?.error
+      ? "Este contrato ya tiene una solicitud de cambio de dirección pendiente."
+      : "Hemos recibido tu solicitud de cambio de dirección.";
+
+    setOpenInfoUpdateModal({ open: true, message });
+    setOpenAddressModal({ open: false, index: null });
+  };
 
   return (
     <>

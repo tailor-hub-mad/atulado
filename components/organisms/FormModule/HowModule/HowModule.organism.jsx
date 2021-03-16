@@ -62,7 +62,11 @@ export const HowModule = ({
     }
 
     const newExtraDataRegister = { ...extraDataRegister };
-    newExtraDataRegister[name] = value;
+    if (name == "electronic_invoice") {
+      newExtraDataRegister[name] = !value;
+    } else {
+      newExtraDataRegister[name] = value;
+    }
 
     setExtraDataRegister(newExtraDataRegister);
   };
@@ -82,7 +86,7 @@ export const HowModule = ({
     setExtraDataRegister(newExtraDataRegister);
     setIsSubrogate(Subrogation);
     setChangeTitulary(HolderChange);
-    setPaperInvoice(eInvoice);
+    setPaperInvoice(!eInvoice);
   }, [defaultInfoUpdateContract]);
 
   return (

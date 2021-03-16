@@ -191,6 +191,7 @@ const withItemList = (Component) => ({
           break;
         }
       case 3:
+        console.log(contractID)
         return router.push(
           `/alta?rateId=${RateId}&refWindow=3&updateContract=true&contractCode=${contractID}`
         );

@@ -101,6 +101,7 @@ export const MultiDropdown = ({
                 <input
                   name={element.name}
                   placeholder={placeholder}
+                  autoComplete="off"
                   ref={register({
                     ...validation,
                     validate: async (value) => {
@@ -144,7 +145,7 @@ export const MultiDropdown = ({
             })}
           </div>
         )}
-        <label htmlFor={name}>{label}</label>
+        {!isEmpty(options) ? <label htmlFor={name}>{label}</label> : ''}
       </SCMultiDropdown>
     </div>
   );

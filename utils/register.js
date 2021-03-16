@@ -458,7 +458,7 @@ export const handleDataRegistration = async (data) => {
     newSupplyContract: data?.atrSIPSInformation?.newSupplyContract || false,
     newSupplyContractReason: data.newContractReason,
     fixedContractDate: data.date != "",
-    contractDate: data.date != "" ? data.date : "",
+    contractDate: data.date != "" ? data.date : null,
     promotionalCode: data?.friend_code || "",
     subrogation: data.previous_contract,
     supplyAddress: address,
@@ -495,7 +495,7 @@ export const handleDataRegistration = async (data) => {
     dataRegister["promotionalCode"] = data?.update?.PromotionalCode || "";
 
     dataRegister["subrogation"] = data?.update?.Subrogation || "";
-    dataRegister["contractDate"] = data?.update?.ContractDate || "";
+    dataRegister["contractDate"] = data?.update?.ContractDate || null;
     dataRegister["fixedContractDate"] =
       data?.update?.FixedContractDate || false;
 
