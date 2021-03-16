@@ -701,7 +701,7 @@ const SummaryContractData = ({ dataContract }) => {
               )}
               <div className="separator" />
               {dataContract.fee.supplyFee?.PowerP1 && (
-                <SCTextSLight color="black">{`Potencia punta: ${(+dataContract.fee.supplyFee.PowerP1 / 365).toFixed(8)} €/kW día`}</SCTextSLight>
+                <SCTextSLight color="black">{`Potencia${dataContract.fee.supplyFee?.PowerP2 ? " punta" : " "}: ${(+dataContract.fee.supplyFee.PowerP1 / 365).toFixed(8)} €/kW día`}</SCTextSLight>
               )}
               {dataContract.fee.supplyFee?.PowerP2 && (
                 <SCTextSLight color="black">{`Potencia valle: ${(+dataContract.fee.supplyFee.PowerP2 / 365).toFixed(8)} €/kW día`}</SCTextSLight>
