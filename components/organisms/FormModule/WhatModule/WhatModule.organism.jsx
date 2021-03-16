@@ -246,7 +246,7 @@ export const WhatModule = ({
   };
 
   const handleOptionSelectedATRValue = (atr, checked = true, type) => {
-    const measurementType = !isEmpty(sipsInformation)
+    const measurementType = !isEmpty(sipsInformation) && !isEmpty(sipsInformation?.sips)
       ? sipsInformation.MeasurementType
       : installationType;
 

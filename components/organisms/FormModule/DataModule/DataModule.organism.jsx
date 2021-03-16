@@ -237,7 +237,7 @@ export const DataModule = ({
         company_name: Name,
         company_email: Email,
         company_phone: PhoneNumber,
-        company_admin_dni: NIF.toUpperCase(),
+        company_admin_dni: NIF?.toUpperCase(),
         company_admin_name: LegalName,
         company_admin_surname: `${LegalLastName} ${LegalSecondLastName}`,
       };
@@ -255,7 +255,7 @@ export const DataModule = ({
       setExtraDataRegister({ ...extraDataRegister, ...newExtraDataRegister });
     } else {
       const newClientDefualtUser = {
-        client_dni: NIF.toUpperCase(),
+        client_dni: NIF?.toUpperCase(),
         client_name: Name,
         client_surname: `${LastName} ${SecondLastName}`,
         client_email: Email,
@@ -383,7 +383,7 @@ export const DataModule = ({
           company_payer_name: LegalName,
           company_payer_email: Email,
           company_payer_phone: PhoneNumber,
-          company_payer_admin_dni: NIF.toUpperCase(),
+          company_payer_admin_dni: NIF?.toUpperCase(),
           company_payer_admin_name: Name,
           company_payer_admin_surname: `${LastName} ${SecondLastName}`,
         };
@@ -397,7 +397,7 @@ export const DataModule = ({
         };
       } else {
         const newClientDefualtPayer = {
-          client_payer_dni: NIF.toUpperCase(),
+          client_payer_dni: NIF?.toUpperCase(),
           client_payer_name: Name,
           client_payer_surname: `${LastName} ${SecondLastName}`,
           client_payer_email: Email,
@@ -432,7 +432,7 @@ export const DataModule = ({
         company_name: Name,
         company_email: Email,
         company_phone: PhoneNumber,
-        company_admin_dni: NIF.toUpperCase(),
+        company_admin_dni: NIF?.toUpperCase(),
         company_admin_name: LegalName,
         company_admin_surname: `${LegalLastName} ${LegalSecondLastName}`,
       };
@@ -450,7 +450,7 @@ export const DataModule = ({
       setExtraDataRegister({ ...extraDataRegister, ...newExtraDataRegister });
     } else {
       const newClientDefualtUser = {
-        client_dni: NIF.toUpperCase(),
+        client_dni: NIF?.toUpperCase(),
         client_name: Name,
         client_surname: `${LastName} ${SecondLastName}`,
         client_email: Email,
