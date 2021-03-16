@@ -196,10 +196,20 @@ export const ClientDetailModule = ({
 
       return;
     } else {
-      setCloseManagementModal({
-        open: false,
-        index: null,
-      });
+      const getProcessById = async (id) => {
+        const { data } = await getProcessByClient(user.roleCode, id);
+
+        setDataManagement(data);
+        setFullDataManagement(data);
+      }
+
+      getProcessById(_userId);
+      setTimeout(() => {
+        setCloseManagementModal({
+          open: false,
+          index: null,
+        });
+      }, 1000);
     }
   };
 
@@ -731,11 +741,11 @@ export const ClientDetailModule = ({
                               setDataManagement(data);
                               setFullDataManagement(data);
                             }
-                            getProcessById(_userId);
                             setCloseManagementModal({
                               open: true,
                               index,
                             })
+                            getProcessById(_userId);
                           }}
                           action={() => handleClickManagementItem(index)}
                           validateAction={() => handleValidateProcess(index)}

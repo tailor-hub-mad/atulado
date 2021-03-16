@@ -372,7 +372,7 @@ export default function SubscriptionTemplate() {
                     />
                   </div>
                 </div>
-                <div className="section-wrapper" id="section-4">
+                <div className="section-wrapper" id="section-4" ref={refs[3]}>
                   <SCTextXL color="black">¿Cómo te facturamos?</SCTextXL>
                   <div className="content-wrapper">
                     <HowModule
@@ -388,7 +388,7 @@ export default function SubscriptionTemplate() {
                   </div>
                 </div>
 
-                <div className="data-wrapper" ref={refs[3]}>
+                <div className="data-wrapper">
                   <DataModule
                     handleRequiredDataForm={handleRequiredDataForm}
                     summaryData={summaryData}

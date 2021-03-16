@@ -399,7 +399,7 @@ const handleSupply = (data) => {
   }
 
   if (data?.powerControlMode) {
-    supplyData["sipsPowerControlMode"] = 2;
+    supplyData["powerControlMode"] = 2;
   }
 
   return supplyData;
