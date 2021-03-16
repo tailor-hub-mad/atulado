@@ -11,6 +11,7 @@ const theme = {
     lightRed: "#EBCDCD",
     gray: "#C4C4C4",
     lightGray: "#DADADA",
+    success: '#60d73c'
   },
   typography: {
     poppinsRegular: "Poppins-Regular",

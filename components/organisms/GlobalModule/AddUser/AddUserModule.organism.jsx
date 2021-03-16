@@ -24,7 +24,7 @@ import {
   createAccount,
 } from "../../../../lib/api/account";
 import { getAccounts, getAccount } from "../../../../lib/api/account";
-import { validateNIF, validateEmail } from "../../../../lib/api/validators";
+import { validateNIF, validateEmail, validatePayerNIF } from "../../../../lib/api/validators";
 
 export const AddUserModule = ({ clientData, user, optionsList }) => {
   const [haveChange, setHaveChange] = useState(false);
@@ -148,10 +148,11 @@ export const AddUserModule = ({ clientData, user, optionsList }) => {
     const response = await createAccount(user.roleCode, { account });
 
     if (response?.error) {
+      setErrorMessage("Se ha producido un error. Por favor revisa los campos introducidos.")
       if (response?.error["Account.NIF"])
         setOpenInfoUpdateModal({
           open: true,
-          message: response?.error?.Account.NIF,
+          message: response?.error?.errors["Account.NIF"][0]
         });
     } else {
       setOpenInfoUpdateModal({
@@ -235,12 +236,12 @@ export const AddUserModule = ({ clientData, user, optionsList }) => {
 
   const handleSearchClient = (value) => {
     if (value == "") {
-      setClientDataList(fullClientData);
+      setClientDataList(fullClientDataList);
       return;
     }
 
     const newFullClientData = fullClientDataList.filter((element) => {
-      return element?.Email.toLowerCase().includes(value.toLowerCase());
+      return element?.NIF.toLowerCase().includes(value.toLowerCase());
     });
 
     setClientDataList(newFullClientData);
@@ -321,7 +322,7 @@ export const AddUserModule = ({ clientData, user, optionsList }) => {
                     required: true,
                     validate: async (value) => handleHaveChange(value),
                   }}
-                  apiValidation={validateNIF}
+                  apiValidation={validatePayerNIF}
                   defaultValue={clientDetail?.NIF}
                   disabled={!isEmpty(clientDetail)}
                 />

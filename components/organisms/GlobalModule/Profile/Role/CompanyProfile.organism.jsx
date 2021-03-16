@@ -57,6 +57,7 @@ export const CompanyProfile = ({ data, setHaveChange }) => {
         label="Email"
         name="company_email"
         placeholder={data?.Email}
+        defaultValue={data?.Email}
         validation={{
           validate: async (value) => handleHaveChenge(value),
         }}
@@ -65,6 +66,7 @@ export const CompanyProfile = ({ data, setHaveChange }) => {
         label="Nº de teléfono"
         name="company_phone"
         placeholder={data?.PhoneNumber}
+        defaultValue={data?.PhoneNumber}
         validation={{
           validate: async (value) => handleHaveChenge(value),
         }}

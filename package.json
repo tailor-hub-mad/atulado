@@ -18,6 +18,7 @@
     "lodash": "^4.17.20",
     "next": "9.4.4",
     "next-translate": "0.16.1",
+    "ramda.pickall": "^0.26.1",
     "react": "16.13.1",
     "react-day-picker": "^7.4.8",
     "react-dom": "16.13.1",

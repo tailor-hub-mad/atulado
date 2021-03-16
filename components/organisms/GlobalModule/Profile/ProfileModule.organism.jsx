@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { endsWith } from "lodash";
 import { useForm, FormProvider } from "react-hook-form";
 import { useRouter } from "next/router";
+import pickAll from 'ramda.pickall';
 
 import { SCProfileModule } from "./ProfileModule.styled";
 import { SCTextXL } from "../../../atoms/Text/TextXL.styled";
@@ -16,6 +17,21 @@ import { UnsubscriptionModal } from "../../Modal/ContractModal/UnsubscriptionMod
 
 import { deleteAccount, updateAccount } from "../../../../lib/api/account";
 import { useAuth } from "../../../../context";
+
+
+const fields = [
+  "email",
+  "phoneNumber",
+  "Name",
+  "LastName",
+  "SecondLastName",
+  "LegalName",
+  "LegalLastName",
+  "LegalSecondLastName",
+  "LegalNIFCIF",
+  "roleCode"
+]
+
 
 export const ProfileModule = ({ user, setOpenInfoModal, openInfoModal }) => {
   const [haveChange, setHaveChange] = useState(false);
@@ -45,6 +61,7 @@ export const ProfileModule = ({ user, setOpenInfoModal, openInfoModal }) => {
 
     const updatedUser = {
       account: {
+        ...pickAll(fields, user),
         email: email != "" ? email : user.Email,
         phoneNumber: phoneNumber != "" ? phoneNumber : user.phoneNumber,
       },
@@ -97,7 +114,7 @@ export const ProfileModule = ({ user, setOpenInfoModal, openInfoModal }) => {
               {user.roleCode == 1 ? (
                 <AdminProfile data={user} setHaveChange={setHaveChange} />
               ) : user.roleCode == 2 ? (
-                <ManagerProfile data={user} />
+                <ManagerProfile data={user} setHaveChange={setHaveChange} />
               ) : (
                 <>
                   {user?.LegalName != "" ? (

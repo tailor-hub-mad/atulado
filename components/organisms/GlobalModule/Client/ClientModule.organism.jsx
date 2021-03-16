@@ -31,7 +31,7 @@ export const ClientModule = ({ user, optionsList }) => {
     }
 
     const newFullClientData = fullClientData.filter((element) => {
-      return element?.Email.toLowerCase().includes(value.toLowerCase());
+      return element?.NIF.toLowerCase().includes(value.toLowerCase());
     });
 
     setClientData(newFullClientData);

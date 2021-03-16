@@ -112,7 +112,11 @@ export default function PasswordTemplate({ action = "create" }) {
           return;
         }
 
-        router.push("/");
+        setButtonText("Contraseña cambiada con éxito.")
+
+        setTimeout(() => {
+          router.push("/");
+        }, 5000);
 
         break;
       default:

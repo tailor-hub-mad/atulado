@@ -102,17 +102,20 @@ export const SCProfileModule = styled.div`
       width: 80%;
     }
 
-    .action-wrapper {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-
-      margin-top: ${({ theme }) => theme.spaces.s.desktopSize};
-
-      .selected-wrapper {
-        & > * {
-          &:not(:first-child) {
-            margin-left: ${({ theme }) => theme.spaces.xs.desktopSize};
+    .data-wrapper {
+      .action-wrapper {
+        /* display: flex; */
+        justify-content: space-between;
+        text-align: left;
+        align-items: flex-start;
+        margin-top: ${({ theme }) => theme.spaces.s.desktopSize};
+        .selected-wrapper {
+          align-items: flex-start;
+          & > * {
+            margin-left: 0;
+            &:not(:first-child) {
+              /* margin-left: ${({ theme }) => theme.spaces.xs.desktopSize}; */
+            }
           }
         }
       }

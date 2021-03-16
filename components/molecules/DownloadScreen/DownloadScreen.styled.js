@@ -23,7 +23,7 @@ export const SCDownloadScreen = styled.section`
     width: 80vw;
 
     padding: ${({ theme }) =>
-      `${theme.spaces.s.desktopSize} ${theme.spaces.s.desktopSize}`};
+    `${theme.spaces.s.desktopSize} ${theme.spaces.s.desktopSize}`};
 
     display: flex;
     flex-direction: column;
@@ -48,10 +48,14 @@ export const SCDownloadScreen = styled.section`
   }
 
   @media only screen and (min-width: 769px) {
-    height: 50vh;
-    width: 40vw;
+    height: 100vh;
+    width: 100%;
+    .modal {
+      height: 50vh;
+      width: 50vw;
+    }
     padding: ${({ theme }) =>
-      `${theme.spaces.l.desktopSize} ${theme.spaces.l.desktopSize}`};
+    `${theme.spaces.l.desktopSize} ${theme.spaces.l.desktopSize}`};
   }
 
   @-webkit-keyframes bounce-7 {

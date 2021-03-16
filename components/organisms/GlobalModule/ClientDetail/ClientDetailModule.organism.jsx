@@ -50,6 +50,8 @@ import {
   findProcessByContract,
   findProcessByCups,
 } from "../../../../utils/process";
+import { IbanModal } from "../../Modal/ContractModal/IbanModal/IbanModal.organism";
+import { AddressModal } from "../../Modal/ContractModal/AddressModal/AddressModal.organism";
 
 const INCREMENT = 3;
 
@@ -85,6 +87,19 @@ export const ClientDetailModule = ({
     open: false,
     index: null,
   });
+  const [openIbanModal, setOpenIbanModal] = useState({
+    contractId: null,
+    open: false,
+  });
+  const [openAddressModal, setOpenAddressModal] = useState({
+    contractId: null,
+    open: false,
+  });
+
+  const [openInfoUpdateModal, setOpenInfoUpdateModal] = useState({
+    message: null,
+    open: false,
+  });
   const [filterManagementParameters, setFilterManagementParameters] = useState({
     search: null,
   });
@@ -101,6 +116,7 @@ export const ClientDetailModule = ({
   const [filterInvoicesParameters, setFilterInvoicesParameters] = useState({
     search: null,
   });
+  const [errorMessage, setErrorMessage] = useState("");
 
   const router = useRouter();
 
@@ -157,7 +173,7 @@ export const ClientDetailModule = ({
 
     const { ContractCode, RegistrationId, ProcessId } = process;
 
-    await deleteProcessById(
+    const response = await deleteProcessById(
       user.roleCode,
       user.UserId,
       ContractCode,
@@ -165,10 +181,24 @@ export const ClientDetailModule = ({
       ProcessId
     );
 
-    setCloseManagementModal({
-      open: false,
-      index: null,
-    });
+    if (response?.error) {
+      setErrorMessage("El registro ya ha sido gestionado.");
+
+      setTimeout(() => {
+        setErrorMessage();
+        setCloseManagementModal({
+          open: false,
+          index: null,
+        });
+      }, 5000);
+
+      return;
+    } else {
+      setCloseManagementModal({
+        open: false,
+        index: null,
+      });
+    }
   };
 
   const handleFilterManagement = () => {
@@ -234,6 +264,7 @@ export const ClientDetailModule = ({
     const contract = pick(element, contractFilterAttributeTable);
 
     contract.State = contract.State ? "Activo" : "Inactivo";
+    delete contract.ContractStatus;
 
     return contract;
   };
@@ -316,17 +347,21 @@ export const ClientDetailModule = ({
           <ItemContractList
             key={index}
             data={filterAttributesContract(element)}
-            actionCheck={() => {}}
+            actionCheck={() => { }}
             action={() => handleOnClikContract(element?.ContractCode)}
             optionsMenu={[
               "Cambiar IBAN",
               "Cambiar Info contacto",
+              "Baja contrato",
               "Cambiar titular y/o pagador",
               "Cambiar tarifa y/o potencia",
               "Descargar contrato",
             ]}
             setOpenDownloadScreen={setOpenDownloadScreen}
+            setOpenIbanModal={setOpenIbanModal}
+            setOpenAddressModal={setOpenAddressModal}
             withOutCheck
+            admin
           />
         );
       });
@@ -346,7 +381,7 @@ export const ClientDetailModule = ({
           <ItmeInvoiceList
             key={index}
             data={filterAttributesInvoice(element)}
-            actionCheck={() => {}}
+            actionCheck={() => { }}
             action={() =>
               handleOnClikInvoice(element?.Id, element?.ContractCode)
             }
@@ -477,6 +512,32 @@ export const ClientDetailModule = ({
 
   return (
     <>
+      {openInfoUpdateModal.open && (
+        <InfoModal
+          setOpenInfoModal={setOpenInfoUpdateModal}
+          openInfoModal={openInfoUpdateModal}
+        />
+      )}
+
+      {openIbanModal.open && (
+        <IbanModal
+          closeAction={() => setOpenIbanModal(false)}
+          action={(iban) =>
+            handleUpdateContractIban(openIbanModal.contractId, iban)
+          }
+        />
+      )}
+      {openAddressModal.open && (
+        <AddressModal
+          closeAction={() => setOpenAddressModal(false)}
+          action={(address) =>
+            handleUpdateContractDeliberyAddress(
+              openAddressModal.contractId,
+              address
+            )
+          }
+        />
+      )}
       {openUnsubscriptionModal.open && (
         <UnsubscriptionModal
           closeAction={() =>
@@ -491,6 +552,7 @@ export const ClientDetailModule = ({
           handleDeleteManagement={handleDeleteManagement}
           setCloseManagementModal={setCloseManagementModal}
           index={closeManagementModal.index}
+          errorMessage={errorMessage}
         />
       )}
       <SCClientDetailModule>
@@ -594,12 +656,19 @@ export const ClientDetailModule = ({
                       .map((element, index) => (
                         <ItemManagement
                           key={index}
-                          closeAction={() =>
+                          closeAction={() => {
+                            const getProcessById = async (id) => {
+                              const { data } = await getProcess(user.roleCode, id);
+
+                              setDataManagement(data);
+                              setFullDataManagement(data);
+                            }
+                            getProcessById(_userId);
                             setCloseManagementModal({
                               open: true,
                               index,
                             })
-                          }
+                          }}
                           action={() => handleClickManagementItem(index)}
                           validateAction={() => handleValidateProcess(index)}
                           data={element}
@@ -664,8 +733,8 @@ export const ClientDetailModule = ({
                       setVisibleContracts(
                         visibleContracts + INCREMENT >= contractData?.length
                           ? visibleContracts +
-                              contractData?.length -
-                              visibleContracts
+                          contractData?.length -
+                          visibleContracts
                           : visibleContracts + INCREMENT
                       )
                     }
@@ -720,8 +789,8 @@ export const ClientDetailModule = ({
                       setVisibleInvoices(
                         visibleInvoices + INCREMENT >= invoiceData?.length
                           ? visibleInvoices +
-                              invoiceData?.length -
-                              visibleInvoices
+                          invoiceData?.length -
+                          visibleInvoices
                           : visibleInvoices + INCREMENT
                       )
                     }

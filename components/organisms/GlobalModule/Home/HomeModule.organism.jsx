@@ -29,7 +29,7 @@ import {
 
 import { chartTemplate, dataYearTemplate } from "../../../../utils/contract";
 
-import { getFriendBalance } from "../../../../lib/api/friend";
+import { getFriendBalance, setFriendInvite } from "../../../../lib/api/friend";
 import { validateEmail } from "../../../../lib/api/validators";
 import {
   getPositionMonthByCode,
@@ -73,6 +73,7 @@ export const HomeModule = ({ contracts, user, optionsList }) => {
   });
   const [openFriendModal, setOpenFriendModal] = useState(false);
   const [friendCodeModal, setFriendCodeModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleFilterManagement = () => {
     const { search, type, state } = filterManagementParameters;
@@ -156,7 +157,7 @@ export const HomeModule = ({ contracts, user, optionsList }) => {
 
     const { ContractCode, RegistrationId, ProcessId } = process;
 
-    await deleteProcessById(
+    const response = await deleteProcessById(
       user.roleCode,
       user.UserId,
       ContractCode,
@@ -164,10 +165,32 @@ export const HomeModule = ({ contracts, user, optionsList }) => {
       ProcessId
     );
 
-    setCloseManagementModal({
-      open: false,
-      index: null,
-    });
+    if (response?.error) {
+      setErrorMessage("El registro ya ha sido gestionado.");
+
+      setTimeout(() => {
+        setErrorMessage();
+        setCloseManagementModal({
+          open: false,
+          index: null,
+        });
+      }, 5000);
+
+      return;
+    } else {
+      getProcess(user.roleCode).then(({ data }) => {
+        setDataManagement(
+          data.filter((element) => element["Status"] != "Procesado")
+        );
+        setFullDataManagement(data);
+        setLoadingSpinner(false);
+        setCloseManagementModal({
+          open: false,
+          index: null,
+        });
+      });
+
+    }
   };
 
   const handleClickManagementItem = (index) => {
@@ -303,6 +326,7 @@ export const HomeModule = ({ contracts, user, optionsList }) => {
           handleDeleteManagement={handleDeleteManagement}
           setCloseManagementModal={setCloseManagementModal}
           index={closeManagementModal.index}
+          errorMessage={errorMessage}
         />
       )}
       {friendCodeModal && (
@@ -428,6 +452,7 @@ export const HomeModule = ({ contracts, user, optionsList }) => {
 
 const FriendCodeModal = ({ setFriendCodeModal, contracts = [], user }) => {
   const [option, setOption] = useState();
+  const [infoMessage, setInfoMessage] = useState("");
 
   const methods = useForm({
     mode: "onSubmit",
@@ -446,7 +471,17 @@ const FriendCodeModal = ({ setFriendCodeModal, contracts = [], user }) => {
       friendEmail: dataInputs.email,
     };
 
-    setFriendCodeModal(user.roleCode, user.UserId, friendInfo);
+    const response = await setFriendInvite(user.roleCode, user.UserId, friendInfo);
+    if (response?.error) {
+      setInfoMessage(response.error);
+    } else {
+      setInfoMessage("Invitación enviada con éxito.");
+      setTimeout(() => {
+        setInfoMessage();
+        setFriendCodeModal(false);
+      }, 5000);
+
+    }
   };
 
   return (
@@ -481,7 +516,7 @@ const FriendCodeModal = ({ setFriendCodeModal, contracts = [], user }) => {
                 apiValidation={validateEmail}
               />
               <div className="btn-modal-wrapper">
-                <Button type="submit">Invitar a mi amigo</Button>
+                <Button type="submit">{infoMessage ? infoMessage : "Invitar a mi amigo"}</Button>
               </div>
             </form>
           </FormProvider>
