@@ -250,7 +250,7 @@ const handleSupply = (data) => {
     if (atrSIPSInformation.checkSips) {
       supplyData["checkSips"] = true;
       supplyData["sipsCUPS"] = data.cups;
-      supplyData["sipsATR"] = atrSIPSInformation.ATR.Code;
+      supplyData["sipsATR"] = atrSIPSInformation.ATR?.Code;
       supplyData["sipsPowerP1"] = atrSIPSInformation.SipsPowerP1 || 0;
       supplyData["sipsPowerP2"] = atrSIPSInformation.SipsPowerP2 || 0;
       supplyData["sipsPowerP3"] = atrSIPSInformation.SipsPowerP3 || 0;
@@ -258,10 +258,10 @@ const handleSupply = (data) => {
       supplyData["sipsPowerP5"] = atrSIPSInformation.SipsPowerP5 || 0;
       supplyData["sipsPowerP6"] = atrSIPSInformation.SipsPowerP6 || 0;
       supplyData["sipsTensionLevel"] = atrSIPSInformation?.TensionLevel?.Code
-        ? Number(atrSIPSInformation.TensionLevel.Code)
+        ? Number(atrSIPSInformation.TensionLevel?.Code)
         : 0;
       supplyData["sipsPowerControlMode"] = Number(
-        atrSIPSInformation.PowerControlMode.Code
+        atrSIPSInformation.PowerControlMode?.Code
       );
       supplyData["sipsMaxBIEPower"] = Number(
         atrSIPSInformation.SipsMaxBIEPower
@@ -273,7 +273,7 @@ const handleSupply = (data) => {
         atrSIPSInformation.SipsAccessRights
       );
       supplyData["sipsDistributor"] =
-        atrSIPSInformation.DistributionCompany.Code;
+        atrSIPSInformation.DistributionCompany?.Code;
       supplyData["sipsCNAE"] = atrSIPSInformation.CNAE.toString();
     } else {
       supplyData["checkSips"] = false;
@@ -345,8 +345,8 @@ const handleSupply = (data) => {
 
   supplyData["cups"] = data.cups;
 
-  if (atrInformation?.newATR.code) {
-    supplyData["atr"] = atrInformation.newATR.code;
+  if (atrInformation?.newATR?.code) {
+    supplyData["atr"] = atrInformation.newATR?.code;
     supplyData["rateId"] = Number(atrInformation.RateId) || 1;
     supplyData["powerP1"] = 0;
     supplyData["powerP2"] = 0;
@@ -382,7 +382,7 @@ const handleSupply = (data) => {
       supplyData["powerControlMode"] =
         Number(atrSIPSInformation?.PowerControlMode) || 1;
     } else {
-      supplyData["atr"] = atrSIPSInformation.ATR.Code;
+      supplyData["atr"] = atrSIPSInformation.ATR?.Code;
       supplyData["rateId"] = Number(atrSIPSInformation.RateId) || 1;
       supplyData["powerP1"] = atrSIPSInformation.SipsPowerP1 || 0;
       supplyData["powerP2"] = atrSIPSInformation.SipsPowerP2 || 0;
@@ -394,8 +394,12 @@ const handleSupply = (data) => {
       supplyData["tensionLevel"] = atrSIPSInformation.TensionLevel;
 
       supplyData["powerControlMode"] =
-        Number(atrSIPSInformation?.PowerControlMode.Code) || 1;
+        Number(atrSIPSInformation?.PowerControlMode?.Code) || 1;
     }
+  }
+
+  if (data?.powerControlMode) {
+    supplyData["sipsPowerControlMode"] = 2;
   }
 
   return supplyData;
@@ -494,7 +498,7 @@ export const handleDataRegistration = async (data) => {
 
     dataRegister["promotionalCode"] = data?.update?.PromotionalCode || "";
 
-    dataRegister["subrogation"] = data?.update?.Subrogation || "";
+    dataRegister["subrogation"] = data?.update?.Subrogation || false;
     dataRegister["contractDate"] = data?.update?.ContractDate || null;
     dataRegister["fixedContractDate"] =
       data?.update?.FixedContractDate || false;

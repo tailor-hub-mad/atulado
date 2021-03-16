@@ -441,7 +441,7 @@ export const WhatModule = ({
 
       let contractTypes;
 
-      const auxATR = type == "current" ? currentATR.code : newATR.code;
+      const auxATR = type == "current" ? currentATR.code : newATR?.code;
 
       const rate = offeredRate.find((element) => {
         return element.Tolls.find((toll) => {

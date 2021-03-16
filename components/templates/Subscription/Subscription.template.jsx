@@ -108,6 +108,7 @@ export default function SubscriptionTemplate() {
     newContractReason: 0,
   });
   const [disactiveNav, setDisactiveNav] = useState(false);
+  const [changeTitulary, setChangeTitulary] = useState(false);
 
   const methods = useForm({
     mode: "onBlur",
@@ -192,6 +193,11 @@ export default function SubscriptionTemplate() {
 
   useEffect(() => {
     if (!refWindow || !refs) return;
+
+    if (refWindow == 3) {
+      console.log('Change titularity!')
+      setChangeTitulary(true);
+    }
 
     refs[refWindow].current?.scrollIntoView({
       behavior: "smooth",
@@ -377,6 +383,7 @@ export default function SubscriptionTemplate() {
                       defaultInfoUpdateContract={defaultInfoUpdateContract}
                       attachmentFile={attachmentFile}
                       setAttachmentFile={setAttachmentFile}
+                      changeTitularyProp={changeTitulary}
                     />
                   </div>
                 </div>

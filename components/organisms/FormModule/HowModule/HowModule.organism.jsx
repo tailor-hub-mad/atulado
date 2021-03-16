@@ -13,6 +13,7 @@ export const HowModule = ({
   defaultInfoUpdateContract,
   attachmentFile,
   setAttachmentFile,
+  changeTitularyProp
 }) => {
   const [changeTitulary, setChangeTitulary] = useState(false);
   const [paperInvoice, setPaperInvoice] = useState(false);
@@ -85,7 +86,12 @@ export const HowModule = ({
 
     setExtraDataRegister(newExtraDataRegister);
     setIsSubrogate(Subrogation);
-    setChangeTitulary(HolderChange);
+    if (changeTitularyProp) {
+      setChangeTitulary(changeTitularyProp);
+      handleCheckButton("change_titularity", changeTitularyProp)
+    } else {
+      setChangeTitulary(HolderChange);
+    }
     setPaperInvoice(!eInvoice);
   }, [defaultInfoUpdateContract]);
 
