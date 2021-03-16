@@ -43,7 +43,7 @@ export default function RatesTemplate() {
             icon={<Bulb color={tab === 1 ? "white" : "#009845"} />}
             action={() => setTab(1)}
           >
-            <SCTextM>MENOS O IGUAL DE 15KW</SCTextM>
+            <SCTextM>MENOR O IGUAL A 15KW</SCTextM>
             <SCTextXSLight>
               Típica para hogares y pequeños negocios
             </SCTextXSLight>
