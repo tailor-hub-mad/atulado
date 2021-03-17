@@ -327,6 +327,12 @@ export const DataModule = ({
     if (DeliveryAddress && !isEqual(DeliveryAddress, SupplyAddress)) {
       setTimeout(() => {
         setIsContactAddress(true);
+        const newExtraDataRegister = { ...extraDataRegister };
+        newExtraDataRegister["isContactAddress"] = true;
+
+        setTimeout(() => {
+          setExtraDataRegister((extraDataRegister) => ({ ...extraDataRegister, ...newExtraDataRegister }));
+        }, 2000)
       }, 1000);
 
       const {

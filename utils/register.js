@@ -247,7 +247,7 @@ const handleSupply = (data) => {
       ? 2
       : 1;
   } else {
-    if (atrSIPSInformation.checkSips) {
+    if (atrSIPSInformation?.checkSips) {
       supplyData["checkSips"] = true;
       supplyData["sipsCUPS"] = data.cups;
       supplyData["sipsATR"] = atrSIPSInformation.ATR?.Code;
