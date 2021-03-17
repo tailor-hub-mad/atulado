@@ -52,7 +52,7 @@ export default function LoginTemplate({ role = "cliente" }) {
       <div className="nav-mobile-wrapper">
         <Navbar
           optionList={[
-            { option: "Tarifas", link: "/", visible: true },
+            { option: "Tarifas", link: "/tarifas", visible: true },
             { option: "Contratar", link: "/", visible: true },
             { option: "Área cliente", link: "/", visible: true },
           ]}
