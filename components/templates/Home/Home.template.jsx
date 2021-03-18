@@ -29,7 +29,7 @@ export default function HomeTemplate() {
     })
   }
   return (
-    <SCHome>
+    <SCHome data-aos="fade" data-aos-duration="1500">
       <div className="home-wrapper">
         <div className="nav-mobile-wrapper">
           <Navbar
