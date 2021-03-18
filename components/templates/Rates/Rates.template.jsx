@@ -11,6 +11,7 @@ import RateCard from "../../molecules/RateCard/RateCard.molecule";
 import { SCRates } from "./Rates.styled";
 import uniqid from "uniqid";
 import { useRouter } from "next/router";
+import { SCTextSLight } from "../../atoms/Text/TextS.styled";
 
 export default function RatesTemplate() {
   const router = useRouter();
@@ -66,6 +67,11 @@ export default function RatesTemplate() {
           </ChooseButton>
         </div>
         <div className="rates-grid">{displayRates()}</div>
+        <div className="conditions-link">
+          <a href="https://www.atuladoenergia.com/CondicionesGenerales/Condiciones_Generales_contrato_suministro_energia.pdf" target="_blank" rel="noopener noreferrer">
+            <SCTextSLight>Condiciones Generales de Contrato</SCTextSLight>
+          </a>
+        </div>
       </div>
     </SCRates>
   );

@@ -115,16 +115,12 @@ export default function HomeTemplate() {
         <div className="home-second-section wrapper">
           <SCTextXL as="h3">NUESTA TARIFA MILENIAL NO TIENE RIVAL</SCTextXL>
           <SCTextM>Accede al comparador oficial de la CNMC  y comprueba que nuestra tarifa MILENIAL no tiene rival en el mercado.</SCTextM>
-          <SCTextM>Tu luz al mejor precio sin permanencia ni engaños. Con la tranquilidad de que siempre pagarás el mejor precio del mercado.</SCTextM>
+          <SCTextM>Tendrás el mejor precio fijo en un único periodo, con las ventajas de la tarifa nocturna, pero sin cambiar tus hábitos de consumo.</SCTextM>
           <div className="link-container center-text">
-            <Link
-              href="/tarifas"
-            >
-              <a>
-                <SCTextM>COMPARADOR OFICIAL</SCTextM>
-                <Arrow />
-              </a>
-            </Link>
+            <a href="https://comparador.cnmc.gob.es/" target="_blank" rel="noopener noreferrer">
+              <SCTextM>COMPARADOR OFICIAL</SCTextM>
+              <Arrow />
+            </a>
           </div>
         </div>
 

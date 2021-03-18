@@ -32,6 +32,10 @@ export const SCRates = styled.section`
     padding-top: 32px;   
     margin-bottom: 0;
   }
+  .conditions-link{
+    text-align: center;
+    margin-top: 55px;
+  } 
 
   @media only screen and (min-width: 769px) {
     .rates-wrapper {
