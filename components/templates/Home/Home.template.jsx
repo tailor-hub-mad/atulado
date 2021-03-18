@@ -78,7 +78,7 @@ export default function HomeTemplate() {
                 icon={<Bulb color={"#009845"} />}
                 action={() => router.push("/tarifas")}
               >
-                <SCTextM>MENOS O IGUAL DE 15KW</SCTextM>
+                <SCTextM>MENOR O IGUAL A 15KW</SCTextM>
                 <SCTextXSLight>
                   Típica para hogares y pequeños negocios
             </SCTextXSLight>
