@@ -85,7 +85,7 @@ export default function HomeTemplate() {
               </ChooseButton>
               <ChooseButton
                 icon={<DoubleBulb color={"#009845"} />}
-                action={() => router.push("/tarifas")}
+                action={() => router.push("/tarifas?index=2")}
               >
                 <SCTextM>MÁS DE 15KW</SCTextM>
                 <SCTextXSLight>

@@ -10,9 +10,15 @@ import { Navbar } from "../../molecules/Navbar/Navbar.molecule";
 import RateCard from "../../molecules/RateCard/RateCard.molecule";
 import { SCRates } from "./Rates.styled";
 import uniqid from "uniqid";
+import { useRouter } from "next/router";
 
 export default function RatesTemplate() {
-  const [tab, setTab] = useState(1);
+  const router = useRouter();
+  const {
+    index
+  } = router?.query;
+
+  const [tab, setTab] = useState(index ? +index : 1);
 
   const displayRates = () => {
     return rates[`state${tab}`]?.map((rate) => {
