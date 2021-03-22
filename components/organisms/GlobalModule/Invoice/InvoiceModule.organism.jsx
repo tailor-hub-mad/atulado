@@ -154,7 +154,7 @@ export const InvoiceModule = ({
       const month = date.getMonth();
 
       const codeMonth = getCodeMonthByPosition(month);
-      dataYear[codeMonth].push(element.Amount);
+      dataYear[codeMonth]?.push(element.Amount);
     });
 
     Object.keys(dataYear).forEach((element) => {
